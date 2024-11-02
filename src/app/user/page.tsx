@@ -1,10 +1,12 @@
 'use client';
 
+import MenuCard from "@/components/user/MenuCard";
 import ScreenMobile from "@/components/ScreenMobile";
 import HeaderTabs from "@/components/user/HeaderTabs";
 import OrderButton from "@/components/user/OrderButton";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import MenuCardList from "@/components/user/MenuCardList";
 
 export default function Home() {
   const searchParams = useSearchParams()
@@ -16,7 +18,7 @@ export default function Home() {
   return (
     <ScreenMobile>
       <HeaderTabs />
-      
+      <MenuCardList />
       <OrderButton />
     </ScreenMobile>
   );
