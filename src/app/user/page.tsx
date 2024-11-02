@@ -1,6 +1,5 @@
 'use client';
 
-import MenuCard from "@/components/user/MenuCard";
 import ScreenMobile from "@/components/ScreenMobile";
 import HeaderTabs from "@/components/user/HeaderTabs";
 import OrderButton from "@/components/user/OrderButton";
