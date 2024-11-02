@@ -3,15 +3,18 @@
 import useToastHandler from "@/lib/toastHanlder";
 import { useState } from "react";
 import { EditMenuDialog } from "./editMenuDialog";
+import { ConfirmDialog } from "./confirmDialog";
 
 
 export default function MenuCard() {
 
     const toaster = useToastHandler();
     const [ openDialog, setOpenDialog ] = useState(false);
+    const [ openDeleteDialog, setOpenDeleteDialog ] = useState(false);
 
     const deleteHandler = () => {
-        toaster("Delete", "Delete success")
+        setOpenDeleteDialog(true);
+        
     }
 
     const editHandler = () => {
@@ -35,6 +38,7 @@ export default function MenuCard() {
                 </div>
             </div>
             <EditMenuDialog openDialog={openDialog} setOpenDialog={setOpenDialog} />
+            <ConfirmDialog openDialog={openDeleteDialog} setOpenDialog={setOpenDeleteDialog} title="แน่ใจหรือไม่ว่าต้องการลบ?" description="แน่ใจหรือไม่ว่าต้องการลบ “แซลมอนย่าง”" callback={() => toaster("Delete", "Delete success")} />
         </div>
     )
 }
