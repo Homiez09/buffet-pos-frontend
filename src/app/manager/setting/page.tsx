@@ -1,6 +1,6 @@
 "use client";
 import { BaseTableResponse } from "@/interfaces/table";
-import React from "react";
+import React, { useState } from "react";
 import TableNameCard from "../../../components/TableNameCard";
 import { Button } from "@/components/ui/button"
 import {
@@ -13,6 +13,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import ModifyPriceDialog from "@/components/manager/ModifyPriceDialog";
 
 
 const tableMockData: BaseTableResponse[] = [
@@ -198,9 +199,12 @@ const tableMockData: BaseTableResponse[] = [
     },
 ];
 
-const MakePayment = () => {
+const page = () => {
     const tableCount = tableMockData.length;
-    const netPricePerPerson: number = 250; //hardcode
+    const [openModifyPriceDialog, setOpenModifyPriceDialog] = useState(false);
+    const [netPricePerPerson, setNetPricePerPerson] = useState(250);
+ 
+
     return (
         <div className="p-10 font-bold">
             <p className="text-4xl my-4 ">ตั้งค่าร้าน</p>
@@ -219,12 +223,13 @@ const MakePayment = () => {
                             <input className="rounded border-2 h-12 w-80 p-3   " />
                         </div>
                         <div className="flex">
-                            <button className="text-xl bg-success btn rounded-xl text-white ml-auto">เพิ่มโต๊ะ</button>
-                            <DialogClose asChild> 
-                                <Button className="font-bold ml-3 btn text-xl text-white bg-error rounded-xl" >
+                            
+                            <DialogClose asChild>
+                                <Button className="font-bold ml-auto btn text-xl text-white bg-error rounded-xl" >
                                     ยกเลิก
                                 </Button>
                             </DialogClose>
+                            <button className="text-xl ml-3 bg-success btn rounded-xl text-white ">เพิ่มโต๊ะ</button>
                         </div>
                     </DialogContent>
                 </Dialog>
@@ -238,12 +243,18 @@ const MakePayment = () => {
                 <p className="text-3xl">
                     ราคาอาหารต่อหัวสุทธิ : {netPricePerPerson} บาท
                 </p>
-                <button className="btn bg-primary text-white text-lg font-base mt-5">
+                <button className="btn bg-primary text-white text-lg font-base mt-5" onClick={() => setOpenModifyPriceDialog(true)}>
                     แก้ไขราคา
                 </button>
+                <ModifyPriceDialog 
+                    openDialog={openModifyPriceDialog} 
+                    setOpenDialog={setOpenModifyPriceDialog} 
+                    price={netPricePerPerson} 
+                    onSave={(newPrice) => setNetPricePerPerson(newPrice)}
+                />
             </div>
         </div>
-    );
+            );
 };
 
-export default MakePayment;
+export default page;
