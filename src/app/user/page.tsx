@@ -6,7 +6,6 @@ import OrderButton from "@/components/user/OrderButton";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import MenuList from "@/components/user/MenuList";
-import CartProvider from "@/provider/CartProvider";
 
 export default function Home() {
   const searchParams = useSearchParams()
