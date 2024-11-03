@@ -29,9 +29,15 @@ export default withAuth({
     },
     callbacks: {
       async authorized({ req, token }) {
-        console.log(req.nextUrl.pathname);
+        const { nextUrl } = req;
 
-        if (req.nextUrl.pathname.startsWith('/user') || req.nextUrl.pathname.startsWith('/_next/') || req.nextUrl.pathname.startsWith('/api/') || req.nextUrl.pathname.startsWith('/public/') || req.nextUrl.pathname.endsWith('.svg')) {
+        // Bypass authorization for paths that don't require authentication
+        if (req.nextUrl.pathname.startsWith('/user') || 
+            req.nextUrl.pathname.startsWith('/_next/') || 
+            req.nextUrl.pathname.startsWith('/api/') || 
+            req.nextUrl.pathname.startsWith('/public/') || 
+            req.nextUrl.pathname.endsWith('.svg')) 
+        {
           return true;
         }
 
@@ -41,7 +47,6 @@ export default withAuth({
           }
           return false;
         }
-        const { nextUrl } = req;
 
         const isAuthorized = PATH.some(({ pathname, roles }) => {
           const isInRole = roles.some((role) => token.role == role);
