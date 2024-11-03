@@ -1,5 +1,7 @@
 'use client';
 
+import { useGetTables } from '@/api/manager/useTable';
+import LoadingAnimation from '@/components/manager/loadingAnimation';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -16,7 +18,11 @@ const tableColor: TableProps = {
 }
 
 export default function TableReservation() {
+
     const [selectedTable, setSelectedTable] = useState<number | null>(null);
+    const { data: tables, isLoading: loadingTables, refetch: refetchTables } = useGetTables();
+
+    if (loadingTables) return <LoadingAnimation/>
 
     return (
         <div className="flex flex-col select-none">

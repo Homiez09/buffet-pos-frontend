@@ -10,7 +10,7 @@ import {
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
 
-  type ConfirmDeliverDialogProps = {
+  type ConfirmDialogProps = {
     openDialog: boolean
     setOpenDialog: (open: boolean) => void
     title: string
@@ -18,7 +18,7 @@ import {
     callback?: () => void
   }
    
-  export function ConfirmDialog({ openDialog, setOpenDialog, title, description, callback }: ConfirmDeliverDialogProps) {
+  export function ConfirmDialog({ openDialog, setOpenDialog, title, description, callback }: ConfirmDialogProps) {
     return (
       <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
         <AlertDialogContent>

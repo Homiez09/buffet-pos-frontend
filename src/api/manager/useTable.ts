@@ -1,19 +1,35 @@
 import { AddTableRequest, TableDetailResponse } from "@/interfaces/table";
 import axiosInstance from "@/lib/axiosInstance";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { getSession } from "next-auth/react";
 
 const getTables = async () => {
-    const { data } = await axiosInstance.get("/manage/tables");
+    const session = await getSession();
+    const { data } = await axiosInstance.get("/manage/tables", {
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
     return data;
 }
 
 const addTable = async (newTable: AddTableRequest) => {
-    const { data } = await axiosInstance.post("/manage/tables", newTable);
+    const session = await getSession();
+    const { data } = await axiosInstance.post("/manage/tables", newTable, {
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
     return data;
 }
 
 const getTableById = async (id: string) => {
-    const { data } = await axiosInstance.get(`/manage/tables/${id}`);
+    const session = await getSession();
+    const { data } = await axiosInstance.get(`/manage/tables/${id}`, {
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
     return data;
 }
 
@@ -38,3 +54,5 @@ const useAddTable = () => {
         mutationFn: addTable,
     });
 }
+
+export { useGetTables, useAddTable, useGetTableById };

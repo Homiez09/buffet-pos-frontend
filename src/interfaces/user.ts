@@ -1,6 +1,6 @@
 export enum Role {
-  MANAGER = "MANAGER",
-  EMPLOYEE = "EMPLOYEE",
+  MANAGER = "manager",
+  EMPLOYEE = "employee",
 }
 
 export interface UserRegisterRequest {

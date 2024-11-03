@@ -1,19 +1,35 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axiosInstance";
 import { AddCategoryRequest, CategoryDetailResponse } from "@/interfaces/category";
+import { getSession } from "next-auth/react";
 
 const getCategories = async () => {
-    const { data } = await axiosInstance.get("/manage/categories");
+    const session = await getSession();
+    const { data } = await axiosInstance.get("/manage/categories", {
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
     return data;
 }
 
 const getCategoryById = async (id: string) => {
-    const { data } = await axiosInstance.get(`/manage/categories/${id}`);
+    const session = await getSession();
+    const { data } = await axiosInstance.get(`/manage/categories/${id}`, {
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
     return data;
 }
 
 const addCategory = async (newCategory: AddCategoryRequest) => {
-    const { data } = await axiosInstance.post("/manage/categories", newCategory);
+    const session = await getSession();
+    const { data } = await axiosInstance.post("/manage/categories", newCategory, {
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
     return data;
 }
 
