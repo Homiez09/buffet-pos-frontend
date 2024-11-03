@@ -13,10 +13,12 @@ const getOrders = async () => {
     return data;
 }
 
-const useGetTables = () => {
+const useGetOrders = () => {
     return useQuery<OrderResponse[]>({
         queryKey: ["orders"],
         queryFn: getOrders,
         staleTime: 5 * 60 * 1000,
     });
 }
+
+export{useGetOrders}
