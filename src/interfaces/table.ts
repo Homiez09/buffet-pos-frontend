@@ -13,4 +13,9 @@ export interface BaseTableResponse {
   updatedAt: Date;
 }
 
+export interface EditTableRequest{
+  id: string;
+  tableName: string;
+}
+
 export type TableDetailResponse = Omit<BaseTableResponse, 'createdAt' | 'updatedAt'>;
