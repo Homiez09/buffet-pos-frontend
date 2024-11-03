@@ -5,6 +5,7 @@ import {
     DialogContent,
     DialogClose,
 } from "@/components/ui/dialog";
+import { useAddCategory } from '@/api/manager/useCategory';
 
 type AddCategoryProps = {
     openDialog: boolean;
@@ -14,13 +15,20 @@ type AddCategoryProps = {
 const AddCategoryDialog = ({ openDialog, setOpenDialog }: AddCategoryProps) => {
     const [inputCategory, setInputCategory] = useState("");
 
+    const addCategory = useAddCategory();
+
     const handleSave = () => {
-        // Perform save operation here if needed
+
+        if (inputCategory === "") {
+            return;
+        }
+
+        addCategory.mutate({ categoryName: inputCategory });
         setOpenDialog(false);
     };
 
     const handleCancel = () => {
-        setOpenDialog(false); // This will close the dialog
+        setOpenDialog(false);
     };
 
     return (

@@ -1,14 +1,22 @@
 'use client';
 
+import { useAddMenu, useGetMenus } from "@/api/manager/useMenu";
 import AddCategoryDialog from "@/components/manager/addCategoryDialog";
 import { AddMenuDialog } from "@/components/manager/addMenuDialog";
+import LoadingAnimation from "@/components/manager/loadingAnimation";
 import MenuCard from "@/components/manager/menuCard";
+import { BaseMenuResponse } from "@/interfaces/menu";
 import { useState } from "react";
 
 export default function MenuPage() {
 
     const [ openDialog, setOpenDialog ] = useState(false);
     const [ openCategoryDialog, setOpenCategoryDialog ] = useState(false);
+    const { data: menus = [], isLoading: loadingMenus, refetch: refetchMenus } = useGetMenus();
+
+    if (loadingMenus) {
+        return <LoadingAnimation/>
+    }
 
     const addCategoryHandler = () => {
         setOpenCategoryDialog(true);
@@ -35,18 +43,22 @@ export default function MenuPage() {
                     </svg>
                 </label>
                 <div>
-                    <div className="btn btn-secondary text-white font-bold text-lg mr-3" onClick={() => addCategoryHandler()}>+ Add Catergory</div>
+                    <div className="btn btn-secondary text-white font-bold text-lg mr-3" onClick={() => addCategoryHandler()}>+ Add Category</div>
                     <div className="btn btn-success text-white font-bold text-lg" onClick={() => addMenuHandler()}>+ Add Menu</div>
                 </div>
             </div>
             <div className="grid grid-cols-3 gap-10">
-                {
-                    Array(10).fill(0).map((_, i) => (
-                        <MenuCard key={i} />
+            {
+                Array.isArray(menus) ? (
+                    menus.map((menu: BaseMenuResponse) => (
+                        <MenuCard key={menu.id} menu={menu} refetchMenus={refetchMenus} />
                     ))
-                }
+                ) : (
+                    <p>No menus available</p>
+                )
+            }
             </div>
-            <AddMenuDialog openDialog={openDialog} setOpenDialog={setOpenDialog} />
+            <AddMenuDialog openDialog={openDialog} setOpenDialog={setOpenDialog} refetchMenus={refetchMenus} />
             <AddCategoryDialog openDialog={openCategoryDialog} setOpenDialog={setOpenCategoryDialog} />
         </div>
     )

@@ -22,34 +22,43 @@ export const PATH: IPATH[] = [
     },
   ];
 
-export default withAuth({
+  export default withAuth({
     pages: {
       signIn: "/auth/login",
       error: "/auth/login",
     },
     callbacks: {
       async authorized({ req, token }) {
-
-        if (req.nextUrl.pathname.startsWith('/_next/') || req.nextUrl.pathname.startsWith('/api/') || req.nextUrl.pathname.startsWith('/public/') || req.nextUrl.pathname.endsWith('.svg')) {
+        const { nextUrl } = req;
+  
+        // Bypass authorization for paths that don't require authentication
+        if (
+          nextUrl.pathname.startsWith('/_next/') ||
+          nextUrl.pathname.startsWith('/api/') ||
+          nextUrl.pathname.startsWith('/public/') ||
+          nextUrl.pathname.endsWith('.svg') ||
+          /^\/user\/.*/.test(nextUrl.pathname) // Bypass login for /user/*whatever
+        ) {
           return true;
         }
-
+  
+        // If there's no token, redirect to sign-in (except for /auth/* paths)
         if (!token) {
-          if (/^\/auth\/.*/.test(req.nextUrl.pathname)) {
+          if (/^\/auth\/.*/.test(nextUrl.pathname)) {
             return true;
           }
           return false;
         }
-        const { nextUrl } = req;
-
+  
+        // Check if the user has the necessary role for the requested path
         const isAuthorized = PATH.some(({ pathname, roles }) => {
-          const isInRole = roles.some((role) => token.role == role);
+          const isInRole = roles.length === 0 || roles.some((role) => token.role == role);
           const matching = match(pathname, { decode: decodeURIComponent });
           const isMatch = matching(nextUrl.pathname);
-
+  
           return !!isMatch && isInRole;
         });
-
+  
         return isAuthorized;
       },
     },

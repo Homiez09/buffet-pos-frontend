@@ -16,18 +16,22 @@ import { BaseTableResponse } from "@/interfaces/table"
 import { useEffect, useState } from "react"
  
 interface DefaultDropdownProps {
-    list: string[],
-    selectedTable: BaseTableResponse | null
+    list: string[] | undefined,
+    selected?: string | undefined,
+    setSelected: (selected: string) => void
 }
 
-export function DefaultDropdown({ list, selectedTable }: DefaultDropdownProps) {
+export function DefaultDropdown({ list, selected, setSelected }: DefaultDropdownProps) {
+
+  if (!list) {
+    return null
+  }
+
   const [position, setPosition] = useState(list[0])
 
   useEffect(() => {
-    if (selectedTable) {
-      setPosition(selectedTable.tableName)
-    }
-  }, [selectedTable])
+    setSelected(position)
+  }, [position])
  
   return (
     <DropdownMenu>

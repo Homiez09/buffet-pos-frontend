@@ -34,7 +34,11 @@ export default function TableReservation() {
                         <p className="absolute text-3xl text-grey">T-{table.tableName}</p>
                     </div>)}
                 </div>
-                <div className="btn btn-primary text-white font-bold text-lg px-8 self-end mt-12" onClick={() => setIsOpenPopup(true)}>จองโต๊ะ</div>
+                <div className={selectedTable ? "btn-primary btn text-white font-bold text-lg px-8 self-end mt-12" : "btn-outline btn text-whereBlack font-bold text-lg px-8 self-end mt-12"} onClick={() => {
+                    if (selectedTable) {
+                        setIsOpenPopup(true);
+                    }
+                }}>จองโต๊ะ</div>
             </div>
             <ConfirmTableDialog openDialog={isOpenPopup} setOpenDialog={setIsOpenPopup} selectedTable={selectedTable} tables={tables} />
         </>

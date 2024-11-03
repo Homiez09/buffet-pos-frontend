@@ -20,7 +20,8 @@ import { useState } from "react";
    
   export function ConfirmTableDialog({ openDialog, setOpenDialog, selectedTable, tables }: ConfirmTableDialogProps) {
 
-    if (!tables) {
+
+    if (!tables || !selectedTable) {
         return null;
     }
     
@@ -35,17 +36,15 @@ import { useState } from "react";
                   </div>
                   <div className="flex flex-row gap-2 items-center">
                       <div className="w-1/3">โต๊ะที่:</div>
-                      <DefaultDropdown 
-                        list={tables.map(table => table.tableName)}
-                        selectedTable={selectedTable}
-                      />
+                      <div className="border-2 p-3 rounded-xl text-center w-full">{selectedTable.tableName}</div>
                   </div>
                 
                 
               </div>
           </div>
          
-          <DialogFooter>
+          <DialogFooter className="">
+              <div className="btn btn-error text-whereWhite" onClick={() => setOpenDialog(false)}>ยกเลิก</div>
               <div className="btn btn-primary text-whereWhite" onClick={() => setOpenDialog(false)}>เปิดบิล</div>
           </DialogFooter>
         </DialogContent>
