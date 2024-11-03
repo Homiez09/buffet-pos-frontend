@@ -4,12 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import { Icon } from '@iconify/react';
 
 const items = [
-    { id: 0, name: "Buffet เนื้อ" },
-    { id: 1, name: "Buffet หมู" },
-    { id: 2, name: "ผัก" },
-    { id: 3, name: "เครื่องดื่ม" },
-    { id: 4, name: "ของหวาน" },
-    { id: 5, name: "อื่นๆ" },
+    { id: 0, name: "หมู" },
+    { id: 1, name: "เนื้อ" },
+    { id: 2, name: "ผักและเห็ด" },
+    { id: 3, name: "ทะเล ลูกชิ้นและอื่นๆ" },
+    { id: 4, name: "ข้าว" },
+    { id: 5, name: "ของหวาน" },
 ];
 
 export default function HeaderTabs() {
@@ -34,16 +34,13 @@ export default function HeaderTabs() {
     return (
         <>
             <div className="fixed flex flex-col gap-5 border py-3 bg-white pl-3 max-lg:max-w-full max-w-lg">
-                {/* <div className="flex flex-col items-end px-2">
-                <Icon icon="ic:baseline-history" fontSize={35} color='#6b7280' />
-            </div> */}
                 <div className="flex overflow-x-scroll scrollbar-hide">
                     <div className="flex flex-row gap-3">
                         <div className="cursor-pointer">
-                            <Icon icon="ic:baseline-search" fontSize={30} color='#6b7280' />
+                            <Icon icon="ic:baseline-search" fontSize={30} color='#ff8d13ef' />
                         </div>
                         <div className="cursor-pointer" onClick={() => setIsShow((e: boolean) => !e)}>
-                            <Icon icon="ic:round-list" fontSize={30} color='#6b7280' />
+                            <Icon icon="ic:round-list" fontSize={30} color='#ff8d13ef' />
                         </div>
                     </div>
 
@@ -51,7 +48,7 @@ export default function HeaderTabs() {
                         {items.map((item) => (
                             <div key={item.id} className="px-4 cursor-pointer">
                                 <div className={`border-transparent pb-1 ${selected === item.id ? 'border-b-4 border-[#ff8d13ef]' : null}`} onClick={() => setSelected(item.id)}>
-                                    <p className={selected === item.id ? "text-black" : "text-gray-500"}>{item.name}</p>
+                                    <p className={selected === item.id ? "#ff8d13ef" : "text-whereBlack"}>{item.name}</p>
                                 </div>
                             </div>
                         ))}
