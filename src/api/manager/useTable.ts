@@ -1,4 +1,4 @@
-import { AddTableRequest, TableDetailResponse } from "@/interfaces/table";
+import { AddTableRequest, BaseTableResponse, TableDetailResponse } from "@/interfaces/table";
 import axiosInstance from "@/lib/axiosInstance";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSession } from "next-auth/react";
@@ -34,7 +34,7 @@ const getTableById = async (id: string) => {
 }
 
 const useGetTables = () => {
-    return useQuery<TableDetailResponse[]>({
+    return useQuery<BaseTableResponse[]>({
         queryKey: ["tables"],
         queryFn: getTables,
         staleTime: 5 * 60 * 1000,
@@ -42,7 +42,7 @@ const useGetTables = () => {
 }
 
 const useGetTableById = (id: string) => {
-    return useQuery<TableDetailResponse>({
+    return useQuery<BaseTableResponse>({
         queryKey: ["tables", id],
         queryFn: () => getTableById(id),
         staleTime: 5 * 60 * 1000,

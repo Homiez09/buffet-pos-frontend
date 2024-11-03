@@ -16,7 +16,6 @@ const schema = z.object({
 type LoginFormValues = z.infer<typeof schema>;
 
 export default function LoginPage() {
-  const login = useLogin();
   const {
     register: loginForm,
     handleSubmit,

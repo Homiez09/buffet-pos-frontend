@@ -7,8 +7,23 @@ import {
     DialogTitle,
     DialogTrigger,
   } from "@/components/ui/dialog"
+import { BaseTableResponse } from "@/interfaces/table";
+import { DefaultDropdown } from "./defaultDropdown";
+import { useState } from "react";
+
+  interface ConfirmTableDialogProps {
+    openDialog: boolean;
+    setOpenDialog: (open: boolean) => void;
+    selectedTable: BaseTableResponse | null;
+    tables: BaseTableResponse[] | undefined;
+  }
    
-  export function ConfirmTableDialog({ openDialog, setOpenDialog }: { openDialog: boolean, setOpenDialog: (open: boolean) => void }) {
+  export function ConfirmTableDialog({ openDialog, setOpenDialog, selectedTable, tables }: ConfirmTableDialogProps) {
+
+    if (!tables) {
+        return null;
+    }
+    
     return (
       <Dialog open={openDialog}>
         <DialogContent className="w-full flex flex-col gap-6">
@@ -20,13 +35,10 @@ import {
                   </div>
                   <div className="flex flex-row gap-2 items-center">
                       <div className="w-1/3">โต๊ะที่:</div>
-                      <div className="dropdown w-full">
-                          <div tabIndex={0} role="button" className="btn w-full">Select here</div>
-                          <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                              <li><a>Item 1</a></li>
-                              <li><a>Item 2</a></li>
-                          </ul>
-                      </div>
+                      <DefaultDropdown 
+                        list={tables.map(table => table.tableName)}
+                        selectedTable={selectedTable}
+                      />
                   </div>
                 
                 

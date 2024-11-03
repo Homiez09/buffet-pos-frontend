@@ -1,5 +1,5 @@
 "use client";
-import { BaseTableResponse } from "@/interfaces/table";
+import { AddTableRequest, BaseTableResponse } from "@/interfaces/table";
 import React, { useState } from "react";
 import TableNameCard from "../../../components/TableNameCard";
 import { Button } from "@/components/ui/button"
@@ -14,228 +14,81 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import ModifyPriceDialog from "@/components/manager/ModifyPriceDialog";
-
-
-const tableMockData: BaseTableResponse[] = [
-    {
-        id: "1",
-        tableName: "Table 1",
-        isAvailable: true,
-        qrCode: "QR001",
-        accessCode: "AC01",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "2",
-        tableName: "Table 2",
-        isAvailable: false,
-        qrCode: "QR002",
-        accessCode: "AC02",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "3",
-        tableName: "Table 3",
-        isAvailable: true,
-        qrCode: "QR003",
-        accessCode: "AC03",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "4",
-        tableName: "Table 4",
-        isAvailable: true,
-        qrCode: "QR004",
-        accessCode: "AC04",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "5",
-        tableName: "Table 5",
-        isAvailable: false,
-        qrCode: "QR005",
-        accessCode: "AC05",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "6",
-        tableName: "Table 6",
-        isAvailable: true,
-        qrCode: "QR006",
-        accessCode: "AC06",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "7",
-        tableName: "Table 7",
-        isAvailable: false,
-        qrCode: "QR007",
-        accessCode: "AC07",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "8",
-        tableName: "Table 8",
-        isAvailable: true,
-        qrCode: "QR008",
-        accessCode: "AC08",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "9",
-        tableName: "Table 9",
-        isAvailable: false,
-        qrCode: "QR009",
-        accessCode: "AC09",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "10",
-        tableName: "Table 10",
-        isAvailable: true,
-        qrCode: "QR010",
-        accessCode: "AC10",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "1",
-        tableName: "Table 1",
-        isAvailable: true,
-        qrCode: "QR001",
-        accessCode: "AC01",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "2",
-        tableName: "Table 2",
-        isAvailable: false,
-        qrCode: "QR002",
-        accessCode: "AC02",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "3",
-        tableName: "Table 3",
-        isAvailable: true,
-        qrCode: "QR003",
-        accessCode: "AC03",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "4",
-        tableName: "Table 4",
-        isAvailable: true,
-        qrCode: "QR004",
-        accessCode: "AC04",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "5",
-        tableName: "Table 5",
-        isAvailable: false,
-        qrCode: "QR005",
-        accessCode: "AC05",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "6",
-        tableName: "Table 6",
-        isAvailable: true,
-        qrCode: "QR006",
-        accessCode: "AC06",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "7",
-        tableName: "Table 7",
-        isAvailable: false,
-        qrCode: "QR007",
-        accessCode: "AC07",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "8",
-        tableName: "Table 8",
-        isAvailable: true,
-        qrCode: "QR008",
-        accessCode: "AC08",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "9",
-        tableName: "Table 9",
-        isAvailable: false,
-        qrCode: "QR009",
-        accessCode: "AC09",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-    {
-        id: "10",
-        tableName: "Table 10",
-        isAvailable: true,
-        qrCode: "QR010",
-        accessCode: "AC10",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    },
-];
+import { useAddTable, useGetTables } from "@/api/manager/useTable";
+import { useForm } from "react-hook-form";
+import LoadingAnimation from "@/components/manager/loadingAnimation";
 
 const page = () => {
-    const tableCount = tableMockData.length;
     const [openModifyPriceDialog, setOpenModifyPriceDialog] = useState(false);
     const [netPricePerPerson, setNetPricePerPerson] = useState(250);
+    const [ openCreateTableDialog, setOpenCreateTableDialog ] = useState(false);
  
+    const { data: tables, isLoading: loadingTables, refetch: refetchTables } = useGetTables();
+    const addTable = useAddTable();
+
+    const {
+        register: tableNameForm,
+        handleSubmit,
+        watch,
+        formState: { errors },
+      } = useForm();
+
+    if (loadingTables) {
+        return <LoadingAnimation/>;
+    }
+
+    const onSubmit = async (data: any) => {
+        console.log(data);
+        const addTableData: AddTableRequest = {
+            tableName: data.tableName,
+        };
+
+        await addTable.mutateAsync(addTableData, {
+            onSuccess: () => {
+                alert("เพิ่มโต๊ะสำเร็จ");
+            },
+            onError: (error) => {
+                alert("เพิ่มโต๊ะไม่สำเร็จ");
+            },
+        });
+        refetchTables();
+        setOpenCreateTableDialog(false);
+    };
 
     return (
         <div className="p-10 font-bold">
             <p className="text-4xl my-4 ">ตั้งค่าร้าน</p>
             <div className="flex m-4 justify-between">
-                <p className="text-xl">รายการโต๊ะทั้งหมด: {tableCount} โต๊ะ</p>
-                <Dialog>
-                    <DialogTrigger><div
-                        className="text-lg btn bg-success text-white font-normal w-36"
-                    >
-                        <img src="\assets\navbar-logo\plusSign.svg" />
-                        เพิ่มโต๊ะ
-                    </div></DialogTrigger>
+                <p className="text-xl flex flex-row items-center">รายการโต๊ะทั้งหมด: {tables?.length} โต๊ะ</p>
+                <Dialog open={openCreateTableDialog} onOpenChange={setOpenCreateTableDialog} >
+                    <DialogTrigger>
+                        <div
+                            className="text-lg btn bg-success text-white font-normal w-36"
+                        >
+                            <img src="\assets\navbar-logo\plusSign.svg" />
+                            เพิ่มโต๊ะ
+                        </div>
+                    </DialogTrigger>
                     <DialogContent>
                         <div className="py-10 align-middle gap-6 flex items-center">
                             <label className="text-2xl font-bold">ชื่อโต๊ะ: </label>
-                            <input className="rounded border-2 h-12 w-80 p-3   " />
+                            <input className="rounded border-2 h-12 w-80 p-3" {...tableNameForm(`tableName`, { required: true })} type="text" />
                         </div>
                         <div className="flex">
-                            
                             <DialogClose asChild>
                                 <Button className="font-bold ml-auto btn text-xl text-white bg-error rounded-xl" >
                                     ยกเลิก
                                 </Button>
                             </DialogClose>
-                            <button className="text-xl ml-3 bg-success btn rounded-xl text-white ">เพิ่มโต๊ะ</button>
+                            <button className="text-xl ml-3 btn bg-success rounded-xl text-white" onClick={
+                                handleSubmit(onSubmit)
+                            }>เพิ่มโต๊ะ</button>
                         </div>
                     </DialogContent>
                 </Dialog>
             </div>
             <div className="overflow-y-auto h-96">
-                {tableMockData.map((data) => (
+                {tables && tables.map((data: BaseTableResponse) => (
                     <TableNameCard key={data.id} detail={data} />
                 ))}
             </div>
