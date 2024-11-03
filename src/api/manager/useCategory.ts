@@ -33,6 +33,22 @@ const addCategory = async (newCategory: AddCategoryRequest) => {
     return data;
 }
 
+const deleteCategory = async (id :string) =>{
+    const session = await getSession();
+    const { data } = await axiosInstance.post(`/manage/categories/${id}`, {
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
+    return data;
+}
+
+const useDeleteCategory = () => {
+    return useMutation({
+        mutationFn: deleteCategory,
+    });
+}
+
 const useGetCategories = () => {
     return useQuery<CategoryDetailResponse[]>({
         queryKey: ["categories"],
@@ -55,4 +71,4 @@ const useAddCategory = () => {
     });
 }
 
-export { useGetCategories, useGetCategoryById, useAddCategory };
+export { useGetCategories, useGetCategoryById, useAddCategory, useDeleteCategory };

@@ -30,14 +30,16 @@ export const PATH: IPATH[] = [
     callbacks: {
       async authorized({ req, token }) {
         const { nextUrl } = req;
-  
+        
+
         // Bypass authorization for paths that don't require authentication
         if (
           nextUrl.pathname.startsWith('/_next/') ||
           nextUrl.pathname.startsWith('/api/') ||
           nextUrl.pathname.startsWith('/public/') ||
           nextUrl.pathname.endsWith('.svg') ||
-          /^\/user\/.*/.test(nextUrl.pathname) // Bypass login for /user/*whatever
+          /^\/user\/.*/.test(nextUrl.pathname) ||// Bypass login for /user/*whatever
+          "/user/"// Bypass login for /user/*whatever
         ) {
           return true;
         }
