@@ -21,4 +21,20 @@ const useGetOrders = () => {
     });
 }
 
-export{useGetOrders}
+const deliverOrders = async () => {
+    const session = await getSession();
+    const { data } = await axiosInstance.get("await p jaw", {
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
+    return data;
+}
+
+const useDeliverOrders = () => {
+    return useMutation({
+        mutationFn: deliverOrders
+    });
+}
+
+export{useGetOrders ,useDeliverOrders}
