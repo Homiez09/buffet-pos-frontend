@@ -24,10 +24,6 @@ export default function TableReservation() {
     const [isOpenPopup, setIsOpenPopup] = useState<boolean>(false);
     const { data: tables, isLoading: loadingTables, refetch: refetchTables } = useGetTables();
 
-    useEffect(() => {
-        setIsOpenPopup(true);
-    }, [selectedTable])
-
     return (
         <>
             <div className="flex flex-col select-none">
