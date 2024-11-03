@@ -1,10 +1,11 @@
 'use client';
 
+import { BaseMenuResponse } from '@/interfaces/menu';
 import { Icon } from '@iconify/react/dist/iconify.js';
 import Image from 'next/image'
 import { useState } from 'react';
 
-export default function MenuCard() {
+export default function MenuCard({ menu } : { menu: BaseMenuResponse }) {
     const [amount, setAmount] = useState(0);
     const increment = () => {
         setAmount(preAmount => preAmount + 1);
@@ -28,7 +29,7 @@ export default function MenuCard() {
             </div>
             <div className="flex flex-col w-3/5 p-4">
                 <div className = "flex flex-col h-full" >
-                    <p className="text-xl  mt-[-6px] m-[-18px]">M1 ไก่ย่างห้าดาว</p>
+                    <p className="text-xl  mt-[-6px] m-[-18px]">{menu.name}</p>
                 </div>
                 <div className = "flex justify-end h-full items-end pr-3 pb-1" >
                     <div className="flex flex-row items-center gap-3" >
