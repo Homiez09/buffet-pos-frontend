@@ -20,7 +20,7 @@ const TableNameCard: React.FC<TableNameCardProps> = ({ detail }) => {
 
 
   return (
-    <div className='p-4 mb-5 flex rounded-2xl items-center bg-whereWhite text-xl shadow-md justify-between'>
+    <div className='p-4 mb-5 flex rounded-2xl items-center bg-white text-xl shadow-md justify-between'>
       <p className='text-2xl'>ชื่อโต๊ะ: {detail.tableName}</p>
       <div className='flex justify-between'>
 
