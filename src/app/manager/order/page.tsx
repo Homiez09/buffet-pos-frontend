@@ -6,16 +6,18 @@ import Image from "next/image";
 import { DiVim } from "react-icons/di";
 import { ConfirmDialog } from "@/components/manager/confirmDialog";
 import LoadingAnimation from "@/components/manager/loadingAnimation";
-import { useGetOrders ,useDeliverOrder} from "@/api/manager/useOrder";
+import { OrderResponse } from "@/interfaces/order";
+import OrderCard from "@/components/manager/orderCard";
+// import { useGetOrders ,useDeliverOrder} from "@/api/manager/useOrder";
 
 export default function OrderPage() {
   const [openDialog, setOpenDialog] = useState(false);
-  const {data: order =[], isLoading: loadingOrders, refetch: refetchOrders } = useGetOrders();
-  const deliverOrder = useDeliverOrder();
+  // const {data: orders =[], isLoading: loadingOrders, isError,refetch: refetchOrders } = useGetOrders();
+  // const deliverOrder = useDeliverOrder();
 
-  if (loadingOrders) {
-    return <LoadingAnimation/>
-  }
+  // if (loadingOrders) {
+  //   return <LoadingAnimation/>
+  // }
 
   const addMenuHandler = () => {
     setOpenDialog(true);
@@ -71,11 +73,21 @@ export default function OrderPage() {
                   className="flex flex-row gap-1"
                   style={{ width: "max-content" }}
                 >
-                  {Array(5)
+                  {
+                  // Array.isArray(orders) && orders.length > 0 || !isError ? (
+                  //     orders.map((order: OrderResponse) => (
+                  //         <OrderCard key={order.id} order={order} refetchOrders={refetchOrders} />
+                  //     ))
+                  // ) : 
+                  (
+                    Array(5)
                     .fill(0)
                     .map((_, i) => {
-                      return <OrderCard key={i} />;
-                    })}
+                      return <OrderCardFake key={i} />
+                    })
+                    //<p>No orders now</p>
+                  )                    
+                  }
                 </div>
               </div>
             </div>
@@ -86,23 +98,25 @@ export default function OrderPage() {
   );
 }
 
-const OrderCard = () => {
+const OrderCardFake = () => {
   return (
-    <div className="flex flex-col w-48 shadow-md m-2 p-2 rounded-lg gap-3">
-      <div className="w-full">
-        <Image
-          src="/assets/images/sample-salmon.svg"
-          alt="salmon"
-          width={100}
-          height={100}
-          className="w-full"
-        />
+      <div className="flex flex-col w-48 shadow-md m-2 p-2 rounded-lg gap-3">
+        <div className="w-full">
+          <Image
+            src="/assets/images/sample-salmon.svg"
+            alt="salmon"
+            width={100}
+            height={100}
+            className="w-full"
+          />
+        </div>
+        <div className="w-full flex flex-col">
+          <div>M1 แซลมอนรมควัน</div>
+          <div>Type: ปลา</div>
+        </div>
+        <div className="w-full justify-end flex flex-row">x1</div>
       </div>
-      <div className="w-full flex flex-col">
-        <div>M1 แซลมอนรมควัน</div>
-        <div>Type: ปลา</div>
-      </div>
-      <div className="w-full justify-end flex flex-row">x1</div>
-    </div>
-  );
+    );
+
 };
+

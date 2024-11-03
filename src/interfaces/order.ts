@@ -12,3 +12,12 @@ export interface OrderResponse {
     createAt: Date,
     updateAt: Date
 }
+
+export interface OrdersResponse {
+    id: string,
+    tableId: string,
+    orderItem: OrderItemResponse[],
+    status: string,
+    createAt: Date,
+    updateAt: Date
+}
