@@ -1,5 +1,6 @@
 'use client';
 
+import AddCategoryDialog from "@/components/manager/addCategoryDialog";
 import { AddMenuDialog } from "@/components/manager/addMenuDialog";
 import MenuCard from "@/components/manager/menuCard";
 import { useState } from "react";
@@ -7,6 +8,11 @@ import { useState } from "react";
 export default function MenuPage() {
 
     const [ openDialog, setOpenDialog ] = useState(false);
+    const [ openCategoryDialog, setOpenCategoryDialog ] = useState(false);
+
+    const addCategoryHandler = () => {
+        setOpenCategoryDialog(true);
+    }
 
     const addMenuHandler = () => {
         setOpenDialog(true);
@@ -28,7 +34,10 @@ export default function MenuPage() {
                         clipRule="evenodd" />
                     </svg>
                 </label>
-                <div className="btn btn-success text-white font-bold text-lg" onClick={() => addMenuHandler()}>+ Add Menu</div>
+                <div>
+                    <div className="btn btn-secondary text-white font-bold text-lg mr-3" onClick={() => addCategoryHandler()}>+ Add Catergory</div>
+                    <div className="btn btn-success text-white font-bold text-lg" onClick={() => addMenuHandler()}>+ Add Menu</div>
+                </div>
             </div>
             <div className="grid grid-cols-3 gap-10">
                 {
@@ -38,6 +47,7 @@ export default function MenuPage() {
                 }
             </div>
             <AddMenuDialog openDialog={openDialog} setOpenDialog={setOpenDialog} />
+            <AddCategoryDialog openDialog={openCategoryDialog} setOpenDialog={setOpenCategoryDialog} />
         </div>
     )
 }

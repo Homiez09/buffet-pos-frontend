@@ -1,7 +1,6 @@
 'use client';
 
-import { useGetTables } from '@/api/manager/useTable';
-import LoadingAnimation from '@/components/manager/loadingAnimation';
+import { ConfirmTableDialog } from '@/components/manager/confirmTableDialog';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -20,20 +19,21 @@ const tableColor: TableProps = {
 export default function TableReservation() {
 
     const [selectedTable, setSelectedTable] = useState<number | null>(null);
-    const { data: tables, isLoading: loadingTables, refetch: refetchTables } = useGetTables();
-
-    if (loadingTables) return <LoadingAnimation/>
+    const [isOpenPopup, setIsOpenPopup] = useState<boolean>(false);
 
     return (
-        <div className="flex flex-col select-none">
-            <p className="text-2xl font-bold">จองโต๊ะ</p>
-            <div className="grid grid-cols-3 gap-y-20 mt-8">
-                {[0,1,2,3,4,5].map((_, index) => <div key={index} onClick={() => setSelectedTable(index)} className=" hover:cursor-pointer flex px-16 items-center justify-center">
-                    {index === selectedTable ? tableColor.selected : tableColor.default}
-                    <p className="absolute text-3xl text-grey">T{index+1}</p>
-                </div>)}
+        <>
+            <div className="flex flex-col select-none">
+                <p className="text-2xl font-bold">จองโต๊ะ</p>
+                <div className="grid grid-cols-3 gap-y-20 mt-8">
+                    {[0, 1, 2, 3, 4, 5].map((_, index) => <div key={index} onClick={() => setSelectedTable(index)} className=" hover:cursor-pointer flex px-16 items-center justify-center">
+                        {index === selectedTable ? tableColor.selected : tableColor.default}
+                        <p className="absolute text-3xl text-grey">T{index + 1}</p>
+                    </div>)}
+                </div>
+                <div className="btn btn-primary text-white font-bold text-lg px-8 self-end mt-12" onClick={() => setIsOpenPopup(true)}>จองโต๊ะ</div>
             </div>
-            <div className="btn btn-primary text-white font-bold text-lg px-8 self-end mt-12" onClick={() => console.log('จอง')}>จองโต๊ะ</div>
-        </div>
+            <ConfirmTableDialog openDialog={isOpenPopup} setOpenDialog={setIsOpenPopup}  />
+        </>
     )
 }
