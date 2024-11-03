@@ -35,7 +35,7 @@ const addCategory = async (newCategory: AddCategoryRequest) => {
 
 const deleteCategory = async (id :string) =>{
     const session = await getSession();
-    const { data } = await axiosInstance.post(`/manage/categories/${id}`, {
+    const { data } = await axiosInstance.delete(`/manage/categories/${id}`, {
         headers: {
             Authorization: `Bearer ${session?.token}`,
         },
