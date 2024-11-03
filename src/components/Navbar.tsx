@@ -2,7 +2,7 @@ import React from 'react'
 
 const Navbar = () => {
   return (
-    <div className='w-3/12 bg-[#FEF8F2] text-black px-10 py-4 h-screen'>
+    <div className='w-3/12 bg-[#FEF8F2] text-black px-10 py-4'>
         <p className='text-3xl'>Buffet</p>
         <p className='text-6xl'>P<span className='text-primary'>O</span>S</p>
 
