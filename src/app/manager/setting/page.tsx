@@ -201,8 +201,8 @@ const MakePayment = () => {
                 </button>
         </div>
         <div className='overflow-y-auto h-96'>
-            {tableMockData.map((data) => (
-                <TableNameCard key={data.id} detail={data}/>
+            {tableMockData.map((data, i) => (
+                <TableNameCard key={i} detail={data}/>
             ))}
         </div>
         <div className='mt-16'>
