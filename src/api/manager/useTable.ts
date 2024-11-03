@@ -1,4 +1,4 @@
-import { AddTableRequest, BaseTableResponse, TableDetailResponse } from "@/interfaces/table";
+import { AddTableRequest, BaseTableResponse, EditTableRequest, TableDetailResponse } from "@/interfaces/table";
 import axiosInstance from "@/lib/axiosInstance";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSession } from "next-auth/react";
@@ -33,6 +33,38 @@ const getTableById = async (id: string) => {
     return data;
 }
 
+const editTable = async (editTable: EditTableRequest ) => {
+    const session = await getSession();
+    const { data } = await axiosInstance.put(`/manage/tables`,editTable ,{
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
+    return data;
+}
+
+const deleteTableById = async (id: string) => {
+    const session = await getSession();
+    const { data } = await axiosInstance.delete(`/manage/tables/${id}`, {
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
+    return data;
+}
+
+const useDeleteTableById = () => {
+    return useMutation({
+        mutationFn: deleteTableById,
+    });
+}
+
+const useEditTable = () => {
+    return useMutation({
+        mutationFn: editTable,
+    });
+}
+
 const useGetTables = () => {
     return useQuery<BaseTableResponse[]>({
         queryKey: ["tables"],
@@ -55,4 +87,4 @@ const useAddTable = () => {
     });
 }
 
-export { useGetTables, useAddTable, useGetTableById };
+export { useGetTables, useAddTable, useGetTableById, useEditTable, useDeleteTableById};

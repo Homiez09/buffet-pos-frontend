@@ -89,7 +89,7 @@ const page = () => {
             </div>
             <div className="overflow-y-auto h-96">
                 {tables && tables.map((data: BaseTableResponse) => (
-                    <TableNameCard key={data.id} detail={data} />
+                    <TableNameCard key={data.id} detail={data} refetchTables={refetchTables} />
                 ))}
             </div>
             <div className="mt-16">
