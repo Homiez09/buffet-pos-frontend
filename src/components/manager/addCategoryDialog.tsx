@@ -26,8 +26,8 @@ const AddCategoryDialog = ({ openDialog, setOpenDialog }: AddCategoryProps) => {
     return (
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogContent>
-                <div className="py-10 align-middle gap-6 flex items-center">
-                    <label className="text-2xl font-bold">ราคา: </label>
+                <div className="py-10 align-middle gap-2 flex items-center">
+                    <label className="text-2xl font-bold">เพิ่มประเภท </label>
                     <input
                         className="rounded border-2 h-12 w-80 p-3"
                         value={inputCategory}
