@@ -18,6 +18,14 @@ export default function Home() {
     <ScreenMobile>
       <HeaderTabs />
       <div className = "flex flex-col gap-2 px-3 pt-16 pb-24">
+      <div>
+      <div className="flex flex-row justify-between">
+        <p className=" w-1/3 font-bold text-lg pl-1"> โต๊ะที่ : 21 </p>
+        <p className=" w-2/3 font-bold text-lg pl-12"> เวลาในการทาน : 54 นาที </p>
+      </div>
+      <p className="text-primary text-xl text-right pr-1"> 20:18 น. </p>
+      </div>
+      
       <MenuCardList />
       </div>
       <OrderButton />
