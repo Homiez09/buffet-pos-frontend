@@ -1,6 +1,6 @@
 import { BaseTableResponse } from '@/interfaces/table';
 import React from 'react'
-import TableNameCard from '../TableNameCard';
+import TableNameCard from '../../../components/TableNameCard';
 
 const tableMockData: BaseTableResponse[] = [
     {

@@ -1,5 +1,5 @@
 import React from 'react'
-import MakePayment from '@/components/manager/MakePayment'
+import Setting from '@/app/manager/setting/page'
 import Navbar from '@/components/Navbar'
 
 const Page = () => {
@@ -9,7 +9,7 @@ const Page = () => {
         <Navbar />
       
       <div className="flex-1">
-        <MakePayment />
+        <Setting />
       </div>
     </div>
   )
