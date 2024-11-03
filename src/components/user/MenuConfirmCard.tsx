@@ -14,8 +14,8 @@ export default function MenuConfirmCard() {
             <div className="flex flex-col w-3/5 p-4">
                 <p className="text-2xl mt-[-12px] m-[-18px] ">M1 Somtum</p>
                 <p className="text-2xl mt-[18px] m-[-18px] ">x 1</p>
-                <div className = "flex border w-full h-full justify-end items-end">
-                    <p className="text-lg text-white border border-success bg-success rounded-[8px] px-3  py-[3px] ">กำลังทำอาหาร</p>
+                <div className = "flex  w-full h-full justify-end items-end">
+                    <p className="text-lg text-white border- border-success bg-success rounded-[8px] px-3  py-[3px] ">กำลังทำอาหาร</p>
                 </div>
             </div>
         </div>
