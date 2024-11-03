@@ -63,7 +63,7 @@ const config: Config = {
   plugins: [
     require('tailwind-scrollbar-hide'),
     require('daisyui'),
-      require("tailwindcss-animate")
+    require("tailwindcss-animate")
 ],
   daisyui: {
     themes: [
