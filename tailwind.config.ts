@@ -19,6 +19,7 @@ const config: Config = {
 			success: "#6FC772",
 			grey: "#BFBFBF",
 			info: "#2196F3",
+			wherePrimary: "#FEF8F2",
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
