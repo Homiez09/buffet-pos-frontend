@@ -12,10 +12,10 @@ export default function MenuConfirmCard() {
                 />
             </div>
             <div className="flex flex-col w-3/5 p-4">
-                <p className="text-2xl mt-[-12px] m-[-18px] ">M1 Somtum</p>
-                <p className="text-2xl mt-[18px] m-[-18px] ">x 1</p>
+            <p className="text-xl  mt-[-6px] m-[-18px]">M1 ไก่ย่างห้าดาว</p>
+            <p className="text-xl mt-[17px] m-[-18px] ">x 1</p>
                 <div className = "flex  w-full h-full justify-end items-end">
-                    <p className="text-lg text-white border- border-success bg-success rounded-[8px] px-3  py-[3px] ">กำลังทำอาหาร</p>
+                    <p className="text-l text-white border- border- bg-success rounded-[8px] px-4  py-[2px] ">สำเร็จ</p>
                 </div>
             </div>
         </div>
