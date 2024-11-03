@@ -14,6 +14,7 @@ const config: Config = {
 			whereBlack: "#474747",
 			white: "#FFFFFF",
 			primary: "#FF8B13",
+			whereOrange: "#f79832ef",
 			secondary: "#FFA500",
 			error: "#E8443F",
 			success: "#6FC772",
