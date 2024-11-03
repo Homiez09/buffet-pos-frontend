@@ -17,7 +17,9 @@ export default function Home() {
   return (
     <ScreenMobile>
       <HeaderTabs />
+      <div className = "flex flex-col gap-2 px-3 pt-16 pb-24">
       <MenuCardList />
+      </div>
       <OrderButton />
     </ScreenMobile>
   );
