@@ -1,7 +1,3 @@
-import MenuConfirmCard from "@/components/user/MenuConfirmCard";
-import MenuConfirmCardList from "@/components/user/MenuConfirmCardList";
-import OrderedItems from "@/components/user/OrderedItems";
-import OrderItemsList from "@/components/user/OrderedItems";
 import OrderedItemsList from "@/components/user/OrderedItemsList";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
@@ -12,7 +8,7 @@ export default function History() {
                 <Icon icon="weui:back-filled" fontSize={40} />
                 <div className="flex flex-row pt-3 mb-3 border-b border-b-whereBlack pb-2 w-10/12 mx-auto">
                 <Icon icon="lets-icons:order-fill" fontSize={25}  />
-                <p className="text-xl font-bold     "> รายการอาหารที่สั่งแล้ว</p>
+                <p className="text-xl font-bold"> รายการอาหารที่สั่งแล้ว</p>
                 </div>
             </div>
             <OrderedItemsList />
