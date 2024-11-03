@@ -9,13 +9,13 @@ import { PiPrinterFill } from "react-icons/pi";
 
 interface PaymentDetailPageProps {
   params: {
-    tableID: string;
+    id: string;
   };
 }
 
 export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
 
-  const { tableID } = params;
+  const { id } = params;
   const [ openDialog, setOpenDialog ] = useState(false);
   const router = useRouter();
   const toaster = useToastHandler();
@@ -44,7 +44,7 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
       </div>
       <div className="flex flex-row justify-between h-fit items-center">
         <div>
-          <span className="font-bold">Order ID:</span> {tableID}
+          <span className="font-bold">Order ID:</span> {id}
         </div>
         <div className="flex flex-row gap-5">
           <div className="flex flex-row items-center gap-2">
