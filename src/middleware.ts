@@ -14,12 +14,12 @@ export const PATH: IPATH[] = [
     },
     {
         pathname: "/user/*whatever",
-        roles: [Role.EMPLOYEE, Role.MANAGER],
+        roles: [],
     },
     {
         pathname: "/auth/*whatever",
         roles: [Role.EMPLOYEE, Role.MANAGER],
-    }
+    },
   ];
 
 export default withAuth({
