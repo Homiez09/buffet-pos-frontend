@@ -33,7 +33,7 @@ export default function HeaderTabs() {
 
     return (
         <>
-            <div className="fixed flex flex-col gap-5 border py-3 bg-white pl-3 max-lg:max-w-lg lg:max-w-[100%]">
+            <div className="fixed flex flex-col gap-5 border py-3 bg-white pl-3 max-lg:max-w-full max-w-lg">
                 {/* <div className="flex flex-col items-end px-2">
                 <Icon icon="ic:baseline-history" fontSize={35} color='#6b7280' />
             </div> */}
@@ -50,7 +50,7 @@ export default function HeaderTabs() {
                     <div className="flex flex-row w-full items-center whitespace-nowrap">
                         {items.map((item) => (
                             <div key={item.id} className="px-4 cursor-pointer">
-                                <div className={`border-transparent pb-1 ${selected === item.id ? 'border-b-4 border-[#FF8B13]' : null}`} onClick={() => setSelected(item.id)}>
+                                <div className={`border-transparent pb-1 ${selected === item.id ? 'border-b-4 border-[#ff8d13ef]' : null}`} onClick={() => setSelected(item.id)}>
                                     <p className={selected === item.id ? "text-black" : "text-gray-500"}>{item.name}</p>
                                 </div>
                             </div>
