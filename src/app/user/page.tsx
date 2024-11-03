@@ -24,9 +24,10 @@ export default function Home() {
         <p className=" w-2/3 font-bold text-lg pl-12"> เวลาในการทาน : 54 นาที </p>
       </div>
       <p className="text-primary text-xl text-right pr-1"> 20:18 น. </p>
-      </div>
-      
+      </div >
+      <div className = " m-2">
       <MenuCardList />
+      </div>
       </div>
       <OrderButton />
     </ScreenMobile>

@@ -31,7 +31,7 @@ export default function MenuCard() {
                     <p className="text-xl  mt-[-6px] m-[-18px]">M1 ไก่ย่างห้าดาว</p>
                 </div>
                 <div className = "flex justify-end h-full items-end pr-3 pb-1" >
-                    <div className="flex flex-row items-center gap-4" >
+                    <div className="flex flex-row items-center gap-3" >
                         <div className='hover:cursor-pointer' onClick={decrement}>
                         <Icon icon="simple-line-icons:minus" fontSize={40} color= {amount != 0 ? "#FF8B13" : "#bfbfbf"} />
                         </div>
