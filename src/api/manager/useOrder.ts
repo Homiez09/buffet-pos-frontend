@@ -21,7 +21,7 @@ const useGetOrders = () => {
     });
 }
 
-const deliverOrders = async () => {
+const deliverOrder = async () => {
     const session = await getSession();
     const { data } = await axiosInstance.get("await p jaw", {
         headers: {
@@ -31,10 +31,10 @@ const deliverOrders = async () => {
     return data;
 }
 
-const useDeliverOrders = () => {
+const useDeliverOrder = () => {
     return useMutation({
-        mutationFn: deliverOrders
+        mutationFn: deliverOrder
     });
 }
 
-export{useGetOrders ,useDeliverOrders}
+export{useGetOrders ,useDeliverOrder}

@@ -5,9 +5,17 @@ import { useState } from "react";
 import Image from "next/image";
 import { DiVim } from "react-icons/di";
 import { ConfirmDialog } from "@/components/manager/confirmDialog";
+import LoadingAnimation from "@/components/manager/loadingAnimation";
+import { useGetOrders ,useDeliverOrder} from "@/api/manager/useOrder";
 
 export default function OrderPage() {
   const [openDialog, setOpenDialog] = useState(false);
+  const {data: order =[], isLoading: loadingOrders, refetch: refetchOrders } = useGetOrders();
+  const deliverOrder = useDeliverOrder();
+
+  if (loadingOrders) {
+    return <LoadingAnimation/>
+  }
 
   const addMenuHandler = () => {
     setOpenDialog(true);
