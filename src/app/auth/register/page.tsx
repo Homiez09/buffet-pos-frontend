@@ -13,7 +13,7 @@ export default function RegisterPage() {
     
     const onSubmit = (data: any) => {
         console.log(data);
-        // registerHandler();
+        registerHandler();
     }
 
     const registerHandler = async () => {
@@ -44,7 +44,7 @@ export default function RegisterPage() {
     return (
         <div className="flex flex-col items-center w-full gap-10">
             <div className="text-3xl font-bold text-primary">Register</div>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 w-2/4">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 w-5/6">
                 <BaseForm
                     name="Email"
                     formId="email"

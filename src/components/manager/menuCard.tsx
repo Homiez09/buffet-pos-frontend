@@ -38,7 +38,7 @@ export default function MenuCard() {
                 </div>
             </div>
             <EditMenuDialog openDialog={openDialog} setOpenDialog={setOpenDialog} />
-            <ConfirmDialog openDialog={openDeleteDialog} setOpenDialog={setOpenDeleteDialog} title="แน่ใจหรือไม่ว่าต้องการลบ?" description="แน่ใจหรือไม่ว่าต้องการลบ “แซลมอนย่าง”" callback={() => toaster("Delete", "Delete success")} />
+            <ConfirmDialog openDialog={openDeleteDialog} setOpenDialog={setOpenDeleteDialog} title="แน่ใจหรือไม่ว่าต้องการลบ?" description="แน่ใจหรือไม่ว่าต้องการลบ “แซลมอนย่าง”" callback={() => toaster("ลบเมนูสำเร็จ", "คุณทำการลบเมนูสำเร็จ")} />
         </div>
     )
 }

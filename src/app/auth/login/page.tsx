@@ -12,8 +12,7 @@ export default function LoginPage() {
     const router = useRouter();
     
     const onSubmit = (data: any) => {
-        console.log(data);
-        // loginHandler();
+        loginHandler();
     }
 
     const loginHandler = async () => {
@@ -43,7 +42,7 @@ export default function LoginPage() {
     return (
         <div className="flex flex-col items-center w-full gap-10">
             <div className="text-3xl font-bold text-primary">Login</div>
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 w-2/4">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3 w-5/6">
                 <BaseForm
                     name="Email"
                     formId="email"
