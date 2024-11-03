@@ -8,7 +8,7 @@ export default function Cart() {
             <p className="w-full text-2xl border text-center font-semibold pt-1">ตะกร้าของฉัน</p>
         </div>
         <div className="flex px-3 pt-5 pb-23" >
-            <MenuCardList></MenuCardList>
+            <MenuCardList />
         </div>
         <div className="flex flex-row justify-between pt-5 border-b-2 pb-5 w-11/12 mx-auto">
             <p className="text-xl font-bold "> จำนวนรายการอาหาร :</p>
