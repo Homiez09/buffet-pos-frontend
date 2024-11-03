@@ -7,7 +7,7 @@ const items = [
     { id: 0, name: "หมู" },
     { id: 1, name: "เนื้อ" },
     { id: 2, name: "ผักและเห็ด" },
-    { id: 3, name: "ทะเล ลูกชิ้นและอื่นๆ" },
+    { id: 3, name: "ทะเล" },
     { id: 4, name: "ข้าว" },
     { id: 5, name: "ของหวาน" },
 ];
@@ -44,21 +44,27 @@ export default function HeaderTabs() {
                         </div>
                     </div>
 
-                    <div className="flex flex-row w-full items-center whitespace-nowrap">
+                    <div className="flex flex-row w-full items-center whitespace-nowrap gap-5 pl-5">
                         {items.map((item) => (
-                            <div key={item.id} className="px-4 cursor-pointer">
-                                <div className={`border-transparent pb-1 ${selected === item.id ? 'border-b-4 border-[#ff8d13ef]' : null}`} onClick={() => setSelected(item.id)}>
-                                    <p className={selected === item.id ? "#ff8d13ef" : "text-whereBlack"}>{item.name}</p>
-                                </div>
+                            <div
+                                className={`relative border-transparent pb-1 ${selected === item.id ? 'border-b-0' : null}`}
+                                onClick={() => setSelected(item.id)}
+                            >
+                                <p className={selected === item.id ? "text-whereOrange" : "text-whereBlack"}>
+                                    {item.name}
+                                </p>
+                                {selected === item.id && (
+                                    <span className="absolute left-1/2 transform -translate-x-1/2 bottom-0 w-1 h-1 bg-whereOrange rounded-full"></span>
+                                )}
                             </div>
                         ))}
                     </div>
                 </div>
             </div>
 
-            <div ref={ref} className={`flex flex-col gap-2 ${isShow ? 'block' : 'hidden'} w-full shadow-xl bg-white rounded-xl`}>
+            <div ref={ref} className={`fixed bottom-0 flex flex-col gap-2 ${isShow ? 'block' : 'hidden'} w-full shadow-xl bg-white rounded-xl`}>
                 {items.map((item) => (
-                    <div key={item.id} className="flex flex-row items-center justify-center gap-2 py-3 px-2">
+                    <div key={item.id} className="flex flex-row items-center justify-center gap-2 py-3 px-2 border-b-2">
                         <p className=" text-2xl">{item.name}</p>
                     </div>
                 ))}
