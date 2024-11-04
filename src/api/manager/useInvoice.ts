@@ -1,4 +1,4 @@
-import { UpdateInvoiceStatusRequest } from "@/interfaces/invoice";
+import { BaseInvoiceResponse, CancelInvoice, UpdateInvoiceStatusRequest } from "@/interfaces/invoice";
 import axiosInstance from "@/lib/axiosInstance";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSession } from "next-auth/react";
@@ -40,7 +40,7 @@ const useUpdateInvoice = () => {
 }
 
 const useGetAllPaidInvoices = () => {
-    return useQuery({
+    return useQuery<BaseInvoiceResponse[]>({
         queryKey: ["menus"],
         queryFn: getAllPaidInvoices,
         staleTime: 5 * 60 * 1000,
@@ -48,11 +48,27 @@ const useGetAllPaidInvoices = () => {
 }
 
 const useGetAllUnpaidInvoices = () => {
-    return useQuery({
+    return useQuery<BaseInvoiceResponse[]>({
         queryKey: ["menus"],
         queryFn: getAllUnpaidInvoices,
         staleTime: 5 * 60 * 1000,
     });
 }
 
-export { useUpdateInvoice, useGetAllPaidInvoices, useGetAllUnpaidInvoices }
+const cancelInvoice = async (invoice_id:string) => {
+    const session = await getSession();
+    const { data } = await axiosInstance.delete(`/manage/invoices/${invoice_id}`, {
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
+    return data;
+}
+
+const useCancelInvoice = () => {
+    return useMutation({
+        mutationFn: cancelInvoice,
+    });
+}
+
+export { useUpdateInvoice, useGetAllPaidInvoices, useGetAllUnpaidInvoices ,useCancelInvoice}

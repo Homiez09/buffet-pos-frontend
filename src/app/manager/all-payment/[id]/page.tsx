@@ -20,6 +20,8 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
   const router = useRouter();
   const toaster = useToastHandler();
 
+  
+
   return (
     <div className="w-full flex flex-col gap-10">
       <div className="flex flex-row justify-between">

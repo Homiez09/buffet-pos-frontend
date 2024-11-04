@@ -3,15 +3,31 @@
 import { BaseTableResponse } from "@/interfaces/table";
 import { useRouter } from "next/navigation";
 import { useState,useEffect } from "react";
+import useToastHandler from "@/lib/toastHanlder";
+import { ConfirmDialog } from "./confirmDialog";
+import { useCancelInvoice, useGetAllUnpaidInvoices } from "@/api/manager/useInvoice";
+import { CancelInvoice } from "@/interfaces/invoice";
 
-export default function TableCard({ table, refetchAvailableTables }: { table: BaseTableResponse, refetchAvailableTables: () => void }) {
+export default function TableCard({ table, refetchUnpaidInvoices }: { table: BaseTableResponse, refetchUnpaidInvoices: () => void }) {
   const router = useRouter();
-  const [openDialog, setOpenDialog] = useState(false); 
+  const toaster = useToastHandler();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<string  | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+  const {data:unpaidInvoices =[], isLoading: loadingUnpaidInvoices } = useGetAllUnpaidInvoices();
+  const cancelInvoice = useCancelInvoice();
 
-  const paymentHandler = (tableID: string) => {
-    router.push(`/manager/all-payment/${tableID}`);
-    refetchAvailableTables();
+
+  const paymentHandler = async (tableID: string) => {
+    refetchUnpaidInvoices();
+  };
+
+  const cancelHandler = async (tableID: string) => {
+    const invoice = unpaidInvoices.find(invoice => invoice.tableId === tableID);
+    if (invoice) {
+      setSelectedInvoice(invoice.id);
+      setOpenDialog(true); // Open the dialog after setting selected invoice
+    }
   };
 
   const endTime = new Date(table.entryAt);
@@ -53,7 +69,10 @@ export default function TableCard({ table, refetchAvailableTables }: { table: Ba
           </div>
           <div
             className="btn btn-error text-whereWhite"
-            onClick={() => setOpenDialog(true)}
+            onClick={() => {
+              cancelHandler(table.id);
+              setOpenDialog(true);
+            }}
           >
             Cancel
           </div>
@@ -62,6 +81,19 @@ export default function TableCard({ table, refetchAvailableTables }: { table: Ba
       <div className="font-bold text-xl">
         Time remaining: <span className="text-primary">{timeRemaining}</span> mins
       </div>
+      <ConfirmDialog
+        title="ยกเลิกโต๊ะ?"
+        description="แน่ใจหรือไม่ว่าต้องการยกเลิกโต๊ะนี้"
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        callback={async () => {
+          if (selectedInvoice) { // Check if selectedInvoice is not null
+            await cancelInvoice.mutateAsync(selectedInvoice); // Pass the specific invoice ID here
+            toaster("ยกเลิกโต๊ะสำเร็จ", "โต๊ะได้ถูกยกเลิกเรียบร้อยแล้ว");
+            refetchUnpaidInvoices();
+          } 
+        }}
+      />
     </div>
   );
 }
