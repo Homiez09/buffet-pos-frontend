@@ -39,7 +39,7 @@ const useUpdateOrder = () => {
 
 const getOrderByTableID = async (tableID :string ) => {
     const session = await getSession();
-    const { data } = await axiosInstance.put(`/manage/orders/table/${tableID}`,{
+    const { data } = await axiosInstance.get(`/manage/orders/table/${tableID}`,{
         headers: {
             Authorization: `Bearer ${session?.token}`,
         },
