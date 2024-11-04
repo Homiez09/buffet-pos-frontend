@@ -4,14 +4,14 @@ import { BaseTableResponse } from "@/interfaces/table";
 import { useRouter } from "next/navigation";
 import { useState,useEffect } from "react";
 
-export default function TableCard({ table, refetchAvailableTables }: { table: BaseTableResponse, refetchAvailableTables: () => void }) {
+export default function TableCard({ table, refetchUnpaidInvoices }: { table: BaseTableResponse, refetchUnpaidInvoices: () => void }) {
   const router = useRouter();
   const [openDialog, setOpenDialog] = useState(false); 
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
 
   const paymentHandler = (tableID: string) => {
     router.push(`/manager/all-payment/${tableID}`);
-    refetchAvailableTables();
+    refetchUnpaidInvoices();
   };
 
   const endTime = new Date(table.entryAt);
@@ -38,7 +38,7 @@ export default function TableCard({ table, refetchAvailableTables }: { table: Ba
     <div className="flex flex-row justify-between shadow-md p-5 rounded-lg">
       <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-1">
-          <div className="font-bold text-xl">Table NO: {table.id}</div>
+          <div className="font-bold text-xl">Table NO: {table.tableName}</div>
           <div className="text-grey">
             <p>เวลาเริ่มต้น : {new Date(table.entryAt).toLocaleTimeString()}</p>
             <p>เวลาสิ้นสุด : {endTime.toLocaleTimeString()}</p>

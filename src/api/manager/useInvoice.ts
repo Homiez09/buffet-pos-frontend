@@ -1,4 +1,4 @@
-import { UpdateInvoiceStatusRequest } from "@/interfaces/invoice";
+import { BaseInvoiceResponse, UpdateInvoiceStatusRequest } from "@/interfaces/invoice";
 import axiosInstance from "@/lib/axiosInstance";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSession } from "next-auth/react";
@@ -40,7 +40,7 @@ const useUpdateInvoice = () => {
 }
 
 const useGetAllPaidInvoices = () => {
-    return useQuery({
+    return useQuery<BaseInvoiceResponse[]>({
         queryKey: ["menus"],
         queryFn: getAllPaidInvoices,
         staleTime: 5 * 60 * 1000,
@@ -48,7 +48,7 @@ const useGetAllPaidInvoices = () => {
 }
 
 const useGetAllUnpaidInvoices = () => {
-    return useQuery({
+    return useQuery<BaseInvoiceResponse[]>({
         queryKey: ["menus"],
         queryFn: getAllUnpaidInvoices,
         staleTime: 5 * 60 * 1000,
