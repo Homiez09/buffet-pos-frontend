@@ -11,7 +11,6 @@ import { BaseTableResponse } from "@/interfaces/table";
 import { useEffect, useState } from "react";
 import { useAssignTable } from "@/api/manager/useTable";
 import {QRCodeSVG} from 'qrcode.react';
-import { OrderStatus } from "@/interfaces/order";
 
 interface ConfirmTableDialogProps {
   openDialog: boolean;
