@@ -1,11 +1,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axiosInstance";
 import { getSession } from "next-auth/react";
-import { OrderResponse } from '@/interfaces/order';
+import { OrderResponse, OrderStatus } from '@/interfaces/order';
 
-const getOrders = async () => {
+const getOrdersByStatus = async (status: OrderStatus) => {
     const session = await getSession();
-    const { data } = await axiosInstance.get("/manage/orders", {
+    const { data } = await axiosInstance.get(`/manage/orders/status/${status}`, {
         headers: {
             Authorization: `Bearer ${session?.token}`,
         },
@@ -13,10 +13,10 @@ const getOrders = async () => {
     return data;
 }
 
-const useGetOrders = () => {
+const useGetOrdersByStatus = (status: OrderStatus) => {
     return useQuery<OrderResponse[]>({
-        queryKey: ["orders"],
-        queryFn: getOrders,
+        queryKey: ["orders", status],
+        queryFn: () => getOrdersByStatus(status),
         staleTime: 5 * 60 * 1000,
     });
 }
@@ -57,4 +57,4 @@ const useGetOrderByTableID = (tableID:string) => {
 
 
 
-export{useGetOrders ,useUpdateOrder,useGetOrderByTableID}
+export{useGetOrdersByStatus,useUpdateOrder,useGetOrderByTableID}

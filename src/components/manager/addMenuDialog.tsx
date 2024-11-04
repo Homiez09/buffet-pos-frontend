@@ -48,7 +48,7 @@ export function AddMenuDialog({ openDialog, setOpenDialog, refetchMenus }: AddMe
     const addMenuHandler = async () => {
 
         if (!inputMenuName || !selectedCategory || !inputFile) {
-            return;
+            return alert("Please fill all the fields");
         }
 
         const categoryData = categories.find((c) => c.name === selectedCategory);
