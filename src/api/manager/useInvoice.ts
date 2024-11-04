@@ -55,9 +55,9 @@ const useGetAllUnpaidInvoices = () => {
     });
 }
 
-const cancelInvoice = async (cancelInvoice:string) => {
+const cancelInvoice = async (invoice_id:string) => {
     const session = await getSession();
-    const { data } = await axiosInstance.delete(`/manage/invoices/${cancelInvoice}`, {
+    const { data } = await axiosInstance.delete(`/manage/invoices/${invoice_id}`, {
         headers: {
             Authorization: `Bearer ${session?.token}`,
         },
