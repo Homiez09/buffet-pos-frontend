@@ -1,7 +1,6 @@
 'use client';
 
-import { useGetOrder } from "@/api/user/useOrder";
-import LoadingAnimation from "@/components/manager/loadingAnimation";
+import { useGetInvoice } from "@/api/user/useInvoices";
 import ScreenMobile from "@/components/ScreenMobile";
 import OrderedItemsList from "@/components/user/OrderedItemsList";
 import { useCart } from "@/provider/CartProvider";
@@ -11,6 +10,7 @@ import { useRouter } from "next/navigation";
 export default function History() {
     const router = useRouter();
     const { accessCode } = useCart();
+    const { data: invoice, isLoading: isInvoiceLoading } = useGetInvoice(accessCode);
 
     return (
         <ScreenMobile>
@@ -29,7 +29,7 @@ export default function History() {
                 <div className="pl-3 pt-3">
                     <div className="flex flex-row justify-between pt-1 pb-7 w-11/12 mx-auto">
                         <p className="text-xl font-bold "> ยอดชำระเงิน :</p>
-                        <p className=" text-xl font-bold "> 100 บาท</p>
+                        <p className=" text-xl font-bold "> {invoice?.totalPrice} บาท</p>
                     </div>
                 </div>
             </div>
