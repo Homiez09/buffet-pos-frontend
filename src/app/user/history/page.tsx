@@ -1,17 +1,16 @@
 'use client';
 
+import { useGetOrder } from "@/api/user/useOrder";
+import LoadingAnimation from "@/components/manager/loadingAnimation";
 import ScreenMobile from "@/components/ScreenMobile";
 import OrderedItemsList from "@/components/user/OrderedItemsList";
 import { useCart } from "@/provider/CartProvider";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-
 
 export default function History() {
     const router = useRouter();
     const { accessCode } = useCart();
-    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     return (
         <ScreenMobile>

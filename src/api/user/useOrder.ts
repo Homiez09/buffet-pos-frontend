@@ -11,8 +11,8 @@ const addOrders = async (newOrders: OrderRequest, accessCode: string) => {
     return data;
 }
 
-const getOrder = async (accessCode: string) => {
-    const { data } = await axiosInstance.get("lor api jaw", {
+const getOrderHistory = async (accessCode: string) => {
+    const { data } = await axiosInstance.get("/customer/orders/history", {
         headers: {
             AccessCode: accessCode,
         },
@@ -29,7 +29,7 @@ const useAddOrders = (newOrders: OrderRequest, accessCode: string) => {
 const useGetOrder = (accessCode: string) => {
     return useQuery({
         queryKey: ["orders", accessCode],
-        queryFn: ()=> getOrder(accessCode),
+        queryFn: ()=> getOrderHistory(accessCode),
     });
 }
 

@@ -25,12 +25,7 @@ export default function Cart() {
 
     const onSubmit = async () => {
         const payload: OrderRequest = {
-            order_items: [
-                {
-                    menu_id: "string",
-                    quantity: 0
-                }
-            ]
+            order_items: cart
         }
         console.log(payload.order_items[1]);
 
