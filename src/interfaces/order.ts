@@ -9,7 +9,7 @@ export interface OrderResponse {
     id: string,
     tableId: string,
     orderItem: OrderItemResponse[],
-    status: string,
+    status: OrderStatus,
     createAt: Date,
     updateAt: Date
 }
@@ -22,4 +22,9 @@ export interface OrderItemRequest {
 export interface OrderRequest {
     table_id: string;
     order_item: OrderItemRequest[];
+}
+
+export enum OrderStatus {
+    Preparing = "preparing",
+    Served = "served",
 }

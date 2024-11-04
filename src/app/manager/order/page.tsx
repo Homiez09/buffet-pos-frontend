@@ -7,15 +7,15 @@ import Image from "next/image";
 import { DiVim } from "react-icons/di";
 import { ConfirmDialog } from "@/components/manager/confirmDialog";
 import LoadingAnimation from "@/components/manager/loadingAnimation";
-import { OrderResponse } from "@/interfaces/order";
+import { OrderResponse, OrderStatus } from "@/interfaces/order";
 import OrderCard from "@/components/manager/orderCard";
-import { useGetOrders ,useDeliverOrder} from "@/api/manager/useOrder";
+import { useGetOrdersByStatus ,useDeliverOrder} from "@/api/manager/useOrder";
 
 export default function OrderPage() {
   const toaster = useToastHandler();
   const [openDialog, setOpenDialog] = useState(false);
   const [currentOrderId, setCurrentOrderId] = useState<string | null>(null); // State to hold the current order ID
-  const {data: orders =[], isLoading: loadingOrders, isError,refetch: refetchOrders } = useGetOrders();
+  const {data: preparingOrders =[], isLoading: loadingPreparingOrders,refetch: refetchPreparingOrders } = useGetOrdersByStatus(OrderStatus.Preparing);
   const deliverOrder = useDeliverOrder();
   
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -26,7 +26,7 @@ export default function OrderPage() {
     return () => clearInterval(interval);
   }, []);
 
-  if (loadingOrders) {
+  if (loadingPreparingOrders) {
     return <LoadingAnimation/>
   }
 
@@ -58,8 +58,8 @@ export default function OrderPage() {
         </div>
       </div>
       <div>
-        {Array.isArray(orders) && orders.length > 0 ? (
-          orders.map((order: OrderResponse) => (
+        {Array.isArray(preparingOrders) && preparingOrders.length > 0 ? (
+          preparingOrders.map((order: OrderResponse) => (
             <div key={order.id} className="flex flex-col items-center gap-3">
               <div className="flex flex-row items-center w-full mt-10">
                 <div className="w-full font-bold px-2">
@@ -95,7 +95,7 @@ export default function OrderPage() {
       <ConfirmDialog openDialog={openDialog} setOpenDialog={setOpenDialog} title="ยืนยันการจัดส่งอาหาร?" description="แน่ใจหรือไม่ว่าต้องการจัดส่งอาหาร" callback={async () =>{ 
             await deliverOrder.mutateAsync(); // Use the current order ID
             toaster("ส่งออเดอร์สำเร็จ", "คุณทำการส่งออเดอร์สำเร็จ");
-            refetchOrders();          
+            refetchPreparingOrders();          
         }} />
     </div>
   );
