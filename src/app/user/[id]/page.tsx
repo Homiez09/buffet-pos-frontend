@@ -10,6 +10,8 @@ import LoadingAnimation from "@/components/manager/loadingAnimation";
 import { useCart } from "@/provider/CartProvider";
 import { useGetCategories } from "@/api/user/useCategory";
 import { BaseCategoryResponse } from "@/interfaces/category";
+import { useGetTable } from "@/api/user/useTable";
+import { BaseTableResponse } from "@/interfaces/table";
 
 type Props = {
   params: { id: string }
@@ -20,13 +22,14 @@ export default function Home({ params }: Props) {
   const { setAccessCode } = useCart();
   const { data: menus, isLoading: isMenuLoading } = useGetMenus(params.id);
   const { data: categories, isLoading: isLoadingCategories } = useGetCategories(params.id) as {data: BaseCategoryResponse[], isLoading: boolean};
-
+  const { data: table, isLoading: isLoadingTable } = useGetTable(params.id) as {data: BaseTableResponse, isLoading: boolean};
+  
   useEffect(() => {
     setAccessCode(params.id);
     console.log(menus)
   }, [menus]);
 
-  if (isMenuLoading) return <LoadingAnimation />;
+  if (isMenuLoading || isLoadingCategories || isLoadingTable) return <LoadingAnimation />;
   if (!menus) return <p>ไม่พบเมนู</p>;
 
   const filteredMenuList = menus.filter((item) => {
@@ -49,7 +52,7 @@ export default function Home({ params }: Props) {
         <HeaderTabs categories={categories} search={search} setSearch={setSearch} />
         <div className="flex flex-col gap-2 px-3 pt-16 pb-24">
           <div className="flex flex-row justify-between w-full">
-            <p className=" w-1/3 font-bold text-lg pl-1"> โต๊ะที่ : 21 </p>
+            <p className=" w-1/3 font-bold text-lg pl-1"> โต๊ะที่ : {table.tableName} </p>
             <p className=" w-2/3 font-bold text-lg pl-12 text-end"> เวลาในการทาน : 54 นาที </p>
           </div>
           <p className="text-primary text-xl text-right pr-1"> 20:18 น. </p>
