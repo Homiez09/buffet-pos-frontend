@@ -2,6 +2,7 @@
 
 import ScreenMobile from "@/components/ScreenMobile";
 import OrderedItemsList from "@/components/user/OrderedItemsList";
+import { useCart } from "@/provider/CartProvider";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -9,6 +10,7 @@ import { useState } from "react";
 
 export default function History() {
     const router = useRouter();
+    const { accessCode } = useCart();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     return (
@@ -22,7 +24,7 @@ export default function History() {
                     </div>
                 </div>
                 <OrderedItemsList />
-                <button onClick={() => router.replace('/user')} className="bg-primary text-white font-bold text-lg py-3 px-4 mt-5 rounded-lg w-11/12 pb-3 shadow-lg self-center">
+                <button onClick={() => router.replace(`/user/${accessCode}`)} className="bg-primary text-white font-bold text-lg py-3 px-4 mt-5 rounded-lg w-11/12 pb-3 shadow-lg self-center">
                     สั่งอาหารเพิ่ม
                 </button>
                 <div className="pl-3 pt-3">
