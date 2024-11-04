@@ -18,8 +18,8 @@ export default function TableCard({ table, refetchUnpaidInvoices }: { table: Bas
   const cancelInvoice = useCancelInvoice();
 
 
-  const paymentHandler = async (tableID: string) => {
-    refetchUnpaidInvoices();
+  const paymentHandler = async () => {
+    
   };
 
   const cancelHandler = async (tableID: string) => {
@@ -63,7 +63,7 @@ export default function TableCard({ table, refetchUnpaidInvoices }: { table: Bas
         <div className="flex flex-row gap-2">
           <div
             className="btn btn-success text-whereWhite"
-            onClick={() => paymentHandler(table.id)}
+            onClick={() => paymentHandler()}
           >
             Make Payment
           </div>

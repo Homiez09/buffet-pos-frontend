@@ -19,7 +19,7 @@ export default function AllPaymentPage() {
   const filteredTables = getTables.filter(table =>
     unpaidInvoices.some(invoice => invoice.tableId === table.id)
   );
-  console.log(filteredTables)
+  
   if (loadingUnpaidInvoices || loadingAvailableTables) {
     return <LoadingAnimation />;
   }

@@ -1,6 +1,15 @@
 "use client";
 
+import { useGetAllUnpaidInvoices, useUpdateInvoice } from "@/api/manager/useInvoice";
+import { useGetMenus } from "@/api/manager/useMenu";
+import { useGetOrdersByStatus } from "@/api/manager/useOrder";
+import { useGetTableById } from "@/api/manager/useTable";
+import DateTimeDisplay from "@/components/manager/clock";
 import { ConfirmDialog } from "@/components/manager/confirmDialog";
+import LoadingAnimation from "@/components/manager/loadingAnimation";
+import { UpdateInvoiceStatusRequest } from "@/interfaces/invoice";
+import { BaseMenuResponse } from "@/interfaces/menu";
+import { OrderItemResponse, OrderStatus } from "@/interfaces/order";
 import useToastHandler from "@/lib/toastHanlder";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -13,40 +22,82 @@ interface PaymentDetailPageProps {
   };
 }
 
+interface HistoryDetailPageProps {
+  params: {
+    id: string;
+  };
+}
+
+interface OrderItemWithMenu extends OrderItemResponse {
+  menu: BaseMenuResponse;
+}
+
 export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
 
   const { id } = params;
   const [ openDialog, setOpenDialog ] = useState(false);
   const router = useRouter();
   const toaster = useToastHandler();
+  const updataInvoice = useUpdateInvoice();
+  const [selectedInvoice, setSelectedInvoice] = useState<UpdateInvoiceStatusRequest  | null>(null);
 
+
+  const {data:unpaidInvoices =[], isLoading: loadingUnpaidInvoices } = useGetAllUnpaidInvoices();
+  const invoiceCurrent = unpaidInvoices?.find((invoice) => invoice.tableId === id);
+
+  const { data: servedOrders, isLoading: loadingServedOrders } = useGetOrdersByStatus(OrderStatus.Served);
+  const { data: menus, isLoading: loadingMenus } = useGetMenus();
+
+  const orderData = servedOrders?.find((order) => order.id === id);
+  const { data: table, isLoading: loadingTable } = useGetTableById(orderData?.tableId!);
+
+  if (loadingServedOrders || loadingMenus || loadingTable) {
+    return <LoadingAnimation />;
+  }
   
+  const orderItemsWithMenu: OrderItemWithMenu[] = orderData?.orderItem.map((item) => {
+    const menu = menus?.find((menu) => menu.id === item.menuID);
+    return { ...item, menu: menu! };
+  })!;
+
+  const totalCount = orderItemsWithMenu.length;
+
+  const confirmHandler = async () => {
+    const invoice : UpdateInvoiceStatusRequest = {
+      invoice_id : invoiceCurrent?.id || ""
+    }
+    if (invoice) {
+      setSelectedInvoice(invoice);
+      setOpenDialog(true); // Open the dialog after setting selected invoice
+    }
+  };
+
+  function formatDate(dateString: string | Date): string {
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+    const formattedTime = date.toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+    return `${formattedDate} ${formattedTime}`;
+  }
 
   return (
     <div className="w-full flex flex-col gap-10">
       <div className="flex flex-row justify-between">
-        <label className="input input-bordered flex items-center gap-2 rounded-xl">
-          <input type="text" className="grow" placeholder="Search" />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            className="h-4 w-4 opacity-70"
-          >
-            <path
-              fillRule="evenodd"
-              d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </label>
         <div className="font-bold text-xl items-center flex px-5 rounded-lg border-2 border-primary">
-          25 September 2024, 18:02:55
+          <DateTimeDisplay/>
         </div>
       </div>
       <div className="flex flex-row justify-between h-fit items-center">
         <div>
-          <span className="font-bold">Order ID:</span> {id}
+          <span className="font-bold">Invoice ID:</span> {invoiceCurrent?.id}
         </div>
         <div className="flex flex-row gap-5">
           <div className="flex flex-row items-center gap-2">
@@ -55,7 +106,7 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
             </div>
             <p>21</p>
           </div>
-          <div className="flex flex-row items-center">Time : 21:00</div>
+          <div className="flex flex-row items-center">Time :{table?.entryAt ? formatDate(table.entryAt.toDateString()) : "No date"}</div>
         </div>
       </div>
       <div className="collapse bg-primary w-full">
@@ -66,11 +117,11 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
         </div>
         <div className="collapse-content bg-wherePrimary">
           {
-            Array(10).fill(0).map((_, i) => {
+            orderItemsWithMenu.map((oim, i) => {
                 return (
                     <div key={i} className="grid grid-cols-2 w-full border-b-2 py-5 text-center">
-                      <div className="font-bold items-center">carry plus egg</div>
-                      <div>x1</div>
+                      <div className="font-bold items-center">{oim.menu.name}</div>
+                      <div>{oim.quantity}</div>
                     </div>
                 );
             })
@@ -79,10 +130,10 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
       </div>
       <div className="flex flex-row justify-between">
             <div>
-                <div><span className="font-bold">people:</span> 5</div>
-                <div><span className="font-bold">total cost:</span> 2000 baht</div>
+                <div><span className="font-bold">people:</span> {invoiceCurrent?.peopleAmount}</div>
+                <div><span className="font-bold">total cost:</span>{invoiceCurrent?.totalPrice} baht</div>
             </div>
-            <div><span className="font-bold">total order:</span> 23 items</div>
+            <div><span className="font-bold">total order:</span> {totalCount}</div>
         </div>
         <div className="flex flex-row gap-4 justify-between">
             <div className="w-full flex flex-row gap-4">
@@ -91,7 +142,10 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
               )}>
                   Back to All Payments
               </div>
-              <div className="btn btn-success w-5/12" onClick={() => setOpenDialog(true)}>
+              <div className="btn btn-success w-5/12" onClick={() => {
+                confirmHandler();
+                setOpenDialog(true);
+              }}>
                   Confirm Payment
               </div>
             </div>
@@ -104,9 +158,15 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
           description="แน่ใจหรือไม่ว่าต้องการยืนยันการชำระเงิน"
           openDialog={openDialog}
           setOpenDialog={setOpenDialog}
-          callback={() => {
-            router.push("/manager/all-payment");
-            toaster("ลูกค้าชำระเงินสำเร็จ", "ข้อมูลออเดอร์จะถูกจัดเก็บในประวัติออเดอร์");
+          callback={async () => {    
+            if (selectedInvoice) { // Check if selectedInvoice is not null
+              await updataInvoice.mutateAsync(selectedInvoice);
+              toaster("ลูกค้าชำระเงินสำเร็จ", "ข้อมูลออเดอร์จะถูกจัดเก็บในประวัติออเดอร์");
+              router.push("/manager/all-payment");
+            } else {
+              // Handle the case where selectedInvoice is null if necessary
+              console.error("Selected invoice is null");
+            }
           }}
         />
     </div>
