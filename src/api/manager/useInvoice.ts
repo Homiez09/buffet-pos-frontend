@@ -41,7 +41,7 @@ const useUpdateInvoice = () => {
 
 const useGetAllPaidInvoices = () => {
     return useQuery<BaseInvoiceResponse[]>({
-        queryKey: ["menus"],
+        queryKey: ["paidInvoices"],
         queryFn: getAllPaidInvoices,
         staleTime: 5 * 60 * 1000,
     });
@@ -49,7 +49,7 @@ const useGetAllPaidInvoices = () => {
 
 const useGetAllUnpaidInvoices = () => {
     return useQuery<BaseInvoiceResponse[]>({
-        queryKey: ["menus"],
+        queryKey: ["unpaidInvoices"],
         queryFn: getAllUnpaidInvoices,
         staleTime: 5 * 60 * 1000,
     });

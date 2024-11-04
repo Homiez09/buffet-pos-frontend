@@ -9,7 +9,7 @@ import { ConfirmDialog } from "@/components/manager/confirmDialog";
 import LoadingAnimation from "@/components/manager/loadingAnimation";
 import { UpdateInvoiceStatusRequest } from "@/interfaces/invoice";
 import { BaseMenuResponse } from "@/interfaces/menu";
-import { OrderItemResponse, OrderStatus } from "@/interfaces/order";
+import { OrderItemResponse, OrderResponse,OrderStatus } from "@/interfaces/order";
 import useToastHandler from "@/lib/toastHanlder";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -17,12 +17,6 @@ import { MdTableBar } from "react-icons/md";
 import { PiPrinterFill } from "react-icons/pi";
 
 interface PaymentDetailPageProps {
-  params: {
-    id: string;
-  };
-}
-
-interface HistoryDetailPageProps {
   params: {
     id: string;
   };
@@ -41,26 +35,23 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
   const updataInvoice = useUpdateInvoice();
   const [selectedInvoice, setSelectedInvoice] = useState<UpdateInvoiceStatusRequest  | null>(null);
 
-
-  const {data:unpaidInvoices =[], isLoading: loadingUnpaidInvoices } = useGetAllUnpaidInvoices();
+  const {data:unpaidInvoices, isLoading: loadingUnpaidInvoices } = useGetAllUnpaidInvoices();
   const invoiceCurrent = unpaidInvoices?.find((invoice) => invoice.tableId === id);
 
   const { data: servedOrders, isLoading: loadingServedOrders } = useGetOrdersByStatus(OrderStatus.Served);
   const { data: menus, isLoading: loadingMenus } = useGetMenus();
 
-  const orderData = servedOrders?.find((order) => order.id === id);
-  const { data: table, isLoading: loadingTable } = useGetTableById(orderData?.tableId!);
-
-  if (loadingServedOrders || loadingMenus || loadingTable) {
+  const orderData = servedOrders?.find((order) => order.tableId === id);
+  const { data: table, isLoading: loadingTable } = useGetTableById(id);
+  
+  if (loadingUnpaidInvoices || loadingServedOrders || loadingMenus || loadingTable ) {
     return <LoadingAnimation />;
   }
-  
+
   const orderItemsWithMenu: OrderItemWithMenu[] = orderData?.orderItem.map((item) => {
     const menu = menus?.find((menu) => menu.id === item.menuID);
     return { ...item, menu: menu! };
   })!;
-
-  const totalCount = orderItemsWithMenu.length;
 
   const confirmHandler = async () => {
     const invoice : UpdateInvoiceStatusRequest = {
@@ -72,8 +63,7 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
     }
   };
 
-  function formatDate(dateString: string | Date): string {
-    const date = new Date(dateString);
+  function formatDate(date: Date): string {
     const formattedDate = date.toLocaleDateString("en-GB", {
       day: "numeric",
       month: "long",
@@ -104,9 +94,9 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
             <div className="flex flex-row items-center">
               <MdTableBar className="mx-2 w-6 h-6" />:
             </div>
-            <p>21</p>
+            <p>{table?.tableName}</p>
           </div>
-          <div className="flex flex-row items-center">Time :{table?.entryAt ? formatDate(table.entryAt.toDateString()) : "No date"}</div>
+          <div className="flex flex-row items-center">Time :{table?.entryAt ? formatDate(new Date(table.entryAt)) : "No date"}</div>
         </div>
       </div>
       <div className="collapse bg-primary w-full">
@@ -133,7 +123,7 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
                 <div><span className="font-bold">people:</span> {invoiceCurrent?.peopleAmount}</div>
                 <div><span className="font-bold">total cost:</span>{invoiceCurrent?.totalPrice} baht</div>
             </div>
-            <div><span className="font-bold">total order:</span> {totalCount}</div>
+            <div><span className="font-bold">total order:</span> {orderData?.orderItem.length}</div>
         </div>
         <div className="flex flex-row gap-4 justify-between">
             <div className="w-full flex flex-row gap-4">
