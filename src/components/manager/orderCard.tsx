@@ -10,8 +10,8 @@ import { useGetCategoryById } from '@/api/manager/useCategory';
 
 
 
-export default function rderCard({ order }: {order: OrderItemResponse}) {
-    const { data: menu , isLoading: loadingMenus } = useGetMenuByID(order.menuId);
+export default function OrderCard({ orderItem }: {orderItem: OrderItemResponse}) {
+    const { data: menu , isLoading: loadingMenus } = useGetMenuByID(orderItem.menuID);
     const { data: category, isLoading: loadingCategory } = menu?.categoryId 
         ? useGetCategoryById(menu.categoryId) 
         : { data: null, isLoading: false };

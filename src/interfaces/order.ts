@@ -10,8 +10,8 @@ export interface OrderResponse {
     tableId: string,
     orderItem: OrderItemResponse[],
     status: OrderStatus,
-    createAt: Date,
-    updateAt: Date
+    createdAt: Date,
+    updatedAt: Date
 }
 
 export interface OrderItemRequest {

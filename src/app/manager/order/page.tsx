@@ -1,31 +1,33 @@
 "use client";
 
 import useToastHandler from "@/lib/toastHanlder";
-import MenuCard from "@/components/manager/menuCard";
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import { DiVim } from "react-icons/di";
 import { ConfirmDialog } from "@/components/manager/confirmDialog";
 import LoadingAnimation from "@/components/manager/loadingAnimation";
 import { OrderResponse, OrderStatus, UpdateOrderRequest } from "@/interfaces/order";
 import OrderCard from "@/components/manager/orderCard";
 import { useGetOrdersByStatus ,useUpdateOrder} from "@/api/manager/useOrder";
-import { string } from "zod";
+import { useGetTableById, useGetTables } from "@/api/manager/useTable";
 
 export default function OrderPage() {
   const toaster = useToastHandler();
   const [openDialog, setOpenDialog] = useState(false);
-  const [currentOrderId, setCurrentOrderId] = useState<UpdateOrderRequest | null>(null); // State to hold the current order ID
+  const [searchTerm, setSearchTerm] = useState("");
+  const { data: tables, isLoading: loadingTables, refetch: refetchTables } = useGetTables();
   const {data: preparingOrders =[], isLoading: loadingPreparingOrders,refetch: refetchPreparingOrders } = useGetOrdersByStatus(OrderStatus.Preparing);
   const updateOrder = useUpdateOrder();
 
-  if (loadingPreparingOrders) {
+  if (loadingPreparingOrders || loadingTables) {
     return <LoadingAnimation/>
   }
 
+  const filteredPreparingOrders = preparingOrders.filter((order) =>
+    tables?.find((table) => table.id === order.tableId)?.tableName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const updateOrderHandler = (orderID :string) => {
     const orderData: UpdateOrderRequest = {
-      status: "served", // หรือสถานะที่คุณต้องการอัปเดต
+      status: OrderStatus.Served, // หรือสถานะที่คุณต้องการอัปเดต
       table_id: orderID // ใช้ tableId ของ order ที่ถูกเลือก
     };
     updateOrder.mutateAsync(orderData)
@@ -37,7 +39,10 @@ export default function OrderPage() {
     <div className="w-full flex flex-col gap-10">
       <div className="flex flex-row justify-between">
         <label className="input input-bordered flex items-center gap-2 rounded-xl">
-          <input type="text" className="grow" placeholder="Search" />
+          <input type="text" className="grow" placeholder="Search" 
+            value={searchTerm} 
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
@@ -56,13 +61,13 @@ export default function OrderPage() {
         </div>
       </div>
       <div>
-        {Array.isArray(preparingOrders) && preparingOrders.length > 0 ? (
-          preparingOrders.map((order: OrderResponse) => (
+        {Array.isArray(filteredPreparingOrders) && filteredPreparingOrders.length > 0 ? (
+          filteredPreparingOrders.map((order: OrderResponse) => (
             <div key={order.id} className="flex flex-col items-center gap-3">
               <div className="flex flex-row items-center w-full mt-10">
                 <div className="w-full font-bold px-2">
                   <div>Table NO: {order.tableId}</div>
-                  <div>Order Since: {order.createAt.toString()}</div>
+                  <div>Order Since: {order.createdAt.toString()}</div>
                 </div>
                 <div
                   className="btn btn-success text-white font-bold text-lg"
@@ -80,7 +85,7 @@ export default function OrderPage() {
               >
                 <div className="flex flex-row gap-1" style={{ width: "max-content" }}>
                   {order.orderItem?.map((item) => (
-                    <OrderCard key={item.id} order={item} />
+                    <OrderCard key={item.id} orderItem={item} />
                   ))}
                 </div>
               </div>
