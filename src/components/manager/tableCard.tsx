@@ -3,15 +3,29 @@
 import { BaseTableResponse } from "@/interfaces/table";
 import { useRouter } from "next/navigation";
 import { useState,useEffect } from "react";
+import useToastHandler from "@/lib/toastHanlder";
+import { ConfirmDialog } from "./confirmDialog";
+import { useCancelInvoice, useGetAllUnpaidInvoices } from "@/api/manager/useInvoice";
+import { BaseInvoiceResponse } from "@/interfaces/invoice";
 
 export default function TableCard({ table, refetchUnpaidInvoices }: { table: BaseTableResponse, refetchUnpaidInvoices: () => void }) {
   const router = useRouter();
-  const [openDialog, setOpenDialog] = useState(false); 
+  const toaster = useToastHandler();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedInvoice, setSelectedInvoice] = useState<BaseInvoiceResponse  | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+  const {data:unpaidInvoices =[], isLoading: loadingUnpaidInvoices } = useGetAllUnpaidInvoices();
+  const cancelInvoice = useCancelInvoice();
 
-  const paymentHandler = (tableID: string) => {
-    router.push(`/manager/all-payment/${tableID}`);
+
+  const paymentHandler = async (tableID: string) => {
     refetchUnpaidInvoices();
+  };
+
+  const cancelHandler = async (tableID: string) => {
+    const invoice = unpaidInvoices.find(invoice => invoice.tableId === tableID);
+    await setSelectedInvoice(invoice);
+    
   };
 
   const endTime = new Date(table.entryAt);
@@ -53,7 +67,10 @@ export default function TableCard({ table, refetchUnpaidInvoices }: { table: Bas
           </div>
           <div
             className="btn btn-error text-whereWhite"
-            onClick={() => setOpenDialog(true)}
+            onClick={() => {
+              cancelHandler(table.id);
+              setOpenDialog(true);
+            }}
           >
             Cancel
           </div>
@@ -62,6 +79,17 @@ export default function TableCard({ table, refetchUnpaidInvoices }: { table: Bas
       <div className="font-bold text-xl">
         Time remaining: <span className="text-primary">{timeRemaining}</span> mins
       </div>
+      <ConfirmDialog
+        title="ยกเลิกโต๊ะ?"
+        description="แน่ใจหรือไม่ว่าต้องการยกเลิกโต๊ะนี้"
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        callback={async () => {
+            await cancelInvoice.mutateAsync(selectedInvoice?.id); // Pass the specific invoice ID here
+            toaster("ยกเลิกโต๊ะสำเร็จ", "โต๊ะได้ถูกยกเลิกเรียบร้อยแล้ว");
+            refetchUnpaidInvoices();
+        }}
+      />
     </div>
   );
 }

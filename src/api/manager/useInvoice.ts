@@ -55,4 +55,20 @@ const useGetAllUnpaidInvoices = () => {
     });
 }
 
-export { useUpdateInvoice, useGetAllPaidInvoices, useGetAllUnpaidInvoices }
+const cancelInvoice = async () => {
+    const session = await getSession();
+    const { data } = await axiosInstance.delete(`/manage/invoices/cancel`, {
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
+    return data;
+}
+
+const useCancelInvoice = () => {
+    return useMutation({
+        mutationFn: cancelInvoice,
+    });
+}
+
+export { useUpdateInvoice, useGetAllPaidInvoices, useGetAllUnpaidInvoices ,useCancelInvoice}

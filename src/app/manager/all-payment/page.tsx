@@ -12,8 +12,6 @@ import { useGetAllUnpaidInvoices } from "@/api/manager/useInvoice";
 
 
 export default function AllPaymentPage() {
-  const [openDialog, setOpenDialog] = useState(false);
-  const toaster = useToastHandler();
   const {data:unpaidInvoices =[], isLoading: loadingUnpaidInvoices,refetch: refetchUnpaidInvoices } = useGetAllUnpaidInvoices();
   const {data:getTables =[], isLoading: loadingAvailableTables,refetch: refetchAvailableTables } = useGetTables();
 
@@ -21,7 +19,7 @@ export default function AllPaymentPage() {
     unpaidInvoices.some(invoice => invoice.tableId === table.id)
   );
 
-  if (loadingUnpaidInvoices) {
+  if (loadingUnpaidInvoices || loadingAvailableTables) {
     return <LoadingAnimation />;
   }
   return (
@@ -71,15 +69,6 @@ export default function AllPaymentPage() {
           )
         }
       </div>
-      <ConfirmDialog
-        title="ยกเลิกโต๊ะ?"
-        description="แน่ใจหรือไม่ว่าต้องการยกเลิกโต๊ะนี้"
-        openDialog={openDialog}
-        setOpenDialog={setOpenDialog}
-        callback={() => {
-          toaster("ยกเลิกโต๊ะสำเร็จ", "โต๊ะได้ถูกยกเลิกเรียบร้อยแล้ว");
-        }}
-      />
     </div>
   );
 
