@@ -6,13 +6,13 @@ import { useState,useEffect } from "react";
 import useToastHandler from "@/lib/toastHanlder";
 import { ConfirmDialog } from "./confirmDialog";
 import { useCancelInvoice, useGetAllUnpaidInvoices } from "@/api/manager/useInvoice";
-import { BaseInvoiceResponse } from "@/interfaces/invoice";
+import { CancelInvoice } from "@/interfaces/invoice";
 
 export default function TableCard({ table, refetchUnpaidInvoices }: { table: BaseTableResponse, refetchUnpaidInvoices: () => void }) {
   const router = useRouter();
   const toaster = useToastHandler();
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedInvoice, setSelectedInvoice] = useState<BaseInvoiceResponse  | null>(null);
+  const [selectedInvoice, setSelectedInvoice] = useState<string  | null>(null);
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const {data:unpaidInvoices =[], isLoading: loadingUnpaidInvoices } = useGetAllUnpaidInvoices();
   const cancelInvoice = useCancelInvoice();
@@ -24,8 +24,10 @@ export default function TableCard({ table, refetchUnpaidInvoices }: { table: Bas
 
   const cancelHandler = async (tableID: string) => {
     const invoice = unpaidInvoices.find(invoice => invoice.tableId === tableID);
-    await setSelectedInvoice(invoice);
-    
+    if (invoice) {
+      setSelectedInvoice(invoice.id);
+      setOpenDialog(true); // Open the dialog after setting selected invoice
+    }
   };
 
   const endTime = new Date(table.entryAt);
@@ -85,9 +87,11 @@ export default function TableCard({ table, refetchUnpaidInvoices }: { table: Bas
         openDialog={openDialog}
         setOpenDialog={setOpenDialog}
         callback={async () => {
-            await cancelInvoice.mutateAsync(selectedInvoice?.id); // Pass the specific invoice ID here
+          if (selectedInvoice) { // Check if selectedInvoice is not null
+            await cancelInvoice.mutateAsync(selectedInvoice); // Pass the specific invoice ID here
             toaster("ยกเลิกโต๊ะสำเร็จ", "โต๊ะได้ถูกยกเลิกเรียบร้อยแล้ว");
             refetchUnpaidInvoices();
+          } 
         }}
       />
     </div>

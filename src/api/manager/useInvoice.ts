@@ -1,4 +1,4 @@
-import { BaseInvoiceResponse, UpdateInvoiceStatusRequest } from "@/interfaces/invoice";
+import { BaseInvoiceResponse, CancelInvoice, UpdateInvoiceStatusRequest } from "@/interfaces/invoice";
 import axiosInstance from "@/lib/axiosInstance";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSession } from "next-auth/react";
@@ -55,9 +55,9 @@ const useGetAllUnpaidInvoices = () => {
     });
 }
 
-const cancelInvoice = async () => {
+const cancelInvoice = async (cancelInvoice:string) => {
     const session = await getSession();
-    const { data } = await axiosInstance.delete(`/manage/invoices/cancel`, {
+    const { data } = await axiosInstance.delete(`/manage/invoices/${cancelInvoice}`, {
         headers: {
             Authorization: `Bearer ${session?.token}`,
         },
