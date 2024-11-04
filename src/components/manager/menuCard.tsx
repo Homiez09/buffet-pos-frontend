@@ -59,7 +59,7 @@ export default function MenuCard({ menu, refetchMenus }: {menu: BaseMenuResponse
                     <button className="btn btn-error text-whereWhite w-full lg:w-fit" onClick={() => deleteHandler()}>delete</button>
                 </div>
             </div>
-            <EditMenuDialog openDialog={openDialog} setOpenDialog={setOpenDialog} />
+            <EditMenuDialog openDialog={openDialog} setOpenDialog={setOpenDialog} menu={menu} refetchMenus={refetchMenus} />
             <ConfirmDialog openDialog={openDeleteDialog} setOpenDialog={setOpenDeleteDialog} title="แน่ใจหรือไม่ว่าต้องการลบ?" description="แน่ใจหรือไม่ว่าต้องการลบ “แซลมอนย่าง”" callback={async () => {
                 await deleteMenu.mutateAsync(menu.id);
                 toaster("ลบเมนูสำเร็จ", "คุณทำการลบเมนูสำเร็จ")

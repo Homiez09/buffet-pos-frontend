@@ -33,7 +33,7 @@ export default function HeaderTabs() {
 
     return (
         <>
-            <div className="fixed flex flex-col gap-6 bg-white px-3 py-3 max-lg:max-w-full max-w-lg w-full">
+            <div className="fixed flex flex-col gap-6 bg-white px-3 py-3 max-w-lg w-full">
                 <div className="flex overflow-x-scroll scrollbar-hide">
                     <div className="flex flex-row gap-3">
                         <div className="cursor-pointer">
@@ -62,7 +62,7 @@ export default function HeaderTabs() {
                 </div>
             </div>
 
-            <div ref={ref} className={`z-[999] fixed bottom-0 flex flex-col gap-2 ${isShow ? 'block' : 'hidden'} w-full shadow-xl bg-white rounded-xl`}>
+            <div ref={ref} className={`z-[999] fixed bottom-0 flex flex-col gap-2 ${isShow ? 'block' : 'hidden'} shadow-xl bg-white rounded-xl max-w-lg w-full`}>
                 <div className="flex flex-row justify-between m-3">
                     <p className="text-lg font-bold">เลือกหมวดหมู่</p>
                     <Icon icon="ic:round-close" fontSize={30} color='#ff8d13ef' onClick={() => setIsShow(false)} />
