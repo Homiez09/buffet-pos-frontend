@@ -33,7 +33,7 @@ export default function HeaderTabs() {
 
     return (
         <>
-            <div className="fixed flex flex-col gap-6 bg-white px-3 py-3 max-lg:max-w-full max-w-lg w-full">
+            <div className="fixed flex flex-col gap-6 bg-white px-3 py-3 max-w-lg w-full">
                 <div className="flex overflow-x-scroll scrollbar-hide">
                     <div className="flex flex-row gap-3">
                         <div className="cursor-pointer">
