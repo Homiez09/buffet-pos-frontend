@@ -33,7 +33,7 @@ export default function HeaderTabs() {
 
     return (
         <>
-            <div className="fixed flex flex-col gap-5 border py-3 bg-white pl-3 max-lg:max-w-full max-w-lg">
+            <div className="fixed flex flex-col gap-6 bg-white px-3 py-3 max-lg:max-w-full max-w-lg w-full">
                 <div className="flex overflow-x-scroll scrollbar-hide">
                     <div className="flex flex-row gap-3">
                         <div className="cursor-pointer">
@@ -44,7 +44,7 @@ export default function HeaderTabs() {
                         </div>
                     </div>
 
-                    <div className="flex flex-row w-full items-center whitespace-nowrap gap-5 pl-5">
+                    <div className="flex flex-row w-full items-center whitespace-nowrap gap-6 pl-5">
                         {items.map((item) => (
                             <div
                                 className={`relative border-transparent pb-1 ${selected === item.id ? 'border-b-0' : null}`}
@@ -62,9 +62,13 @@ export default function HeaderTabs() {
                 </div>
             </div>
 
-            <div ref={ref} className={`fixed bottom-0 flex flex-col gap-2 ${isShow ? 'block' : 'hidden'} w-full shadow-xl bg-white rounded-xl`}>
+            <div ref={ref} className={`z-[999] fixed bottom-0 flex flex-col gap-2 ${isShow ? 'block' : 'hidden'} w-full shadow-xl bg-white rounded-xl`}>
+                <div className="flex flex-row justify-between m-3">
+                    <p className="text-lg font-bold">เลือกหมวดหมู่</p>
+                    <Icon icon="ic:round-close" fontSize={30} color='#ff8d13ef' onClick={() => setIsShow(false)} />
+                </div>
                 {items.map((item) => (
-                    <div key={item.id} className="flex flex-row items-center justify-center gap-2 py-3 px-2 border-b-2">
+                    <div key={item.id} className="flex flex-row items-center justify-center gap-2 py-3 px-2 border-b-[1px]">
                         <p className=" text-2xl">{item.name}</p>
                     </div>
                 ))}
