@@ -1,6 +1,5 @@
 import { BaseMenuResponse } from "@/interfaces/menu";
 import MenuCard from "./MenuCard";
-import { useCart } from "@/provider/CartProvider";
 
 const menuList:BaseMenuResponse[] = [
     {
@@ -46,8 +45,6 @@ const menuList:BaseMenuResponse[] = [
 ];
 
 export default function MenuList({ title } : { title: string }) {
-    const { cart } = useCart();
-    
     return(
         <div className="flex flex-col gap-2" >
             <p className=" text-xl font-bold pl-1 pb-3">{title}</p>

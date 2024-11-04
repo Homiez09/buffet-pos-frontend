@@ -25,8 +25,9 @@ export default function Home() {
             <p className=" w-2/3 font-bold text-lg pl-12 text-end"> เวลาในการทาน : 54 นาที </p>
           </div>
           <p className="text-primary text-xl text-right pr-1"> 20:18 น. </p>
-          <div className=" m-2">
+          <div className="m-2 space-y-10">
             <MenuList title="หมู" />
+            <MenuList title="เนื้อ" />
           </div>
         </div>
         <OrderButton />
