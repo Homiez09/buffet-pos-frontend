@@ -12,8 +12,6 @@ import { useGetCategories } from "@/api/user/useCategory";
 import { BaseCategoryResponse } from "@/interfaces/category";
 import { useGetTable } from "@/api/user/useTable";
 import { BaseTableResponse } from "@/interfaces/table";
-import { OrderResponse } from "@/interfaces/order";
-import { useGetOrder } from "@/api/user/useOrder";
 import { entryTime, remainingTime } from "@/lib/formatDate";
 
 type Props = {

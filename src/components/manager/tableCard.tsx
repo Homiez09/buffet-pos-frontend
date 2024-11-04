@@ -6,7 +6,6 @@ import { useState,useEffect } from "react";
 import useToastHandler from "@/lib/toastHanlder";
 import { ConfirmDialog } from "./confirmDialog";
 import { useCancelInvoice, useGetAllUnpaidInvoices } from "@/api/manager/useInvoice";
-import { CancelInvoice } from "@/interfaces/invoice";
 
 export default function TableCard({ table, refetchUnpaidInvoices }: { table: BaseTableResponse, refetchUnpaidInvoices: () => void }) {
   const router = useRouter();

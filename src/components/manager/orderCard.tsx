@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { OrderItemResponse } from '@/interfaces/order';
 import Image from "next/image";
 import LoadingAnimation from './loadingAnimation';
-import { useGetMenuByID, useGetMenus } from '@/api/manager/useMenu';
+import { useGetMenuByID } from '@/api/manager/useMenu';
 import { useGetCategoryById } from '@/api/manager/useCategory';
 
 export default function OrderCard({ orderItem }: {orderItem: OrderItemResponse}) {

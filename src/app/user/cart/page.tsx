@@ -1,12 +1,9 @@
 'use client';
 
 import { useGetMenus } from "@/api/user/useMenu";
-import { useAddOrders } from "@/api/user/useOrder";
-import { ConfirmDialog } from "@/components/manager/confirmDialog";
 import ScreenMobile from "@/components/ScreenMobile";
 import { ConfirmOrderDialog } from "@/components/user/ConfirmOrderDialog";
 import MenuCardList from "@/components/user/MenuCardList";
-import { BaseMenuResponse } from "@/interfaces/menu";
 import { OrderRequest } from "@/interfaces/order";
 import axiosInstance from "@/lib/axiosInstance";
 import { useCart } from "@/provider/CartProvider";

@@ -5,14 +5,9 @@ import { useAddMenu } from "@/api/manager/useMenu";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
 import { AddMenuRequest } from "@/interfaces/menu";
-import { UseMutationResult } from "@tanstack/react-query";
 import { DefaultDropdown } from "./defaultDropdown";
 import { useEffect, useState } from "react";
 import LoadingAnimation from "./loadingAnimation";

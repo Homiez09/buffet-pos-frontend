@@ -3,10 +3,7 @@ import {
   Dialog,
   DialogContent,
   DialogFooter,
-  DialogHeader,
-  DialogTitle,
 } from "@/components/ui/dialog";
-import { BaseCategoryResponse } from "@/interfaces/category";
 import {
   BaseMenuResponse,
   EditMenuRequest,

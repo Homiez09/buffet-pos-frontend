@@ -5,7 +5,7 @@ import {
     DialogContent,
     DialogClose,
 } from "@/components/ui/dialog";
-import { useAddCategory, useGetCategories } from '@/api/manager/useCategory';
+import { useAddCategory } from '@/api/manager/useCategory';
 
 type AddCategoryProps = {
     openDialog: boolean;
