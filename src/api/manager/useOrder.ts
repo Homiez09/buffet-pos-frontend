@@ -21,9 +21,9 @@ const useGetOrders = () => {
     });
 }
 
-const deliverOrder = async () => {
+const updateOrder = async () => {
     const session = await getSession();
-    const { data } = await axiosInstance.put("await p jaw", {
+    const { data } = await axiosInstance.put("/manage/orders/status", {
         headers: {
             Authorization: `Bearer ${session?.token}`,
         },
@@ -31,10 +31,30 @@ const deliverOrder = async () => {
     return data;
 }
 
-const useDeliverOrder = () => {
+const useUpdateOrder = () => {
     return useMutation({
-        mutationFn: deliverOrder
+        mutationFn: updateOrder
     });
 }
 
-export{useGetOrders ,useDeliverOrder}
+const getOrderByTableID = async (tableID :string ) => {
+    const session = await getSession();
+    const { data } = await axiosInstance.put(`/manage/orders/table/${tableID}`,{
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
+    return data;
+}
+
+const useGetOrderByTableID = (tableID:string) => {
+    return useQuery<OrderResponse>({
+        queryKey: ["orders", tableID],
+        queryFn: () => getOrderByTableID(tableID),
+        staleTime: 5 * 60 * 1000,
+    });
+}
+
+
+
+export{useGetOrders ,useUpdateOrder,useGetOrderByTableID}

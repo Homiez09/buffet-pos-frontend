@@ -9,14 +9,14 @@ import { ConfirmDialog } from "@/components/manager/confirmDialog";
 import LoadingAnimation from "@/components/manager/loadingAnimation";
 import { OrderResponse } from "@/interfaces/order";
 import OrderCard from "@/components/manager/orderCard";
-import { useGetOrders ,useDeliverOrder} from "@/api/manager/useOrder";
+import { useGetOrders ,useUpdateOrder} from "@/api/manager/useOrder";
 import { string } from "zod";
 
 export default function OrderPage() {
   const toaster = useToastHandler();
   const [openDialog, setOpenDialog] = useState(false);
   const {data: orders =[], isLoading: loadingOrders, refetch: refetchOrders } = useGetOrders();
-  const deliverOrder = useDeliverOrder();
+  const deliverOrder = useUpdateOrder();
 
   if (loadingOrders) {
     return <LoadingAnimation/>
