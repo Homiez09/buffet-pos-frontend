@@ -70,7 +70,7 @@ export default function Cart() {
                 </div>
                 <div className="flex flex-row justify-between pt-5 border-b-2 pb-3 w-11/12 mx-auto">
                     <p className="text-xl font-bold "> จำนวนรายการอาหาร :</p>
-                    <p className=" text-xl font-bold "> {cart.length} รายการ</p>
+                    <p className=" text-xl font-bold "> {cart.reduce((acc, item) => acc + item.quantity, 0)} รายการ</p>
                 </div>
                 <div className="flex pt-6 justify-center pb-6">
                     <button onClick={() => setIsOpen((o) => !o)} className="bg-primary text-white font-bold text-lg py-3 px-4 rounded-lg w-11/12 pb-4 shadow-lg">
