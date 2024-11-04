@@ -8,6 +8,13 @@ import MenuList from "@/components/user/MenuList";
 import { useGetMenus } from "@/api/user/useMenu";
 import LoadingAnimation from "@/components/manager/loadingAnimation";
 import { useCart } from "@/provider/CartProvider";
+import { useGetCategories } from "@/api/user/useCategory";
+import { BaseCategoryResponse } from "@/interfaces/category";
+import { useGetTable } from "@/api/user/useTable";
+import { BaseTableResponse } from "@/interfaces/table";
+import { OrderResponse } from "@/interfaces/order";
+import { useGetOrder } from "@/api/user/useOrder";
+import { entryTime, remainingTime } from "@/lib/formatDate";
 
 type Props = {
   params: { id: string }
@@ -16,32 +23,46 @@ type Props = {
 export default function Home({ params }: Props) {
   const [search, setSearch] = useState<string>('');
   const { setAccessCode } = useCart();
-  //http://localhost:3000/user/0192f7c3-e7ef-74c1-9db6-e27b09a37df7
   const { data: menus, isLoading: isMenuLoading } = useGetMenus(params.id);
-
+  const { data: categories, isLoading: isLoadingCategories } = useGetCategories(params.id) as {data: BaseCategoryResponse[], isLoading: boolean};
+  const { data: table, isLoading: isLoadingTable } = useGetTable(params.id) as {data: BaseTableResponse, isLoading: boolean};
+  
   useEffect(() => {
     setAccessCode(params.id);
-  }, []);
+    console.log(menus)
+  }, [menus]);
 
-  if (isMenuLoading) return <LoadingAnimation />;
+  if (isMenuLoading || isLoadingCategories || isLoadingTable) return <LoadingAnimation />;
   if (!menus) return <p>ไม่พบเมนู</p>;
 
   const filteredMenuList = menus.filter((item) => {
     return item.name.toLowerCase().includes(search.toLowerCase());
   });
   
+  const menusByCategory = filteredMenuList.reduce((acc, item) => {
+    const category = categories.find(cat => cat.id === item.categoryId);
+    const categoryName = category ? category.name : "Unknown";
+
+    if (!acc[categoryName]) {
+        acc[categoryName] = [];
+    }
+    acc[categoryName].push(item);
+    return acc;
+  }, {} as { [key: string]: any[] });
+
   return (
       <ScreenMobile>
-        <HeaderTabs search={search} setSearch={setSearch} />
+        <HeaderTabs categories={categories} search={search} setSearch={setSearch} />
         <div className="flex flex-col gap-2 px-3 pt-16 pb-24">
           <div className="flex flex-row justify-between w-full">
-            <p className=" w-1/3 font-bold text-lg pl-1"> โต๊ะที่ : 21 </p>
-            <p className=" w-2/3 font-bold text-lg pl-12 text-end"> เวลาในการทาน : 54 นาที </p>
+            <p className=" w-1/3 font-bold text-lg pl-1"> โต๊ะที่ : {table.tableName} </p>
+            <p className=" w-2/3 font-bold text-lg text-end"> เวลาในการทาน : {remainingTime(table.entryAt.toString())} นาที </p>
           </div>
-          <p className="text-primary text-xl text-right pr-1"> 20:18 น. </p>
+          <p className="text-primary text-xl text-right pr-1"> {entryTime(table.entryAt.toString())} น. </p>
           <div className="m-2 space-y-10">
-            <MenuList title="หมู" menuList={filteredMenuList} />
-            <MenuList title="เนื้อ" menuList={filteredMenuList} />
+            {Object.keys(menusByCategory).map((key) => {
+              return <MenuList key={key} title={key} menuList={menusByCategory[key]} />;
+            })}
           </div>
         </div>
         <OrderButton />

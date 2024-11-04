@@ -10,6 +10,7 @@ import OrderCard from "@/components/manager/orderCard";
 import { useGetOrdersByStatus ,useUpdateOrder} from "@/api/manager/useOrder";
 import { useGetTableById, useGetTables } from "@/api/manager/useTable";
 import { BaseTableResponse } from "@/interfaces/table";
+import DateTimeDisplay from "@/components/manager/clock";
 
 interface PreparingOrderWithTable extends OrderResponse {
   table: BaseTableResponse;
@@ -94,7 +95,7 @@ export default function OrderPage() {
           </svg>
         </label>
         <div className="font-bold text-xl items-center flex px-5 rounded-lg border-2 border-primary">
-            25 September 2024, 18:02:55
+            <DateTimeDisplay/>
         </div>
       </div>
       <div>
