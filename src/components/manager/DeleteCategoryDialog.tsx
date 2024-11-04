@@ -6,22 +6,27 @@ import {
     DialogContent,
 } from "@/components/ui/dialog";
 import { DefaultDropdown } from "./defaultDropdown";
-import { useGetCategories } from '@/api/manager/useCategory';
+import { useDeleteCategory, useGetCategories } from '@/api/manager/useCategory';
 
 type DeleteCategoryProps = {
     openDialog: boolean;
     setOpenDialog: (open: boolean) => void;
 };
 
-
-
 const DeleteCategoryDialog = ({ openDialog, setOpenDialog }: DeleteCategoryProps) => {
-    const { data: categories } = useGetCategories();
+    const { data: categories, refetch: refetchCategory } = useGetCategories();
     const [selectedCategory, setSelectedCategory] = useState<string>("");
-    
-    const handleSave = () => {
-        // Delete logic here
+    const deleteCategory = useDeleteCategory();
+
+    const handleSave = async () => {
+        const category = categories?.find((c) => c.name === selectedCategory);
+        if (!category) {
+            return;
+        }
+
+        await deleteCategory.mutateAsync(category.id);
         setOpenDialog(false);
+        refetchCategory();
     };
     return (
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
