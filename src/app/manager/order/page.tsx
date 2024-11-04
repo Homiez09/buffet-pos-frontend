@@ -89,7 +89,7 @@ export default function OrderPage() {
               <div className="flex flex-row items-center w-full mt-10">
                 <div className="w-full font-bold px-2">
                   <div>Table NO: {order.tableId}</div>
-                  <div>Order Since: {format(order.createdAt)}</div>
+                  <div>Order Since: {formatDate(order.createdAt)}</div>
                 </div>
                 <div
                   className="btn btn-success text-white font-bold text-lg"
