@@ -18,6 +18,7 @@ type DeleteCategoryProps = {
 const DeleteCategoryDialog = ({ openDialog, setOpenDialog }: DeleteCategoryProps) => {
     const { data: categories } = useGetCategories();
     const [selectedCategory, setSelectedCategory] = useState<string>("");
+    
     const handleSave = () => {
         // Delete logic here
         setOpenDialog(false);

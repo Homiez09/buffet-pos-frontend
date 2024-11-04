@@ -26,12 +26,12 @@ export default function OrderPage() {
     tables?.find((table) => table.id === order.tableId)?.tableName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const updateOrderHandler = (orderID :string) => {
+  const updateOrderHandler = async (orderID :string) => {
     const orderData: UpdateOrderRequest = {
       status: OrderStatus.Served, // หรือสถานะที่คุณต้องการอัปเดต
       table_id: orderID // ใช้ tableId ของ order ที่ถูกเลือก
     };
-    updateOrder.mutateAsync(orderData)
+    await updateOrder.mutateAsync(orderData)
     setOpenDialog(true);
     refetchPreparingOrders();
   };
@@ -119,6 +119,7 @@ export default function OrderPage() {
         }
       </div>
       <ConfirmDialog openDialog={openDialog} setOpenDialog={setOpenDialog} title="ยืนยันการจัดส่งอาหาร?" description="แน่ใจหรือไม่ว่าต้องการจัดส่งอาหาร" callback={() =>{ 
+
             toaster("ส่งออเดอร์สำเร็จ", "คุณทำการส่งออเดอร์สำเร็จ");
             setOpenDialog(false);      
         }} />
