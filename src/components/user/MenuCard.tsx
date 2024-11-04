@@ -22,7 +22,7 @@ export default function MenuCard({ menu }: { menu: BaseMenuResponse }) {
     }
 
     return (
-        <div className="flex border bg-white rounded-2xl">
+        <div className={`flex border bg-white rounded-2xl ${menu.isAvailable ? "" : "opacity-80 "}`}>
             <div className="flex w-2/5 p-3 h-[125px] relative">
                 <div className="relative w-full h-full overflow-hidden rounded-xl">
                     <Image className=''
@@ -36,7 +36,7 @@ export default function MenuCard({ menu }: { menu: BaseMenuResponse }) {
                 <div className="flex flex-col h-full" >
                     <p className="text-xl  mt-[-6px] m-[-18px]">{menu.name}</p>
                 </div>
-                <div className="flex justify-end h-full items-end pr-3 pb-1" >
+                {!menu.isAvailable ? <p className='flex text-xl text-error justify-end w-full pr-2'>- สินค้าหมด -</p> : <div className="flex justify-end h-full items-end pr-3 pb-1" >
                     <div className="flex flex-row items-center gap-3" >
                         <div className='hover:cursor-pointer' onClick={decrement}>
                             <Icon icon="simple-line-icons:minus" fontSize={40} color={amount != 0 ? "#FF8B13" : "#bfbfbf"} />
@@ -46,7 +46,7 @@ export default function MenuCard({ menu }: { menu: BaseMenuResponse }) {
                             <Icon icon="simple-line-icons:plus" fontSize={40} color='#FF8B13' />
                         </div>
                     </div>
-                </div>
+                </div>}
             </div>
         </div>
     );

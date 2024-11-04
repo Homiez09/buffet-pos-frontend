@@ -25,16 +25,18 @@ export default function OrderCard({ orderItem }: {orderItem: OrderItemResponse})
                     alt={menu?.name || "Menu Image"}
                     width={100}
                     height={100}
-                    className="object-cover w-full h-full"
+                    className="object-cover w-full h-full rounded-lg"
                 />
             </figure>
             <div className="w-full flex flex-col">
-                <h2 className="card-title">{menu?.name}</h2>
+                <h2 className="card-title text-md">Menu: {menu?.name}</h2>
                 <div>
-                    <h2 className="card-title">{loadingCategory ? "Loading..." : category?.name || "No Category"}</h2>
                 </div>
             </div>
-            <div className="w-full justify-end flex flex-row">x{orderItem.quantity}</div>
+            <div className="w-full justify-between flex flex-row">
+                <h2 className="card-title text-sm">Type: {loadingCategory ? "Loading..." : category?.name || "No Category"}</h2>
+                <div>x{orderItem.quantity}</div>
+            </div>
         </div>
     );
 }

@@ -12,6 +12,15 @@ const getMenus = async (accessCode: string) => {
     return data;
 }
 
+const getMenuById = async (accessCode: string, id: string) => {
+    const { data } = await axiosInstance.get(`/customer/menus/${id}`, {
+        headers: {
+            AccessCode: accessCode,
+        },
+    });
+    return data;
+}
+
 const useGetMenus = (accessCode: string) => {
     return useQuery<BaseMenuResponse[]>({
         queryKey: ["menus"],
@@ -19,4 +28,13 @@ const useGetMenus = (accessCode: string) => {
         staleTime: 5 * 60 * 1000,
     });
 }
-export { useGetMenus };
+
+const useGetMenuById = (accessCode: string, id: string) => {
+    return useQuery<BaseMenuResponse>({
+        queryKey: ["menus", id],
+        queryFn: () => getMenuById(accessCode, id),
+        staleTime: 5 * 60 * 1000,
+    });
+}
+
+export { useGetMenus, useGetMenuById };
