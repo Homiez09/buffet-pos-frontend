@@ -2,11 +2,12 @@
 
 import { BaseTableResponse } from "@/interfaces/table";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 export default function TableCard({ table, refetchAvailableTables }: { table: BaseTableResponse, refetchAvailableTables: () => void }) {
   const router = useRouter();
   const [openDialog, setOpenDialog] = useState(false); 
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
 
   const paymentHandler = (tableID: string) => {
     router.push(`/manager/all-payment/${tableID}`);
@@ -15,6 +16,23 @@ export default function TableCard({ table, refetchAvailableTables }: { table: Ba
 
   const endTime = new Date(table.entryAt);
   endTime.setHours(endTime.getHours() + 2);
+
+  useEffect(() => {
+    // Calculate remaining time in minutes
+    const calculateTimeRemaining = () => {
+      const now = new Date();
+      const remainingTimeInMs = endTime.getTime() - now.getTime();
+      const remainingTimeInMinutes = Math.max(Math.floor(remainingTimeInMs / 60000), 0);
+      setTimeRemaining(remainingTimeInMinutes);
+    };
+
+    calculateTimeRemaining(); // Calculate initially
+
+    // Optionally, update remaining time every minute
+    const timer = setInterval(calculateTimeRemaining, 60000);
+
+    return () => clearInterval(timer); // Clean up interval on component unmount
+  }, [endTime]);
 
   return (
     <div className="flex flex-row justify-between shadow-md p-5 rounded-lg">
