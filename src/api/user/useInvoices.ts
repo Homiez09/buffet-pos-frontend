@@ -1,5 +1,4 @@
 import { BaseInvoiceResponse } from "@/interfaces/invoice";
-import { BaseMenuResponse } from "@/interfaces/menu";
 import axiosInstance from "@/lib/axiosInstance";
 import { useQuery } from "@tanstack/react-query";
 
@@ -14,7 +13,7 @@ const getInvoice = async (accessCode: string) => {
 
 const useGetInvoice = (accessCode: string) => {
     return useQuery<BaseInvoiceResponse>({
-        queryKey: ["menus"],
+        queryKey: ["invoice"],
         queryFn: () => getInvoice(accessCode),
         staleTime: 5 * 60 * 1000,
     });
