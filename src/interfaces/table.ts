@@ -7,7 +7,7 @@ export interface BaseTableResponse {
   id: string;
   tableName: string;
   isAvailable: boolean;
-  qrCode?: string;
+  qrcode?: string;
   accessCode?: string;
   createdAt: Date;
   updatedAt: Date;

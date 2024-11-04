@@ -80,7 +80,7 @@ export default function OrderPage() {
               >
                 <div className="flex flex-row gap-1" style={{ width: "max-content" }}>
                   {order.orderItem?.map((item) => (
-                    <OrderCard key={item.id} order={item} />
+                    <OrderCard key={item.id} orderItem={item} />
                   ))}
                 </div>
               </div>

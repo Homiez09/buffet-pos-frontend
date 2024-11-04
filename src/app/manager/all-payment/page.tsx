@@ -4,48 +4,22 @@ import { ConfirmDialog } from "@/components/manager/confirmDialog";
 import useToastHandler from "@/lib/toastHanlder";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useGetTables} from "@/api/manager/useTable";
+import { BaseTableResponse} from "@/interfaces/table";
+import TableCard from "@/components/manager/tableCard";
+import LoadingAnimation from "@/components/manager/loadingAnimation";
+
 
 export default function AllPaymentPage() {
-  const router = useRouter();
   const [openDialog, setOpenDialog] = useState(false);
   const toaster = useToastHandler();
+  const {data:availableTables =[], isLoading: loadingAvailableTables,refetch: refetchAvailableTables } = useGetTables();
 
-  const paymentHandler = (tableID: string) => {
-    router.push(`/manager/all-payment/${tableID}`);
-  };
+  
 
-  const TableCard = ({ tableID }: { tableID: string }) => {
-    return (
-      <div className="flex flex-row justify-between shadow-md p-5 rounded-lg">
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-col gap-1">
-            <div className="font-bold text-xl">Table NO: 21</div>
-            <div className="text-grey">
-              <p>เวลาเริ่มต้น : 21:00 น.</p>
-              <p>เวลาสิ้นสุด : 24.00 น.</p>
-            </div>
-          </div>
-          <div className="flex flex-row gap-2">
-            <div
-              className="btn btn-success text-whereWhite"
-              onClick={() => paymentHandler(tableID)}
-            >
-              make payment
-            </div>
-            <div
-              className="btn btn-error text-whereWhite"
-              onClick={() => setOpenDialog(true)}
-            >
-              cancel
-            </div>
-          </div>
-        </div>
-        <div className="font-bold text-xl">
-          time remaining: <span className="text-primary">112</span> mins
-        </div>
-      </div>
-    );
-  };
+  if(loadingAvailableTables){
+    return <LoadingAnimation/>
+  }
 
   return (
     <div className="w-full flex flex-col gap-10">
@@ -69,12 +43,14 @@ export default function AllPaymentPage() {
           25 September 2024, 18:02:55
         </div>
       </div>
-      <div className="gap-5 flex flex-col">
-        {Array(10)
-          .fill(0)
-          .map((_, i) => {
-            return <TableCard key={i} tableID={`${i}`} />;
-          })}
+      <div className="collapse-content bg-wherePrimary">
+        {Array.isArray(availableTables) && availableTables.length > 0 ? (
+          availableTables.map((table: BaseTableResponse) => (
+            <TableCard key={table.id} table={table} refetchAvailableTables={refetchAvailableTables}/>
+          ))
+        ) : (
+          <p>No orders now</p>
+        )}
       </div>
       <ConfirmDialog
         title="ยกเลิกโต๊ะ?"
@@ -87,4 +63,6 @@ export default function AllPaymentPage() {
       />
     </div>
   );
+
+  
 }
