@@ -68,11 +68,16 @@ export default function HeaderTabs() {
                     <Icon icon="ic:round-close" fontSize={30} color='#ff8d13ef' onClick={() => setIsShow(false)} />
                 </div>
                 {items.map((item) => (
-                    <div key={item.id} className="flex flex-row items-center justify-center gap-2 py-3 px-2 border-b-[1px]">
-                        <p className=" text-2xl">{item.name}</p>
-                    </div>
+                    <div
+                    key={item.id}
+                    className={`flex flex-row justify-start gap-2 py-4 px-7 border-b-[1px] ${selected == item.id ? 'text-primary' : 'text-whereBlack'} } `}
+                    onClick={() => setSelected(item.id)}> 
+                    <p className="text-xl">{item.name}</p>
+                </div>
+                
                 ))}
             </div>
+            {isShow && <div className="fixed inset-0 bg-black opacity-50 z-50" onClick={() => setIsShow(false)}></div>}
         </>
     );
 }

@@ -33,4 +33,4 @@ const useGetOrder = (accessCode: string) => {
     });
 }
 
-export{ useAddOrders, useGetOrder }
+export{ useAddOrders, useGetOrder };
