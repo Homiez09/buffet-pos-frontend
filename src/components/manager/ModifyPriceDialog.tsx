@@ -10,20 +10,34 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { useEditPricePerPerson } from '@/api/manager/useSetting';
 
 type ModifyPriceDialogProps = {
     openDialog: boolean;
     setOpenDialog: (open: boolean) => void;
     price: number;
     onSave: (newPrice: number) => void;
+    refetchPricePerPerson: () => void;
 };
 
 
-const ModifyPriceDialog = ({ openDialog, setOpenDialog, price, onSave }: ModifyPriceDialogProps) => {
+const ModifyPriceDialog = ({ openDialog, setOpenDialog, price, onSave, refetchPricePerPerson }: ModifyPriceDialogProps) => {
 
+    const editPricePerPerson = useEditPricePerPerson();
     const [inputPrice, setInputPrice] = useState(price);
 
-    const handleSave = () => {
+    const handleSave = async () => {
+
+        await editPricePerPerson.mutateAsync({ price: inputPrice }, {
+            onSuccess: () => {
+                refetchPricePerPerson();
+                alert("แก้ไขราคาสำเร็จ");
+            },
+            onError: (error) => {
+                alert("แก้ไขราคาไม่สำเร็จ");
+            },
+        });
+
         onSave(inputPrice);
         setOpenDialog(false);
     };

@@ -71,16 +71,7 @@ export default function LoginPage() {
           Login
         </button>
       </form>
-      <div>
-        No account?{" "}
-        <span
-          className="text-primary hover:cursor-pointer"
-          onClick={() => router.push("/auth/register")}
-        >
-          register
-        </span>{" "}
-        here
-      </div>
+      
     </div>
   );
 }
