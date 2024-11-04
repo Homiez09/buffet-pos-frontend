@@ -52,26 +52,26 @@ export default function HistoryPage() {
     if (!table) {
       return <div className="text-red-500">Table information unavailable.</div>;
     }
-
+  
     function formatDate(dateString: string | Date): string {
       const date = new Date(dateString);
-
+  
       const formattedDate = date.toLocaleDateString("en-GB", {
         day: "numeric",
         month: "long",
         year: "numeric",
       });
-
+  
       const formattedTime = date.toLocaleTimeString("en-GB", {
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
         hour12: false,
       });
-
+  
       return `${formattedDate} ${formattedTime}`;
     }
-
+  
     return (
       <div className="flex flex-row justify-between shadow-md p-5 rounded-lg">
         <div className="flex flex-col gap-5">
@@ -80,17 +80,22 @@ export default function HistoryPage() {
             <div className="text-grey">{formatDate(sot.createdAt)}</div>
           </div>
           <div className="flex flex-row gap-2">
-            <div
-              className="btn btn-info text-whereWhite"
-              onClick={() => router.push(`/manager/history/${sot.id}`)}
-            >
-              View Order
-            </div>
+            {sot.id ? (
+              <div
+                className="btn btn-info text-whereWhite"
+                onClick={() => router.push(`/manager/history/${sot.id}`)}
+              >
+                View Order
+              </div>
+            ) : (
+              <div className="text-red-500">Order ID unavailable.</div>
+            )}
           </div>
         </div>
       </div>
     );
   };
+  
 
   return (
     <div className="w-full flex flex-col gap-10">
