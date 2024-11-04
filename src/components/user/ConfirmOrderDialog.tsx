@@ -30,7 +30,7 @@ export function ConfirmOrderDialog({ openDialog, setOpenDialog, title, descripti
         </AlertDialogHeader>
         <AlertDialogFooter className="flex flex-row justify-end gap-2 items-center">
           <AlertDialogCancel className="bg-grey text-white">ยกเลิก</AlertDialogCancel>
-          <AlertDialogAction onClick={callback} className="bg-success text-white">ยืนยัน</AlertDialogAction>
+          <AlertDialogAction onClick={callback} className="bg-success text-white self-end">ยืนยัน</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
