@@ -12,6 +12,9 @@ import { useGetCategories } from "@/api/user/useCategory";
 import { BaseCategoryResponse } from "@/interfaces/category";
 import { useGetTable } from "@/api/user/useTable";
 import { BaseTableResponse } from "@/interfaces/table";
+import { OrderResponse } from "@/interfaces/order";
+import { useGetOrder } from "@/api/user/useOrder";
+import { entryTime, remainingTime } from "@/lib/formatDate";
 
 type Props = {
   params: { id: string }
@@ -53,9 +56,9 @@ export default function Home({ params }: Props) {
         <div className="flex flex-col gap-2 px-3 pt-16 pb-24">
           <div className="flex flex-row justify-between w-full">
             <p className=" w-1/3 font-bold text-lg pl-1"> โต๊ะที่ : {table.tableName} </p>
-            <p className=" w-2/3 font-bold text-lg pl-12 text-end"> เวลาในการทาน : 54 นาที </p>
+            <p className=" w-2/3 font-bold text-lg text-end"> เวลาในการทาน : {remainingTime(table.entryAt.toString())} นาที </p>
           </div>
-          <p className="text-primary text-xl text-right pr-1"> 20:18 น. </p>
+          <p className="text-primary text-xl text-right pr-1"> {entryTime(table.entryAt.toString())} น. </p>
           <div className="m-2 space-y-10">
             {Object.keys(menusByCategory).map((key) => {
               return <MenuList key={key} title={key} menuList={menusByCategory[key]} />;
