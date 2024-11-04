@@ -34,7 +34,7 @@ export default function MenuPage() {
     };
 
     // Filter menus based on the search term
-    const filteredMenus = menus.filter((menu) => 
+    const filteredMenus = menus.filter((menu) =>
         menu.name && menu.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
