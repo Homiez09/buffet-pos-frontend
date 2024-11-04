@@ -9,7 +9,7 @@ export default async function AuthLayout({ children }: Readonly<{ children: Reac
 
     if (session && session.user) {
         if (session?.user?.role == Role.EMPLOYEE || session?.user?.role == Role.MANAGER) {
-            redirect("/manager/all-payment");
+            redirect("/manager/menu");
         }
     }
 

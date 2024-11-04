@@ -17,6 +17,8 @@ import ModifyPriceDialog from "@/components/manager/ModifyPriceDialog";
 import { useAddTable, useGetTables } from "@/api/manager/useTable";
 import { useForm } from "react-hook-form";
 import LoadingAnimation from "@/components/manager/loadingAnimation";
+import { useRouter } from "next/navigation";
+import { useGetPricePerPerson } from "@/api/manager/useSetting";
 
 const page = () => {
     const [openModifyPriceDialog, setOpenModifyPriceDialog] = useState(false);
@@ -24,7 +26,10 @@ const page = () => {
     const [ openCreateTableDialog, setOpenCreateTableDialog ] = useState(false);
  
     const { data: tables, isLoading: loadingTables, refetch: refetchTables } = useGetTables();
+    const { data: pricePerPerson, isLoading: loadingPricePerPerson, refetch: refetchPricePerPerson } = useGetPricePerPerson();
+
     const addTable = useAddTable();
+    const router = useRouter();
 
     const {
         register: tableNameForm,
@@ -33,7 +38,7 @@ const page = () => {
         formState: { errors },
       } = useForm();
 
-    if (loadingTables) {
+    if (loadingTables || loadingPricePerPerson) {
         return <LoadingAnimation/>;
     }
 
@@ -94,7 +99,7 @@ const page = () => {
             </div>
             <div className="mt-16">
                 <p className="text-3xl">
-                    ราคาอาหารต่อหัวสุทธิ : {netPricePerPerson} บาท
+                    ราคาอาหารต่อหัวสุทธิ : {Number(pricePerPerson?.value).toFixed(2)} บาท
                 </p>
                 <button className="btn bg-primary text-white text-lg font-base mt-5" onClick={() => setOpenModifyPriceDialog(true)}>
                     แก้ไขราคา
@@ -104,7 +109,16 @@ const page = () => {
                     setOpenDialog={setOpenModifyPriceDialog} 
                     price={netPricePerPerson} 
                     onSave={(newPrice) => setNetPricePerPerson(newPrice)}
+                    refetchPricePerPerson={refetchPricePerPerson}
                 />
+            </div>
+            <div className="mt-16">
+                <p className="text-3xl">
+                    Employee Whitelist
+                </p>
+                <button className="btn bg-primary text-white text-lg font-base mt-5" onClick={() => router.push("/manager/setting/whitelist")}>
+                    เพิ่มรายชื่อพนักงาน
+                </button>
             </div>
         </div>
             );
