@@ -33,8 +33,8 @@ export default function MenuCard({ menu, refetchMenus }: {menu: BaseMenuResponse
     }
 
     return (
-        <div className="card card-compact bg-base-100 shadow-xl">
-            <figure className="h-3/5">
+        <div className="card card-compact bg-base-100 shadow-xl h-[23rem]">
+            <figure className="h-full w-full">
                 <Image
                     src={menu.imageUrl}
                     alt={menu.name}
@@ -44,13 +44,19 @@ export default function MenuCard({ menu, refetchMenus }: {menu: BaseMenuResponse
                     className="object-cover w-full h-full"
                 />
             </figure>
-            <div className="card-body">
+            <div className="card-body flex flex-col justify-between">
                 <h2 className="card-title">{menu.name}</h2>
-                    <p>type: {category?.name}</p>
-                    <p>status: {menu.isAvailable}</p>
+                    <div className="mb-4">
+                        <p>type: {category?.name}</p>
+                        <p>status: {menu.isAvailable? (
+                            <span className="text-success">available</span>
+                        ): (
+                            <span className="text-error">unavailable</span>
+                        )}</p>
+                    </div>
                 <div className="card-actions justify-end">
-                    <button className="btn btn-info text-whereWhite" onClick={() => editHandler()}>edit</button>
-                    <button className="btn btn-error text-whereWhite" onClick={() => deleteHandler()}>delete</button>
+                    <button className="btn btn-info text-whereWhite w-full lg:w-fit" onClick={() => editHandler()}>edit</button>
+                    <button className="btn btn-error text-whereWhite w-full lg:w-fit" onClick={() => deleteHandler()}>delete</button>
                 </div>
             </div>
             <EditMenuDialog openDialog={openDialog} setOpenDialog={setOpenDialog} />

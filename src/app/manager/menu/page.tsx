@@ -10,8 +10,9 @@ import { useState } from "react";
 
 export default function MenuPage() {
 
-    const [ openDialog, setOpenDialog ] = useState(false);
-    const [ openCategoryDialog, setOpenCategoryDialog ] = useState(false);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [openCategoryDialog, setOpenCategoryDialog] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
     const { data: menus = [], isLoading: loadingMenus, refetch: refetchMenus } = useGetMenus();
 
     if (loadingMenus) {
@@ -26,11 +27,22 @@ export default function MenuPage() {
         setOpenDialog(true);
     }
 
+    // Filter menus based on the search term
+    const filteredMenus = menus.filter((menu) =>
+        menu.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="w-full flex flex-col gap-10">
             <div className="flex flex-row justify-between">
                 <label className="input input-bordered flex items-center gap-2 rounded-xl">
-                    <input type="text" className="grow" placeholder="Search" />
+                    <input 
+                        type="text" 
+                        className="grow" 
+                        placeholder="Search" 
+                        value={searchTerm} 
+                        onChange={(e) => setSearchTerm(e.target.value)} 
+                    />
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 16 16"
@@ -49,8 +61,8 @@ export default function MenuPage() {
             </div>
             <div className="grid grid-cols-3 gap-10">
             {
-                Array.isArray(menus) ? (
-                    menus.map((menu: BaseMenuResponse) => (
+                Array.isArray(filteredMenus) && filteredMenus.length > 0 ? (
+                    filteredMenus.map((menu: BaseMenuResponse) => (
                         <MenuCard key={menu.id} menu={menu} refetchMenus={refetchMenus} />
                     ))
                 ) : (

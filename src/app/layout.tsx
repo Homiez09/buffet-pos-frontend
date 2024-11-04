@@ -1,4 +1,3 @@
-"use client";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import QueryClientProvider from "@/provider/QueryClientProvider";
@@ -12,11 +11,12 @@ const notoSan = Noto_Sans_Thai_Looped({
   subsets: ["thai"],
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en" data-theme="ming">
       <body>

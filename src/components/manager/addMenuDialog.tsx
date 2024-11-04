@@ -33,7 +33,13 @@ export function AddMenuDialog({ openDialog, setOpenDialog, refetchMenus }: AddMe
     const addMenu = useAddMenu();
     const { data: categories, isLoading: loadingCategories, refetch: refetchCategories } = useGetCategories();
 
+    useEffect(() => {
+        refetchCategories();
+    }, [openDialog]);
+
     if (loadingCategories) return <LoadingAnimation />;
+
+    
 
     if (!categories) {
         return null;

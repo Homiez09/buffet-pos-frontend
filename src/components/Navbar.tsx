@@ -9,6 +9,7 @@ import { FaHistory } from "react-icons/fa";
 import { LuSettings } from "react-icons/lu";
 import { RxExit } from "react-icons/rx";
 import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 
 const Navbar = () => {
     const router = useRouter();
@@ -43,7 +44,7 @@ const Navbar = () => {
             </div>
             <div className='items-center mt-14 h-9 text-2xl flex hover:text-primary cursor-pointer'>
                 <RxExit />
-                <span className='ml-2' onClick={() => router.push('/manager/setting')}>ออกจากระบบ</span>
+                <span className='ml-2' onClick={() => signOut()}>ออกจากระบบ</span>
             </div>
         </div>
     );

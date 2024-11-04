@@ -5,7 +5,7 @@ import {
     DialogContent,
     DialogClose,
 } from "@/components/ui/dialog";
-import { useAddCategory } from '@/api/manager/useCategory';
+import { useAddCategory, useGetCategories } from '@/api/manager/useCategory';
 
 type AddCategoryProps = {
     openDialog: boolean;
@@ -34,10 +34,10 @@ const AddCategoryDialog = ({ openDialog, setOpenDialog }: AddCategoryProps) => {
     return (
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
             <DialogContent>
-                <div className="py-10 align-middle gap-2 flex items-center">
+                <div className="py-10 align-middle gap-3 flex flex-col w-full">
                     <label className="text-2xl font-bold">เพิ่มประเภท </label>
                     <input
-                        className="rounded border-2 h-12 w-80 p-3"
+                        className="rounded border-2 h-12 p-3 w-full"
                         value={inputCategory}
                         onChange={(e) => setInputCategory((e.target.value))}
                     />

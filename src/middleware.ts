@@ -14,7 +14,7 @@ export const PATH: IPATH[] = [
     },
     {
         pathname: "/user/*whatever",
-        roles: [Role.EMPLOYEE, Role.MANAGER],
+        roles: [],
     },
     {
         pathname: "/auth/*whatever",
@@ -31,8 +31,8 @@ export default withAuth({
       async authorized({ req, token }) {
         const { nextUrl } = req;
 
-        // Bypass authorization for paths that don't require authentication
         if (req.nextUrl.pathname.startsWith('/user') || 
+            req.nextUrl.pathname.startsWith('/auth') || 
             req.nextUrl.pathname.startsWith('/_next/') || 
             req.nextUrl.pathname.startsWith('/api/') || 
             req.nextUrl.pathname.startsWith('/public/') || 
@@ -42,9 +42,6 @@ export default withAuth({
         }
 
         if (!token) {
-          if (/^\/auth\/.*/.test(req.nextUrl.pathname)) {
-            return true;
-          }
           return false;
         }
 
