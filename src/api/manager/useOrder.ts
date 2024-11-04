@@ -23,7 +23,7 @@ const useGetOrdersByStatus = (status: OrderStatus) => {
 
 const deliverOrder = async () => {
     const session = await getSession();
-    const { data } = await axiosInstance.get("await p jaw", {
+    const { data } = await axiosInstance.put("await p jaw", {
         headers: {
             Authorization: `Bearer ${session?.token}`,
         },

@@ -10,6 +10,7 @@ import LoadingAnimation from "@/components/manager/loadingAnimation";
 import { OrderResponse, OrderStatus } from "@/interfaces/order";
 import OrderCard from "@/components/manager/orderCard";
 import { useGetOrdersByStatus ,useDeliverOrder} from "@/api/manager/useOrder";
+import { string } from "zod";
 
 export default function OrderPage() {
   const toaster = useToastHandler();
@@ -17,21 +18,12 @@ export default function OrderPage() {
   const [currentOrderId, setCurrentOrderId] = useState<string | null>(null); // State to hold the current order ID
   const {data: preparingOrders =[], isLoading: loadingPreparingOrders,refetch: refetchPreparingOrders } = useGetOrdersByStatus(OrderStatus.Preparing);
   const deliverOrder = useDeliverOrder();
-  
-  const [currentTime, setCurrentTime] = useState(new Date());
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000); // 1000 ms = 1 second
-    return () => clearInterval(interval);
-  }, []);
 
   if (loadingPreparingOrders) {
     return <LoadingAnimation/>
   }
 
-  const deliverOrderHandler = (orderId: string) => {
-    setCurrentOrderId(orderId)// Set the current order ID when delivering
+  const deliverOrderHandler = (order :OrderResponse) => {
     setOpenDialog(true);
   };
 
@@ -68,7 +60,7 @@ export default function OrderPage() {
                 </div>
                 <div
                   className="btn btn-success text-white font-bold text-lg"
-                  onClick={() => deliverOrderHandler(order.id)}
+                  onClick={() => deliverOrderHandler(order)}
                 >
                   Deliver
                 </div>
@@ -88,14 +80,16 @@ export default function OrderPage() {
               </div>
             </div>
           ))
-        ) : (
-          <p>No orders now</p>
-        )}
+          ) : (
+            <p>No orders now</p>
+          )
+        }
       </div>
       <ConfirmDialog openDialog={openDialog} setOpenDialog={setOpenDialog} title="ยืนยันการจัดส่งอาหาร?" description="แน่ใจหรือไม่ว่าต้องการจัดส่งอาหาร" callback={async () =>{ 
-            await deliverOrder.mutateAsync(); // Use the current order ID
+            await deliverOrder.mutateAsync()
             toaster("ส่งออเดอร์สำเร็จ", "คุณทำการส่งออเดอร์สำเร็จ");
-            refetchPreparingOrders();          
+            refetchPreparingOrders();    
+            setOpenDialog(false);      
         }} />
     </div>
   );

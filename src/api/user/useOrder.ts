@@ -13,4 +13,10 @@ const addOrders = async (newOrders: OrderRequest) => {
     return data;
 }
 
-export{ addOrders }
+const useAddOrder = () => {
+    return useMutation({
+        mutationFn: addOrders,
+    });
+}
+
+export{ useAddOrder }
