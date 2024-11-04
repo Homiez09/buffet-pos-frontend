@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axiosInstance";
 import { AddCategoryRequest, CategoryDetailResponse } from "@/interfaces/category";
 import { getSession } from "next-auth/react";
-import { AddMenuRequest, BaseMenuResponse } from "@/interfaces/menu";
+import { AddMenuRequest, BaseMenuResponse, EditMenuRequest } from "@/interfaces/menu";
 
 const getMenus = async () => {
     const session = await getSession();
@@ -45,11 +45,12 @@ const deleteMenu = async (id: string) => {
     return data;
 }
 
-const editMenu = async (editMenu: BaseMenuResponse) => {
+const editMenu = async (editMenu: EditMenuRequest) => {
     const session = await getSession();
-    const { data } = await axiosInstance.put(`/manage/menus`, {
+    const { data } = await axiosInstance.put(`/manage/menus`, editMenu, {
         headers: {
             Authorization: `Bearer ${session?.token}`,
+            "Content-Type": "multipart/form-data",
         },
     });
     return data;

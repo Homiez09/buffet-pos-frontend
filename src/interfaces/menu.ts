@@ -20,3 +20,17 @@ export interface AddMenuRequest {
 export interface MenuFindByIDRequest {
   id: string; // Required field
 }
+
+export enum MenuStatus {
+  Available = "Available",
+  Unavailable = "Unavailable",
+}
+
+export interface EditMenuRequest {
+  id: string;
+  name?: string;
+  description?: string;
+  categoryId?: string;
+  isAvailable?: boolean;
+  image?: File;
+}

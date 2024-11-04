@@ -17,7 +17,7 @@ import { useEffect, useState } from "react"
  
 interface DefaultDropdownProps {
     list: string[] | undefined,
-    selected?: string | undefined,
+    selected?: string | undefined | null,
     setSelected: (selected: string) => void
 }
 
@@ -27,19 +27,19 @@ export function DefaultDropdown({ list, selected, setSelected }: DefaultDropdown
     return null
   }
 
-  const [position, setPosition] = useState(list[0])
+  const [position, setPosition] = useState(selected ?? list[0])
 
   useEffect(() => {
     setSelected(position)
   }, [position])
- 
+
   return (
     <DropdownMenu>
         <DropdownMenuTrigger asChild className="w-full">
         <Button variant="outline">{position}</Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
-        <DropdownMenuLabel>Tables Name</DropdownMenuLabel>
+        <DropdownMenuLabel>Dropdown</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
           {

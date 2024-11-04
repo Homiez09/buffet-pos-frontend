@@ -2,6 +2,7 @@
 
 import { useGetTables } from '@/api/manager/useTable';
 import { ConfirmTableDialog } from '@/components/manager/confirmTableDialog';
+import LoadingAnimation from '@/components/manager/loadingAnimation';
 import { BaseTableResponse } from '@/interfaces/table';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
@@ -24,12 +25,16 @@ export default function TableReservation() {
     const [isOpenPopup, setIsOpenPopup] = useState<boolean>(false);
     const { data: tables, isLoading: loadingTables, refetch: refetchTables } = useGetTables();
 
+    if (loadingTables) {
+        return <LoadingAnimation />
+    }
+
     return (
         <>
             <div className="flex flex-col select-none">
                 <p className="text-2xl font-bold">Table Reservation</p>
                 <div className="grid grid-cols-3 gap-y-20 mt-8">
-                    {tables && tables.map((table, index) => (
+                    {tables && tables.map((table: BaseTableResponse, index) => (
                         <div 
                             key={index} 
                             onClick={() => table.isAvailable && setSelectedTable(table)} 
