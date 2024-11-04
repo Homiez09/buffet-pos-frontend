@@ -67,7 +67,7 @@ export default function OrderPage() {
               <div className="flex flex-row items-center w-full mt-10">
                 <div className="w-full font-bold px-2">
                   <div>Table NO: {order.tableId}</div>
-                  <div>Order Since: {order.createAt.toString()}</div>
+                  <div>Order Since: {order.createdAt.toString()}</div>
                 </div>
                 <div
                   className="btn btn-success text-white font-bold text-lg"
@@ -85,7 +85,7 @@ export default function OrderPage() {
               >
                 <div className="flex flex-row gap-1" style={{ width: "max-content" }}>
                   {order.orderItem?.map((item) => (
-                    <OrderCard key={item.id} order={item} />
+                    <OrderCard key={item.id} orderItem={item} />
                   ))}
                 </div>
               </div>
