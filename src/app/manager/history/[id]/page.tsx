@@ -1,6 +1,13 @@
 "use client";
 
+import { useGetMenus } from "@/api/manager/useMenu";
+import { useGetOrdersByStatus } from "@/api/manager/useOrder";
+import { useGetTableById } from "@/api/manager/useTable";
+import DateTimeDisplay from "@/components/manager/clock";
 import { ConfirmDialog } from "@/components/manager/confirmDialog";
+import LoadingAnimation from "@/components/manager/loadingAnimation";
+import { BaseMenuResponse } from "@/interfaces/menu";
+import { OrderItemResponse, OrderResponse, OrderStatus } from "@/interfaces/order";
 import useToastHandler from "@/lib/toastHanlder";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -13,12 +20,31 @@ interface HistoryDetailPageProps {
   };
 }
 
+interface OrderItemWithMenu extends OrderItemResponse {
+  menu: BaseMenuResponse;
+}
+
 export default function HistoryDetailPage({ params }: HistoryDetailPageProps) {
 
   const { id } = params;
   const [ openDialog, setOpenDialog ] = useState(false);
   const router = useRouter();
   const toaster = useToastHandler();
+
+  const { data: servedOrders, isLoading: loadingServedOrders } = useGetOrdersByStatus(OrderStatus.Served);
+  const { data: menus, isLoading: loadingMenus } = useGetMenus();
+
+  const orderData = servedOrders?.find((order) => order.id === id);
+  const { data: table, isLoading: loadingTable } = useGetTableById(orderData?.tableId!);
+
+  if (loadingServedOrders || loadingMenus || loadingTable) {
+    return <LoadingAnimation />;
+  }
+  
+  const orderItemsWithMenu: OrderItemWithMenu[] = orderData?.orderItem.map((item) => {
+    const menu = menus?.find((menu) => menu.id === item.menuID);
+    return { ...item, menu: menu! };
+  })!;
 
   return (
     <div className="w-full flex flex-col gap-10">
@@ -39,21 +65,20 @@ export default function HistoryDetailPage({ params }: HistoryDetailPageProps) {
           </svg>
         </label>
         <div className="font-bold text-xl items-center flex px-5 rounded-lg border-2 border-primary">
-          25 September 2024, 18:02:55
+          <DateTimeDisplay/>
         </div>
       </div>
       <div className="flex flex-row justify-between h-fit items-center">
         <div>
-          <span className="font-bold">Order ID:</span> {id}
+          <span className="font-bold">Order ID:</span> {orderData?.id}
         </div>
         <div className="flex flex-row gap-5">
           <div className="flex flex-row items-center gap-2">
             <div className="flex flex-row items-center">
               <MdTableBar className="mx-2 w-6 h-6" />:
             </div>
-            <p>21</p>
+            <p>{table?.tableName}</p>
           </div>
-          <div className="flex flex-row items-center">Time : 21:00</div>
         </div>
       </div>
       <div className="collapse bg-primary w-full">
@@ -64,11 +89,11 @@ export default function HistoryDetailPage({ params }: HistoryDetailPageProps) {
         </div>
         <div className="collapse-content bg-wherePrimary">
           {
-            Array(10).fill(0).map((_, i) => {
+            orderItemsWithMenu.map((oim, i) => {
                 return (
                     <div key={i} className="grid grid-cols-2 w-full border-b-2 py-5 text-center">
-                      <div className="font-bold items-center">carry plus egg</div>
-                      <div>x1</div>
+                      <div className="font-bold items-center">{oim.menu.name}</div>
+                      <div>{oim.quantity}</div>
                     </div>
                 );
             })
@@ -76,11 +101,7 @@ export default function HistoryDetailPage({ params }: HistoryDetailPageProps) {
         </div>
       </div>
       <div className="flex flex-row justify-between">
-            <div>
-                <div><span className="font-bold">people:</span> 5</div>
-                <div><span className="font-bold">total cost:</span> 2000 baht</div>
-            </div>
-            <div><span className="font-bold">total order:</span> 23 items</div>
+        <div><span className="font-bold">total order:</span> {orderData?.orderItem.length} items</div>
         </div>
         <div className="flex flex-row gap-4 justify-between">
             <div className="w-full flex flex-row gap-4">

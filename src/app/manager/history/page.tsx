@@ -1,33 +1,96 @@
-'use client';
+"use client";
 
+import { useGetOrdersByStatus } from "@/api/manager/useOrder";
+import { useGetTables } from "@/api/manager/useTable";
+import DateTimeDisplay from "@/components/manager/clock";
+import { OrderResponse, OrderStatus } from "@/interfaces/order";
+import { BaseTableResponse } from "@/interfaces/table";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+
+interface ServedOrderWithTable extends OrderResponse {
+  table?: BaseTableResponse;
+}
 
 export default function HistoryPage() {
+  const router = useRouter();
 
-    const router = useRouter();
+  const {
+    data: tables = [],
+    isLoading: loadingTables,
+    isError: errorTables,
+  } = useGetTables();
+  const {
+    data: servedOrders = [],
+    isLoading: loadingServedOrders,
+    isError: errorServedOrders,
+  } = useGetOrdersByStatus(OrderStatus.Served);
 
-    const TableCard = ({ tableID }: { tableID: string }) => {
-        return (
-          <div className="flex flex-row justify-between shadow-md p-5 rounded-lg">
-            <div className="flex flex-col gap-5">
-              <div className="flex flex-col gap-1">
-                <div className="font-bold text-xl">Table NO: 21</div>
-                <div className="text-grey">
-                  <p>27 ก.ย. 2024 21.00 น.</p>
-                </div>
-              </div>
-              <div className="flex flex-row gap-2">
-                <div
-                  className="btn btn-info text-whereWhite"
-                  onClick={() => router.push(`/manager/history/${tableID}`)}
-                >
-                  view order
-                </div>
-              </div>
+  const servedOrdersWithTable: ServedOrderWithTable[] = useMemo(
+    () =>
+      servedOrders.map((order) => {
+        const table = tables.find((table) => table.id === order.tableId);
+        return { ...order, table }; // table may be undefined if not found
+      }),
+    [servedOrders, tables]
+  );
+
+  if (loadingTables || loadingServedOrders) {
+    return <div>Loading...</div>;
+  }
+
+  if (errorTables || errorServedOrders) {
+    return <div>Error loading data. Please try again later.</div>;
+  }
+
+  interface TableCardProps {
+    table?: BaseTableResponse;
+    sot: ServedOrderWithTable;
+  }
+
+  const TableCard = ({ table, sot }: TableCardProps) => {
+    if (!table) {
+      return <div className="text-red-500">Table information unavailable.</div>;
+    }
+
+    function formatDate(dateString: string | Date): string {
+      const date = new Date(dateString);
+
+      const formattedDate = date.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+
+      const formattedTime = date.toLocaleTimeString("en-GB", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
+      });
+
+      return `${formattedDate} ${formattedTime}`;
+    }
+
+    return (
+      <div className="flex flex-row justify-between shadow-md p-5 rounded-lg">
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-1">
+            <div className="font-bold text-xl">Table NO: {table.tableName}</div>
+            <div className="text-grey">{formatDate(sot.createdAt)}</div>
+          </div>
+          <div className="flex flex-row gap-2">
+            <div
+              className="btn btn-info text-whereWhite"
+              onClick={() => router.push(`/manager/history/${sot.id}`)}
+            >
+              View Order
             </div>
           </div>
-        );
-      };
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="w-full flex flex-col gap-10">
@@ -47,14 +110,15 @@ export default function HistoryPage() {
             />
           </svg>
         </label>
-
       </div>
       <div className="gap-5 flex flex-col">
-        {Array(10)
-          .fill(0)
-          .map((_, i) => {
-            return <TableCard key={i} tableID={`${i}`} />;
-          })}
+        {servedOrdersWithTable.length > 0 ? (
+          servedOrdersWithTable.map((sot) => (
+            <TableCard key={sot.id} table={sot.table} sot={sot} />
+          ))
+        ) : (
+          <div>No served orders found.</div>
+        )}
       </div>
     </div>
   );
