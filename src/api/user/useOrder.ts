@@ -22,7 +22,7 @@ const getOrder = async (accessCode: string) => {
 
 const useAddOrders = (newOrders: OrderRequest, accessCode: string) => {
     return useMutation({
-        mutationFn: ()=> addOrders(newOrders, accessCode),
+        mutationFn: () => addOrders(newOrders, accessCode),
     });
 }
 

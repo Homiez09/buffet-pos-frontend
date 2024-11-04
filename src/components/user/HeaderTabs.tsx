@@ -2,6 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Icon } from '@iconify/react';
+import { useGetCategories } from "@/api/user/useCategory";
+import { useCart } from "@/provider/CartProvider";
+import { BaseCategoryResponse } from "@/interfaces/category";
+
 
 const items = [
     { id: 0, name: "หมู" },
@@ -13,9 +17,11 @@ const items = [
 ];
 
 export default function HeaderTabs({ search, setSearch }: { search: string, setSearch: React.Dispatch<React.SetStateAction<string>> }) {
-    const [selected, setSelected] = useState(0);
+    const [selected, setSelected] = useState<string>('0');
     const [isShow, setIsShow] = useState<boolean>(false);
     const [isSearchShow, setIsSearchShow] = useState<boolean>(false);
+    const { accessCode } = useCart();
+    const { data: categories, isLoading: isLoadingCategories } = useGetCategories(accessCode);
 
     const ref = useRef(null) as any;
 
@@ -36,10 +42,10 @@ export default function HeaderTabs({ search, setSearch }: { search: string, setS
         return item.name.toLowerCase().includes(search.toLowerCase());
     });
 
-
+    if (isLoadingCategories) return <p>Loading...</p>;
     return (
         <>
-            <div className="fixed flex flex-col gap-6 bg-white px-3 py-3 max-w-lg w-full">
+            <div className="fixed flex flex-col gap-6 bg-white px-3 py-3 max-w-lg w-full z-[999]">
                 <div className="flex overflow-x-scroll scrollbar-hide">
                     <div className="flex flex-row gap-3">
                         <div className="cursor-pointer">
@@ -65,7 +71,7 @@ export default function HeaderTabs({ search, setSearch }: { search: string, setS
 
 
                     <div className="flex flex-row w-full items-center whitespace-nowrap gap-6 pl-5">
-                        {items.map((item) => (
+                        {categories!.map((item:BaseCategoryResponse) => (
                             <div
                                 className={`relative border-transparent pb-1 ${selected === item.id ? 'border-b-0' : null}`}
                                 onClick={() => setSelected(item.id)}
@@ -87,10 +93,10 @@ export default function HeaderTabs({ search, setSearch }: { search: string, setS
                     <p className="text-lg font-bold">เลือกหมวดหมู่</p>
                     <Icon icon="ic:round-close" fontSize={30} color='#ff8d13ef' onClick={() => setIsShow(false)} />
                 </div>
-                {items.map((item) => (
+                {categories!.map((item) => (
                     <div
                         key={item.id}
-                        className={`flex flex-row justify-start gap-2 py-4 px-7 border-b-[1px] ${selected == item.id ? 'text-primary' : 'text-whereBlack'} } `}
+                        className={`flex flex-row justify-start gap-2 py-4 px-7 border-b-[1px] ${item.id === selected ? 'text-primary' : 'text-whereBlack'} } `}
                         onClick={() => setSelected(item.id)}>
                         <p className="text-xl">{item.name}</p>
                     </div>

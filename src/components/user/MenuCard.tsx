@@ -23,13 +23,14 @@ export default function MenuCard({ menu }: { menu: BaseMenuResponse }) {
 
     return (
         <div className="flex border bg-white rounded-2xl">
-            <div className="flex w-2/5 p-3">
-                <Image className='rounded-xl'
-                    src={'/assets/images/sample-salmon.svg'}
-                    alt="Picture of the author"
-                    width={500}
-                    height={500}
-                />
+            <div className="flex w-2/5 p-3 h-[125px] relative">
+                <div className="relative w-full h-full overflow-hidden rounded-xl">
+                    <Image className=''
+                        src={menu.imageUrl}
+                        alt="Picture of the author"
+                        layout="fill"
+                    />
+                </div>
             </div>
             <div className="flex flex-col w-3/5 p-4">
                 <div className="flex flex-col h-full" >

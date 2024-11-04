@@ -20,7 +20,7 @@ export interface OrderItemRequest {
 }
 
 export interface OrderRequest {
-    order_item: OrderItemRequest[];
+    order_items: OrderItemRequest[];
 }
 
 export interface UpdateOrderRequest{
