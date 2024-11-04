@@ -86,7 +86,7 @@ export default function OrderPage() {
         }
       </div>
       <ConfirmDialog openDialog={openDialog} setOpenDialog={setOpenDialog} title="ยืนยันการจัดส่งอาหาร?" description="แน่ใจหรือไม่ว่าต้องการจัดส่งอาหาร" callback={async () =>{ 
-            await updateOrder.mutateAsync()
+            //await updateOrder.mutateAsync()
             toaster("ส่งออเดอร์สำเร็จ", "คุณทำการส่งออเดอร์สำเร็จ");
             refetchPreparingOrders();    
             setOpenDialog(false);      
