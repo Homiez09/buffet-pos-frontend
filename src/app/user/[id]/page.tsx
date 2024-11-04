@@ -52,7 +52,7 @@ export default function Home({ params }: Props) {
 
   return (
       <ScreenMobile>
-        <HeaderTabs categories={categories} search={search} setSearch={setSearch} />
+        <HeaderTabs categories={Object.keys(menusByCategory)} search={search} setSearch={setSearch} />
         <div className="flex flex-col gap-2 px-3 pt-16 pb-24">
           <div className="flex flex-row justify-between w-full">
             <p className=" w-1/3 font-bold text-lg pl-1"> โต๊ะที่ : {table.tableName} </p>

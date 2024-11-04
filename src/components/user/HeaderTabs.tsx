@@ -2,16 +2,36 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Icon } from '@iconify/react';
-import { useGetCategories } from "@/api/user/useCategory";
-import { useCart } from "@/provider/CartProvider";
 import { BaseCategoryResponse } from "@/interfaces/category";
 
-export default function HeaderTabs({ categories, search, setSearch }: { categories: BaseCategoryResponse[], search: string, setSearch: React.Dispatch<React.SetStateAction<string>> }) {
-    const [selected, setSelected] = useState<string>('0');
+const observeSections = (sections: string[], setSelected: (id: string) => void) => {
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setSelected(entry.target.id);
+                }
+            });
+        },
+        { threshold: 0.6 } 
+    );
+
+    sections.forEach(sectionId => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+            observer.observe(element);
+        }
+    });
+
+    return () => {
+        observer.disconnect();
+    };
+};
+
+export default function HeaderTabs({ categories, search, setSearch }: { categories: string[], search: string, setSearch: React.Dispatch<React.SetStateAction<string>> }) {
+    const [selected, setSelected] = useState<string>(categories[0]);
     const [isShow, setIsShow] = useState<boolean>(false);
     const [isSearchShow, setIsSearchShow] = useState<boolean>(false);
-    const { accessCode } = useCart();
-
     const ref = useRef(null) as any;
 
     useEffect(() => {
@@ -19,13 +39,35 @@ export default function HeaderTabs({ categories, search, setSearch }: { categori
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    })
+    }, []);
+
+    useEffect(() => {
+        // const sections = categories.map((item) => category);
+        return observeSections(categories, setSelected);
+    }, [setSelected]);
+
+
 
     const handleClickOutside = (event: any) => {
         if (ref.current && !ref.current.contains(event.target)) {
             setIsShow(false);
         }
     }
+
+    const handleClickTab = (name: string) => {
+        const element = document.getElementById(name);
+        if (element) {
+            const offsetTop = element.getBoundingClientRect().top + window.scrollY - 80;
+
+            window.scrollTo({
+                top: offsetTop,
+                behavior: 'smooth'
+            });
+
+            setTimeout(() => setSelected(name), 300);
+        }
+    };
+
 
     return (
         <>
@@ -55,15 +97,15 @@ export default function HeaderTabs({ categories, search, setSearch }: { categori
 
 
                     <div className="flex flex-row w-full items-center whitespace-nowrap gap-6 pl-5">
-                        {categories!.map((item:BaseCategoryResponse) => (
+                        {categories!.map((category: string) => (
                             <div
-                                className={`relative border-transparent pb-1 ${selected === item.id ? 'border-b-0' : null}`}
-                                onClick={() => setSelected(item.id)}
+                                className={`relative border-transparent pb-1 ${selected === category ? 'border-b-0' : null}`}
+                                onClick={() => handleClickTab(category)}
                             >
-                                <p className={selected === item.id ? "text-whereOrange" : "text-whereBlack"}>
-                                    {item.name}
+                                <p className={selected === category ? "text-whereOrange" : "text-whereBlack"}>
+                                    {category}
                                 </p>
-                                {selected === item.id && (
+                                {selected === category && (
                                     <span className="absolute left-1/2 transform -translate-x-1/2 bottom-0 w-1 h-1 bg-whereOrange rounded-full"></span>
                                 )}
                             </div>
@@ -77,12 +119,12 @@ export default function HeaderTabs({ categories, search, setSearch }: { categori
                     <p className="text-lg font-bold">เลือกหมวดหมู่</p>
                     <Icon icon="ic:round-close" fontSize={30} color='#ff8d13ef' onClick={() => setIsShow(false)} />
                 </div>
-                {categories!.map((item) => (
+                {categories!.map((category, index) => (
                     <div
-                        key={item.id}
-                        className={`flex flex-row justify-start gap-2 py-4 px-7 border-b-[1px] ${item.id === selected ? 'text-primary' : 'text-whereBlack'} } `}
-                        onClick={() => setSelected(item.id)}>
-                        <p className="text-xl">{item.name}</p>
+                        key={index}
+                        className={`flex flex-row justify-start gap-2 py-4 px-7 border-b-[1px] ${category === selected ? 'text-primary' : 'text-whereBlack'} } `}
+                        onClick={() => handleClickTab(category)}>
+                        <p className="text-xl">{category}</p>
                     </div>
 
                 ))}
