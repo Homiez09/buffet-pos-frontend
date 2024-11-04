@@ -35,7 +35,7 @@ export default function MenuPage() {
 
     // Filter menus based on the search term
     const filteredMenus = menus.filter((menu) =>
-        menu.name.toLowerCase().includes(searchTerm.toLowerCase())
+        menu.name && menu.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
