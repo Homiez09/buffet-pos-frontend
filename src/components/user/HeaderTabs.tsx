@@ -33,7 +33,7 @@ export default function HeaderTabs() {
 
     return (
         <>
-            <div className="fixed flex flex-col gap-5 border py-3 bg-white pl-3 max-lg:max-w-full max-w-lg">
+            <div className="fixed flex flex-col gap-6 bg-white px-3 py-3 max-lg:max-w-full max-w-lg w-full">
                 <div className="flex overflow-x-scroll scrollbar-hide">
                     <div className="flex flex-row gap-3">
                         <div className="cursor-pointer">
@@ -44,7 +44,7 @@ export default function HeaderTabs() {
                         </div>
                     </div>
 
-                    <div className="flex flex-row w-full items-center whitespace-nowrap gap-5 pl-5">
+                    <div className="flex flex-row w-full items-center whitespace-nowrap gap-6 pl-5">
                         {items.map((item) => (
                             <div
                                 className={`relative border-transparent pb-1 ${selected === item.id ? 'border-b-0' : null}`}
