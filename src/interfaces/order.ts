@@ -1,7 +1,7 @@
 export interface OrderItemResponse{
     id: string,
-    orderId: string,
-    menuId: string,
+    orderID: string,
+    menuID: string,
     quantity: number,
 }
 
@@ -9,7 +9,7 @@ export interface OrderResponse {
     id: string,
     tableId: string,
     orderItem: OrderItemResponse[],
-    status: string,
+    status: OrderStatus,
     createAt: Date,
     updateAt: Date
 }
@@ -22,4 +22,14 @@ export interface OrderItemRequest {
 export interface OrderRequest {
     table_id: string;
     order_item: OrderItemRequest[];
+}
+
+export interface UpdateOrderRequest{
+    status: string;
+    table_id: string;
+}
+
+export enum OrderStatus {
+    Preparing = "preparing",
+    Served = "served",
 }

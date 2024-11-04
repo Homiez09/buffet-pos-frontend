@@ -1,11 +1,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axiosInstance";
 import { getSession } from "next-auth/react";
-import { OrderResponse } from '@/interfaces/order';
+import { OrderResponse, OrderStatus, UpdateOrderRequest } from '@/interfaces/order';
 
-const getOrders = async () => {
+const getOrdersByStatus = async (status: OrderStatus) => {
     const session = await getSession();
-    const { data } = await axiosInstance.get("/manage/orders", {
+    const { data } = await axiosInstance.get(`/manage/orders/status/${status}`, {
         headers: {
             Authorization: `Bearer ${session?.token}`,
         },
@@ -13,17 +13,17 @@ const getOrders = async () => {
     return data;
 }
 
-const useGetOrders = () => {
+const useGetOrdersByStatus = (status: OrderStatus) => {
     return useQuery<OrderResponse[]>({
-        queryKey: ["orders"],
-        queryFn: getOrders,
+        queryKey: ["orders", status],
+        queryFn: () => getOrdersByStatus(status),
         staleTime: 5 * 60 * 1000,
     });
 }
 
-const deliverOrder = async () => {
+const updateOrder = async (updateOrder : UpdateOrderRequest) => {
     const session = await getSession();
-    const { data } = await axiosInstance.put("await p jaw", {
+    const { data } = await axiosInstance.put("/manage/orders/status", updateOrder,{
         headers: {
             Authorization: `Bearer ${session?.token}`,
         },
@@ -31,10 +31,30 @@ const deliverOrder = async () => {
     return data;
 }
 
-const useDeliverOrder = () => {
+const useUpdateOrder = () => {
     return useMutation({
-        mutationFn: deliverOrder
+        mutationFn: updateOrder
     });
 }
 
-export{useGetOrders ,useDeliverOrder}
+const getOrderByTableID = async (tableID :string ) => {
+    const session = await getSession();
+    const { data } = await axiosInstance.get(`/manage/orders/table/${tableID}`,{
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
+    return data;
+}
+
+const useGetOrderByTableID = (tableID:string) => {
+    return useQuery<OrderResponse>({
+        queryKey: ["orders", tableID],
+        queryFn: () => getOrderByTableID(tableID),
+        staleTime: 5 * 60 * 1000,
+    });
+}
+
+
+
+export{useGetOrdersByStatus,useUpdateOrder,useGetOrderByTableID}
