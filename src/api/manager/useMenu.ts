@@ -45,6 +45,22 @@ const deleteMenu = async (id: string) => {
     return data;
 }
 
+const editMenu = async (editMenu: BaseMenuResponse) => {
+    const session = await getSession();
+    const { data } = await axiosInstance.put(`/manage/menus`, {
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
+    return data;
+}
+
+const useEditMenu = () => {
+    return useMutation({
+        mutationFn: editMenu,
+    });
+}
+
 const useDeleteMenu = () => {
     return useMutation({
         mutationFn: deleteMenu,
@@ -73,4 +89,4 @@ const useAddMenu = () => {
     });
 }
 
-export { useGetMenus, useGetMenuByID, useAddMenu, useDeleteMenu };
+export { useGetMenus, useGetMenuByID, useAddMenu, useDeleteMenu , useEditMenu};

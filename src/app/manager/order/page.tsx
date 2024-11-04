@@ -14,6 +14,7 @@ import { useGetOrders ,useDeliverOrder} from "@/api/manager/useOrder";
 export default function OrderPage() {
   const toaster = useToastHandler();
   const [openDialog, setOpenDialog] = useState(false);
+  const [currentOrderId, setCurrentOrderId] = useState<string | null>(null); // State to hold the current order ID
   const {data: orders =[], isLoading: loadingOrders, isError,refetch: refetchOrders } = useGetOrders();
   const deliverOrder = useDeliverOrder();
   
@@ -29,7 +30,8 @@ export default function OrderPage() {
     return <LoadingAnimation/>
   }
 
-  const deliverOrderHandler = () => {
+  const deliverOrderHandler = (orderId: string) => {
+    setCurrentOrderId(orderId)// Set the current order ID when delivering
     setOpenDialog(true);
   };
 
@@ -66,7 +68,7 @@ export default function OrderPage() {
                 </div>
                 <div
                   className="btn btn-success text-white font-bold text-lg"
-                  onClick={() => deliverOrderHandler}
+                  onClick={() => deliverOrderHandler(order.id)}
                 >
                   Deliver
                 </div>
@@ -91,9 +93,9 @@ export default function OrderPage() {
         )}
       </div>
       <ConfirmDialog openDialog={openDialog} setOpenDialog={setOpenDialog} title="ยืนยันการจัดส่งอาหาร?" description="แน่ใจหรือไม่ว่าต้องการจัดส่งอาหาร" callback={async () =>{ 
-          await deliverOrder.mutateAsync(order.id);
-          toaster("ส่งออเดอร์สำเร็จ", "คุณทำการส่งออเดอร์สำเร็จ")
-          refetchOrders();
+            await deliverOrder.mutateAsync(); // Use the current order ID
+            toaster("ส่งออเดอร์สำเร็จ", "คุณทำการส่งออเดอร์สำเร็จ");
+            refetchOrders();          
         }} />
     </div>
   );
