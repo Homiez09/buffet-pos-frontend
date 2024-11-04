@@ -3,12 +3,14 @@ import { ConfirmDialog } from "@/components/manager/confirmDialog";
 import ScreenMobile from "@/components/ScreenMobile";
 import { ConfirmOrderDialog } from "@/components/user/ConfirmOrderDialog";
 import MenuCardList from "@/components/user/MenuCardList";
+import { useCart } from "@/provider/CartProvider";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Cart() {
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const { cart } = useCart();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const router = useRouter();
