@@ -10,7 +10,7 @@ import MenuList from "@/components/user/MenuList";
 export default function Home() {
   const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const [search, setSearch] = useState<string>('');
 
   useEffect(() => {
     console.log(searchParams.get('accessKey'))
@@ -18,7 +18,7 @@ export default function Home() {
 
   return (
       <ScreenMobile>
-        <HeaderTabs />
+        <HeaderTabs search={search} setSearch={setSearch} />
         <div className="flex flex-col gap-2 px-3 pt-16 pb-24">
           <div className="flex flex-row justify-between w-full">
             <p className=" w-1/3 font-bold text-lg pl-1"> โต๊ะที่ : 21 </p>
