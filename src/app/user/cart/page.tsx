@@ -49,7 +49,7 @@ export default function Cart() {
                     <p ><Icon icon="weui:back-filled" fontSize={40} onClick={() => router.back()} /></p>
                     <p className="w-full text-2xl  text-center font-semibold pt-1">ตะกร้าของฉัน</p>
                 </div>
-                <div className="flex px-4 pt-5 pb-23 w-full" >
+                <div className="flex px-4 pt-5 pb-23 w-full justify-center items-center" >
                     <MenuCardList menuList={menus!} />
                 </div>
                 <div className="flex flex-row justify-between pt-5 border-b-2 pb-3 w-11/12 mx-auto">

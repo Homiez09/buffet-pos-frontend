@@ -11,6 +11,7 @@ export default function History() {
     const router = useRouter();
     const { accessCode } = useCart();
     const { data: invoice, isLoading: isInvoiceLoading } = useGetInvoice(accessCode);
+    if (isInvoiceLoading) return null
 
     return (
         <ScreenMobile>
@@ -29,7 +30,7 @@ export default function History() {
                 <div className="pl-3 pt-3">
                     <div className="flex flex-row justify-between pt-1 pb-7 w-11/12 mx-auto">
                         <p className="text-xl font-bold "> ยอดชำระเงิน :</p>
-                        <p className=" text-xl font-bold "> {invoice?.totalPrice} บาท</p>
+                        <p className=" text-xl font-bold ">{invoice?.totalPrice} บาท</p>
                     </div>
                 </div>
             </div>
