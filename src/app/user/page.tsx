@@ -4,11 +4,13 @@ import ScreenMobile from "@/components/ScreenMobile";
 import HeaderTabs from "@/components/user/HeaderTabs";
 import OrderButton from "@/components/user/OrderButton";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import MenuList from "@/components/user/MenuList";
 
 export default function Home() {
   const searchParams = useSearchParams()
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
 
   useEffect(() => {
     console.log(searchParams.get('accessKey'))
