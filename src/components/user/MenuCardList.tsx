@@ -54,8 +54,8 @@ export default function MenuCardList() {
 
     return (
         <div className="flex flex-col gap-3">
-            {filteredMenuList.map((item: BaseMenuResponse, index: number) => (
-                <MenuCard key={index} menu={item} />
+            {filteredMenuList.map((item: BaseMenuResponse) => (
+                <MenuCard key={item.id} menu={item} />
             ))}
         </div>
     );
