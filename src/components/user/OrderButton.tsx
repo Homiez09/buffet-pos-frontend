@@ -13,7 +13,7 @@ export default function OrderButton() {
             <div className="flex flex-row gap-3">
                 <div className="relative bg-primary rounded-full p-3" onClick={()=>router.push('/user/cart')}>
                    {cart.length > 0 && <div className="absolute top-0 right-0 bg-white rounded-lg shadow-lg text-sm text-whereBlack px-1">
-                        <p className="text-sm">{cart.length > 99 ? '99+' : cart.length }</p>
+                        <p className="text-sm">{cart.reduce((acc, item) => acc + item.quantity, 0) > 99 ? '99+' : cart.reduce((acc, item) => acc + item.quantity, 0) }</p>
                     </div>}
                     <Icon icon="ic:baseline-shopping-cart" fontSize={30} color='#fff' />
                 </div>
