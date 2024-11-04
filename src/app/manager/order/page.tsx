@@ -17,28 +17,38 @@ interface PreparingOrderWithTable extends OrderResponse {
 
 export default function OrderPage() {
   const toaster = useToastHandler();
+  const updateOrder = useUpdateOrder();
   const [openDialog, setOpenDialog] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const { data: tables, isLoading: loadingTables, refetch: refetchTables } = useGetTables();
   const {data: preparingOrders =[], isLoading: loadingPreparingOrders,refetch: refetchPreparingOrders } = useGetOrdersByStatus(OrderStatus.Preparing);
-  const updateOrder = useUpdateOrder();
+  
+  const [orderData, setOrderData] = useState<UpdateOrderRequest>();
+
+  if (!tables) {
+    return;
+  }
+
+  const preparingOrdersWithTable: PreparingOrderWithTable[] = preparingOrders.map((order) => {
+    const table = tables.find((table) => table.id === order.tableId);
+    return { ...order, table: table! };
+  });
+  
 
   if (loadingPreparingOrders || loadingTables) {
     return <LoadingAnimation/>
   }
 
-  const filteredPreparingOrders = preparingOrders.filter((order) =>
-    tables?.find((table) => table.id === order.tableId)?.tableName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   const updateOrderHandler = async (orderID :string) => {
-    const orderData: UpdateOrderRequest = {
-      status: OrderStatus.Served, // หรือสถานะที่คุณต้องการอัปเดต
-      table_id: orderID // ใช้ tableId ของ order ที่ถูกเลือก
+
+    const updateOrderData: UpdateOrderRequest = {
+      status: OrderStatus.Served,
+      table_id: orderID
     };
-    await updateOrder.mutateAsync(orderData)
+
+    setOrderData(updateOrderData);
+    
     setOpenDialog(true);
-    refetchPreparingOrders();
   };
 
   function formatDate(dateString: string | Date): string {
@@ -88,17 +98,17 @@ export default function OrderPage() {
         </div>
       </div>
       <div>
-        {Array.isArray(filteredPreparingOrders) && filteredPreparingOrders.length > 0 ? (
-          filteredPreparingOrders.map((order: OrderResponse) => (
-            <div key={order.id} className="flex flex-col items-center gap-3">
+        {preparingOrdersWithTable.map((pot: PreparingOrderWithTable) => (
+            <div key={pot.id} className="flex flex-col items-center gap-3">
               <div className="flex flex-row items-center w-full mt-10">
                 <div className="w-full font-bold px-2">
-                  <div>Table NO: {order.tableId}</div>
-                  <div>Order Since: {formatDate(order.createdAt)}</div>
+                  <div>Table NO: {pot.table.tableName}</div>
+                  <div>Order Since: {formatDate(pot.createdAt)}</div>
+                  <div>Order Status: {pot.status}</div>
                 </div>
                 <div
                   className="btn btn-success text-white font-bold text-lg"
-                  onClick={() => updateOrderHandler(order.id)}
+                  onClick={() => updateOrderHandler(pot.id)}
                 >
                   Deliver
                 </div>
@@ -111,22 +121,19 @@ export default function OrderPage() {
                 }}
               >
                 <div className="flex flex-row gap-1" style={{ width: "max-content" }}>
-                  {order.orderItem?.map((item) => (
+                  {pot.orderItem?.map((item) => (
                     <OrderCard key={item.id} orderItem={item} />
                   ))}
                 </div>
               </div>
             </div>
-          ))
-          ) : (
-            <p>No orders now</p>
-          )
-        }
+          ))}
       </div>
-      <ConfirmDialog openDialog={openDialog} setOpenDialog={setOpenDialog} title="ยืนยันการจัดส่งอาหาร?" description="แน่ใจหรือไม่ว่าต้องการจัดส่งอาหาร" callback={() =>{ 
-
+      <ConfirmDialog openDialog={openDialog} setOpenDialog={setOpenDialog} title="ยืนยันการจัดส่งอาหาร?" description="แน่ใจหรือไม่ว่าต้องการจัดส่งอาหาร" callback={async () =>{ 
+            await updateOrder.mutateAsync(orderData!);
             toaster("ส่งออเดอร์สำเร็จ", "คุณทำการส่งออเดอร์สำเร็จ");
             setOpenDialog(false);      
+            refetchPreparingOrders();
         }} />
     </div>
   );
