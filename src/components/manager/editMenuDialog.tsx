@@ -64,7 +64,6 @@ export function EditMenuDialog({
     },
   });
 
-  const imageFile = watch("image");
   const [previewImage, setPreviewImage] = useState<string | null>(menu.imageUrl);
 
   useEffect(() => {
