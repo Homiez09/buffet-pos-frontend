@@ -27,19 +27,22 @@ export default function CartProvider({ children }: { children: ReactNode }) {
     const existingItem = cart.find((i) => i.menu_id === item.menu_id);
     if (existingItem) {
       setCart(
-        cart.map((i) =>
-          i.menu_id === item.menu_id ? { ...i, quantity: i.quantity + item.quantity } : i
-        )
+        cart.map((i) => i.menu_id === item.menu_id ? { ...i, quantity: i.quantity + item.quantity } : i
+        ).filter((i) => i.quantity !== 0)
       );
     } else {
       setCart([...cart, item]);
     }
   }
 
+  const clearCart = () => {
+    setCart([]);
+  }
+
   // debug
   useEffect(() => {
     console.log(cart);
   })
-  
+
   return <CartContext.Provider value={{ cart, setCart, addItem }}>{children}</CartContext.Provider>;
 }

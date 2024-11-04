@@ -1,6 +1,6 @@
 import Image from 'next/image'
 
-export default function MenuConfirmCard() {
+export default function MenuCompleteCard() {
     return (
         <div className="flex border bg-white rounded-2xl">
             <div className="flex w-2/5 p-3">

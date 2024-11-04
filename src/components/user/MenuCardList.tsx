@@ -1,7 +1,8 @@
 import { BaseMenuResponse } from "@/interfaces/menu";
 import MenuCard from "./MenuCard";
+import { useCart } from "@/provider/CartProvider";
 
-const menuList:BaseMenuResponse[] = [
+const menuList: BaseMenuResponse[] = [
     {
         id: "0",
         name: "Pork",
@@ -45,10 +46,17 @@ const menuList:BaseMenuResponse[] = [
 ];
 
 export default function MenuCardList() {
-    
-    return(
-        <div className="flex flex-col gap-3" >
-            {menuList.map((item : BaseMenuResponse,index : number) => <MenuCard key={index} menu={item} />) }
+    const { cart } = useCart();
+
+    const filteredMenuList = menuList.filter((i) =>
+        cart.some((j) => j.menu_id === i.id)
+    );
+
+    return (
+        <div className="flex flex-col gap-3">
+            {filteredMenuList.map((item: BaseMenuResponse, index: number) => (
+                <MenuCard key={index} menu={item} />
+            ))}
         </div>
     );
 }

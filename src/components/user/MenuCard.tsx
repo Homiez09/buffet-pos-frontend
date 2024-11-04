@@ -7,8 +7,8 @@ import Image from 'next/image'
 import { useState } from 'react';
 
 export default function MenuCard({ menu }: { menu: BaseMenuResponse }) {
-    const [amount, setAmount] = useState(0);
     const { cart, addItem } = useCart();
+    const [amount, setAmount] = useState<number>(cart.find((j) => j.menu_id === menu.id)?.quantity ?? 0);
     
     const increment = () => {
         setAmount(preAmount => preAmount + 1);
