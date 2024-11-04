@@ -34,7 +34,7 @@ export default function OrderCard({ orderItem }: {orderItem: OrderItemResponse})
                     <h2 className="card-title">{loadingCategory ? "Loading..." : category?.name || "No Category"}</h2>
                 </div>
             </div>
-            <div className="w-full justify-end flex flex-row">x1</div>
+            <div className="w-full justify-end flex flex-row">x{orderItem.quantity}</div>
         </div>
     );
 }
