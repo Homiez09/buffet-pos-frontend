@@ -1,25 +1,35 @@
 "use client";
 
+import useToastHandler from "@/lib/toastHanlder";
 import MenuCard from "@/components/manager/menuCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { DiVim } from "react-icons/di";
 import { ConfirmDialog } from "@/components/manager/confirmDialog";
 import LoadingAnimation from "@/components/manager/loadingAnimation";
 import { OrderResponse } from "@/interfaces/order";
 import OrderCard from "@/components/manager/orderCard";
-// import { useGetOrders ,useDeliverOrder} from "@/api/manager/useOrder";
+import { useGetOrders ,useDeliverOrder} from "@/api/manager/useOrder";
 
 export default function OrderPage() {
+  const toaster = useToastHandler();
   const [openDialog, setOpenDialog] = useState(false);
-  // const {data: orders =[], isLoading: loadingOrders, isError,refetch: refetchOrders } = useGetOrders();
-  // const deliverOrder = useDeliverOrder();
+  const {data: orders =[], isLoading: loadingOrders, isError,refetch: refetchOrders } = useGetOrders();
+  const deliverOrder = useDeliverOrder();
+  
+  const [currentTime, setCurrentTime] = useState(new Date());
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000); // 1000 ms = 1 second
+    return () => clearInterval(interval);
+  }, []);
 
-  // if (loadingOrders) {
-  //   return <LoadingAnimation/>
-  // }
+  if (loadingOrders) {
+    return <LoadingAnimation/>
+  }
 
-  const addMenuHandler = () => {
+  const deliverOrderHandler = () => {
     setOpenDialog(true);
   };
 
@@ -46,77 +56,45 @@ export default function OrderPage() {
         </div>
       </div>
       <div>
-        {Array(10)
-          .fill(0)
-          .map((_, i) => (
-            <div key={i} className="flex flex-col items-center gap-3">
+        {Array.isArray(orders) && orders.length > 0 ? (
+          orders.map((order: OrderResponse) => (
+            <div key={order.id} className="flex flex-col items-center gap-3">
               <div className="flex flex-row items-center w-full mt-10">
                 <div className="w-full font-bold px-2">
-                    <div>Table NO: 12</div>
-                    <div>Order Since: 2 minutes ago</div>
+                  <div>Table NO: {order.tableId}</div>
+                  <div>Order Since: {order.createAt.toString()}</div>
                 </div>
                 <div
-                    className="btn btn-success text-white font-bold text-lg"
-                    onClick={addMenuHandler}
-                    >
-                    Deliver
+                  className="btn btn-success text-white font-bold text-lg"
+                  onClick={() => deliverOrderHandler}
+                >
+                  Deliver
                 </div>
               </div>
               <div 
                 className="w-[54rem] text-whereBlack overflow-x-scroll border-2 rounded-lg"
                 style={{
-                    scrollbarWidth: 'none',       // Firefox
-                    msOverflowStyle: 'none',      // Internet Explorer 10+
+                    scrollbarWidth: 'none',
+                    msOverflowStyle: 'none',
                 }}
               >
-                <div
-                  className="flex flex-row gap-1"
-                  style={{ width: "max-content" }}
-                >
-                  {
-                  // Array.isArray(orders) && orders.length > 0 || !isError ? (
-                  //     orders.map((order: OrderResponse) => (
-                  //         <OrderCard key={order.id} order={order} refetchOrders={refetchOrders} />
-                  //     ))
-                  // ) : 
-                  (
-                    Array(5)
-                    .fill(0)
-                    .map((_, i) => {
-                      return <OrderCardFake key={i} />
-                    })
-                    //<p>No orders now</p>
-                  )                    
-                  }
+                <div className="flex flex-row gap-1" style={{ width: "max-content" }}>
+                  {order.orderItem?.map((item) => (
+                    <OrderCard key={item.id} order={item} />
+                  ))}
                 </div>
               </div>
             </div>
-          ))}
+          ))
+        ) : (
+          <p>No orders now</p>
+        )}
       </div>
-      <ConfirmDialog openDialog={openDialog} setOpenDialog={setOpenDialog} title="ยืนยันการจัดส่งอาหาร?" description="แน่ใจหรือไม่ว่าต้องการจัดส่งอาหาร" />
+      <ConfirmDialog openDialog={openDialog} setOpenDialog={setOpenDialog} title="ยืนยันการจัดส่งอาหาร?" description="แน่ใจหรือไม่ว่าต้องการจัดส่งอาหาร" callback={async () =>{ 
+          await deliverOrder.mutateAsync(order.id);
+          toaster("ส่งออเดอร์สำเร็จ", "คุณทำการส่งออเดอร์สำเร็จ")
+          refetchOrders();
+        }} />
     </div>
   );
 }
-
-const OrderCardFake = () => {
-  return (
-      <div className="flex flex-col w-48 shadow-md m-2 p-2 rounded-lg gap-3">
-        <div className="w-full">
-          <Image
-            src="/assets/images/sample-salmon.svg"
-            alt="salmon"
-            width={100}
-            height={100}
-            className="w-full"
-          />
-        </div>
-        <div className="w-full flex flex-col">
-          <div>M1 แซลมอนรมควัน</div>
-          <div>Type: ปลา</div>
-        </div>
-        <div className="w-full justify-end flex flex-row">x1</div>
-      </div>
-    );
-
-};
-

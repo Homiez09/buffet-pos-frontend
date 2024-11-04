@@ -1,26 +1,43 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { OrderResponse } from '@/interfaces/order';
+import { OrderItemResponse } from '@/interfaces/order';
 import Image from "next/image";
+import LoadingAnimation from './loadingAnimation';
+import { useGetMenuByID, useGetMenus } from '@/api/manager/useMenu';
+import { useGetCategoryById } from '@/api/manager/useCategory';
 
 
 
-export default function rderCard({ order, refetchOrders }: {order: OrderResponse, refetchOrders: () => void}) {
-    
+export default function rderCard({ order }: {order: OrderItemResponse}) {
+    const { data: menu , isLoading: loadingMenus } = useGetMenuByID(order.menuId);
+    const { data: category, isLoading: loadingCategory } = menu?.categoryId 
+        ? useGetCategoryById(menu.categoryId) 
+        : { data: null, isLoading: false };
+
+    if (loadingMenus) {
+        return <LoadingAnimation/>
+    }
+
+
     return (
         <div className="flex flex-col w-48 shadow-md m-2 p-2 rounded-lg gap-3">
-          <div className="w-full">
-            <Image
-              src="/assets/images/sample-salmon.svg"
-              alt="salmon"
-              width={100}
-              height={100}
-              className="w-full"
-            />
-          </div>
+            <figure className="h-full w-full">
+                <Image
+                    src={menu?.imageUrl || "/default-image.png"}
+                    alt={menu?.name|| "Menu Image"}
+                    width={100}
+                    height={100}
+                    layout=""
+                    className="object-cover w-full h-full"
+                />
+            </figure>
           <div className="w-full flex flex-col">
-            <div>M1 แซลมอนรมควัน</div>
-            <div>Type: ปลา</div>
+            <h2 className="card-title">{menu?.name}</h2>
+            <div>
+                <h2 className="card-title">{category?.name || "No Category"}</h2>
+            </div>
           </div>
           <div className="w-full justify-end flex flex-row">x1</div>
         </div>
