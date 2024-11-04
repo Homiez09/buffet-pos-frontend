@@ -35,41 +35,38 @@ export default function OrderPage() {
     return { ...order, table: table! };
   });
   
+  // Filter orders by table name based on search term
+  const filteredOrders = preparingOrdersWithTable.filter((order) => 
+    order.table.tableName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   if (loadingPreparingOrders || loadingTables) {
     return <LoadingAnimation/>
   }
 
   const updateOrderHandler = async (orderID :string) => {
-
     const updateOrderData: UpdateOrderRequest = {
       status: OrderStatus.Served,
       table_id: orderID
     };
 
     setOrderData(updateOrderData);
-    
     setOpenDialog(true);
   };
 
   function formatDate(dateString: string | Date): string {
     const date = new Date(dateString);
-    
-    // Format the date part
     const formattedDate = date.toLocaleDateString("en-GB", {
       day: "numeric",
       month: "long",
       year: "numeric",
     });
-  
-    // Format the time part
     const formattedTime = date.toLocaleTimeString("en-GB", {
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
       hour12: false,
     });
-  
     return `${formattedDate} ${formattedTime}`;
   }
 
@@ -77,7 +74,7 @@ export default function OrderPage() {
     <div className="w-full flex flex-col gap-10">
       <div className="flex flex-row justify-between">
         <label className="input input-bordered flex items-center gap-2 rounded-xl">
-          <input type="text" className="grow" placeholder="Search" 
+          <input type="text" className="grow" placeholder="Search Table" 
             value={searchTerm} 
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -95,47 +92,47 @@ export default function OrderPage() {
           </svg>
         </label>
         <div className="font-bold text-xl items-center flex px-5 rounded-lg border-2 border-primary">
-            <DateTimeDisplay/>
+          <DateTimeDisplay/>
         </div>
       </div>
       <div>
-        {preparingOrdersWithTable.map((pot: PreparingOrderWithTable) => (
-            <div key={pot.id} className="flex flex-col items-center gap-3">
-              <div className="flex flex-row items-center w-full mt-10">
-                <div className="w-full font-bold px-2">
-                  <div>Table NO: {pot.table.tableName}</div>
-                  <div>Order Since: {formatDate(pot.createdAt)}</div>
-                  <div>Order Status: {pot.status}</div>
-                </div>
-                <div
-                  className="btn btn-success text-white font-bold text-lg"
-                  onClick={() => updateOrderHandler(pot.id)}
-                >
-                  Deliver
-                </div>
+        {filteredOrders.map((pot: PreparingOrderWithTable) => (
+          <div key={pot.id} className="flex flex-col items-center gap-3">
+            <div className="flex flex-row items-center w-full mt-10">
+              <div className="w-full font-bold px-2">
+                <div>Table NO: {pot.table.tableName}</div>
+                <div>Order Since: {formatDate(pot.createdAt)}</div>
+                <div>Order Status: {pot.status}</div>
               </div>
-              <div 
-                className="w-[54rem] text-whereBlack overflow-x-scroll border-2 rounded-lg"
-                style={{
-                    scrollbarWidth: 'none',
-                    msOverflowStyle: 'none',
-                }}
+              <div
+                className="btn btn-success text-white font-bold text-lg"
+                onClick={() => updateOrderHandler(pot.id)}
               >
-                <div className="flex flex-row gap-1" style={{ width: "max-content" }}>
-                  {pot.orderItem?.map((item) => (
-                    <OrderCard key={item.id} orderItem={item} />
-                  ))}
-                </div>
+                Deliver
               </div>
             </div>
-          ))}
+            <div 
+              className="w-[54rem] text-whereBlack overflow-x-scroll border-2 rounded-lg"
+              style={{
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none',
+              }}
+            >
+              <div className="flex flex-row gap-1" style={{ width: "max-content" }}>
+                {pot.orderItem?.map((item) => (
+                  <OrderCard key={item.id} orderItem={item} />
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
       <ConfirmDialog openDialog={openDialog} setOpenDialog={setOpenDialog} title="ยืนยันการจัดส่งอาหาร?" description="แน่ใจหรือไม่ว่าต้องการจัดส่งอาหาร" callback={async () =>{ 
-            await updateOrder.mutateAsync(orderData!);
-            toaster("ส่งออเดอร์สำเร็จ", "คุณทำการส่งออเดอร์สำเร็จ");
-            setOpenDialog(false);      
-            refetchPreparingOrders();
-        }} />
+          await updateOrder.mutateAsync(orderData!);
+          toaster("ส่งออเดอร์สำเร็จ", "คุณทำการส่งออเดอร์สำเร็จ");
+          setOpenDialog(false);      
+          refetchPreparingOrders();
+      }} />
     </div>
   );
 }
