@@ -27,9 +27,6 @@ export default function AllPaymentPage() {
     
     <div className="w-full flex flex-col gap-10">
       <div className="flex flex-row justify-between">
-        <div className="font-bold text-xl items-center flex px-5 rounded-lg border-2 border-primary">
-          <DateTimeDisplay/>
-        </div>
       </div>
       <div>
         {Array.isArray(filteredTables) && filteredTables.length > 0 ? (
