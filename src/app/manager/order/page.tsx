@@ -1,6 +1,7 @@
 "use client";
 
 import useToastHandler from "@/lib/toastHanlder";
+import { format } from 'date-fns';
 import { useEffect, useState } from "react";
 import { ConfirmDialog } from "@/components/manager/confirmDialog";
 import LoadingAnimation from "@/components/manager/loadingAnimation";
@@ -35,6 +36,27 @@ export default function OrderPage() {
     refetchPreparingOrders();
   };
 
+  function formatDate(dateString: string | Date): string {
+    const date = new Date(dateString);
+    
+    // Format the date part
+    const formattedDate = date.toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  
+    // Format the time part
+    const formattedTime = date.toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+  
+    return `${formattedDate} ${formattedTime}`;
+  }
+
   return (
     <div className="w-full flex flex-col gap-10">
       <div className="flex flex-row justify-between">
@@ -67,7 +89,7 @@ export default function OrderPage() {
               <div className="flex flex-row items-center w-full mt-10">
                 <div className="w-full font-bold px-2">
                   <div>Table NO: {order.tableId}</div>
-                  <div>Order Since: {order.createdAt.toString()}</div>
+                  <div>Order Since: {format(order.createdAt)}</div>
                 </div>
                 <div
                   className="btn btn-success text-white font-bold text-lg"
