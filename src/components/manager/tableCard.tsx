@@ -13,7 +13,7 @@ export default function TableCard({ table, refetchAvailableTables }: { table: Ba
     refetchAvailableTables();
   };
 
-  const endTime = new Date(table.createdAt);
+  const endTime = new Date(table.entryAt);
   endTime.setHours(endTime.getHours() + 2);
 
   return (
@@ -22,7 +22,7 @@ export default function TableCard({ table, refetchAvailableTables }: { table: Ba
         <div className="flex flex-col gap-1">
           <div className="font-bold text-xl">Table NO: {table.id}</div>
           <div className="text-grey">
-            <p>เวลาเริ่มต้น : {new Date(table.createdAt).toLocaleTimeString()}</p>
+            <p>เวลาเริ่มต้น : {table.entryAt.toLocaleTimeString()}</p>
             <p>เวลาสิ้นสุด : {endTime.toLocaleTimeString()}</p>
           </div>
         </div>
