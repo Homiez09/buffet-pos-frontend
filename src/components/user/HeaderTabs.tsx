@@ -12,7 +12,7 @@ const items = [
     { id: 5, name: "ของหวาน" },
 ];
 
-export default function HeaderTabs({ search, setSearch } : { search: string, setSearch: React.Dispatch<React.SetStateAction<string>> }) {
+export default function HeaderTabs({ search, setSearch }: { search: string, setSearch: React.Dispatch<React.SetStateAction<string>> }) {
     const [selected, setSelected] = useState(0);
     const [isShow, setIsShow] = useState<boolean>(false);
     const [isSearchShow, setIsSearchShow] = useState<boolean>(false);
