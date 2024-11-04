@@ -40,7 +40,7 @@ export default function TableCard({ table, refetchAvailableTables }: { table: Ba
         <div className="flex flex-col gap-1">
           <div className="font-bold text-xl">Table NO: {table.id}</div>
           <div className="text-grey">
-            <p>เวลาเริ่มต้น : {table.entryAt.toLocaleTimeString()}</p>
+            <p>เวลาเริ่มต้น : {new Date(table.entryAt).toLocaleTimeString()}</p>
             <p>เวลาสิ้นสุด : {endTime.toLocaleTimeString()}</p>
           </div>
         </div>
@@ -60,7 +60,7 @@ export default function TableCard({ table, refetchAvailableTables }: { table: Ba
         </div>
       </div>
       <div className="font-bold text-xl">
-        Time remaining: <span className="text-primary">112</span> mins
+        Time remaining: <span className="text-primary">{timeRemaining}</span> mins
       </div>
     </div>
   );
