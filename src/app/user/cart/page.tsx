@@ -24,13 +24,9 @@ export default function Cart() {
 
 
     const onSubmit = async () => {
+        if (cart.length === 0) return;
         const payload: OrderRequest = {
-            order_items: [
-                {
-                    menu_id: "string",
-                    quantity: 0
-                }
-            ]
+            order_items: cart
         }
         console.log(payload.order_items[1]);
 
@@ -61,7 +57,7 @@ export default function Cart() {
                     <p className=" text-xl font-bold "> {cart.reduce((acc, item) => acc + item.quantity, 0)} รายการ</p>
                 </div>
                 <div className="flex pt-6 justify-center pb-6">
-                    <button onClick={() => setIsOpen((o) => !o)} className="bg-primary text-white font-bold text-lg py-3 px-4 rounded-lg w-11/12 pb-4 shadow-lg">
+                    <button disabled={cart.length === 0} onClick={() => setIsOpen((o) => !o)} className={`${cart.length === 0? 'bg-grey' : 'bg-primary'} text-white font-bold text-lg py-3 px-4 rounded-lg w-11/12 pb-4 shadow-lg`}>
                         สั่งอาหารเลย
                     </button>
                 </div >

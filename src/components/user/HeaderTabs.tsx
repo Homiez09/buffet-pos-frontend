@@ -6,22 +6,11 @@ import { useGetCategories } from "@/api/user/useCategory";
 import { useCart } from "@/provider/CartProvider";
 import { BaseCategoryResponse } from "@/interfaces/category";
 
-
-const items = [
-    { id: 0, name: "หมู" },
-    { id: 1, name: "เนื้อ" },
-    { id: 2, name: "ผักและเห็ด" },
-    { id: 3, name: "ทะเล" },
-    { id: 4, name: "ข้าว" },
-    { id: 5, name: "ของหวาน" },
-];
-
-export default function HeaderTabs({ search, setSearch }: { search: string, setSearch: React.Dispatch<React.SetStateAction<string>> }) {
+export default function HeaderTabs({ categories, search, setSearch }: { categories: BaseCategoryResponse[], search: string, setSearch: React.Dispatch<React.SetStateAction<string>> }) {
     const [selected, setSelected] = useState<string>('0');
     const [isShow, setIsShow] = useState<boolean>(false);
     const [isSearchShow, setIsSearchShow] = useState<boolean>(false);
     const { accessCode } = useCart();
-    const { data: categories, isLoading: isLoadingCategories } = useGetCategories(accessCode);
 
     const ref = useRef(null) as any;
 
@@ -38,11 +27,6 @@ export default function HeaderTabs({ search, setSearch }: { search: string, setS
         }
     }
 
-    const filterItems = items.filter((item) => {
-        return item.name.toLowerCase().includes(search.toLowerCase());
-    });
-
-    if (isLoadingCategories) return <p>Loading...</p>;
     return (
         <>
             <div className="fixed flex flex-col gap-6 bg-white px-3 py-3 max-w-lg w-full z-[999]">
