@@ -19,7 +19,7 @@ export default function TableCard({ table, refetchUnpaidInvoices }: { table: Bas
 
 
   const paymentHandler = async () => {
-    
+    router.push(`/manager/all-payment/${table.id}`);
   };
 
   const cancelHandler = async (tableID: string) => {
