@@ -12,7 +12,7 @@ import { BaseMenuResponse } from "@/interfaces/menu";
 import { OrderItemResponse, OrderResponse,OrderStatus } from "@/interfaces/order";
 import useToastHandler from "@/lib/toastHanlder";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import { MdTableBar } from "react-icons/md";
 import { PiPrinterFill } from "react-icons/pi";
 
@@ -23,7 +23,7 @@ interface PaymentDetailPageProps {
 }
 
 interface OrderItemWithMenu extends OrderItemResponse {
-  menu: BaseMenuResponse;
+  menu: BaseMenuResponse|null;
 }
 
 export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
@@ -38,21 +38,28 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
   const {data:unpaidInvoices, isLoading: loadingUnpaidInvoices } = useGetAllUnpaidInvoices();
   const invoiceCurrent = unpaidInvoices?.find((invoice) => invoice.tableId === id);
 
-  const { data: servedOrders, isLoading: loadingServedOrders } = useGetOrdersByStatus(OrderStatus.Served);
+  const { data: servedOrders, isLoading: loadingServedOrders,refetch: refetchServedOrders } = useGetOrdersByStatus(OrderStatus.Served);
   const { data: menus, isLoading: loadingMenus } = useGetMenus();
 
   const orderData = servedOrders?.find((order) => order.tableId === id);
   const { data: table, isLoading: loadingTable } = useGetTableById(id);
-  
+    
+  useEffect(() => {
+    if (!loadingServedOrders) {
+      refetchServedOrders();
+    }
+  }, [loadingServedOrders,refetchServedOrders]);
+
   if (loadingUnpaidInvoices || loadingServedOrders || loadingMenus || loadingTable ) {
     return <LoadingAnimation />;
   }
 
-  const orderItemsWithMenu: OrderItemWithMenu[] = orderData?.orderItem.map((item) => {
-    const menu = menus?.find((menu) => menu.id === item.menuID);
-    return { ...item, menu: menu! };
-  })!;
-
+  const orderItemsWithMenu: OrderItemWithMenu[] = (orderData?.orderItem || []).map((item) => {
+    const menu = menus?.find((menu) => menu.id === item.menuID) || { id: item.menuID, name: "" }; // Default object if menu not found
+  
+    return { ...item, menu };
+  });
+  console.log(orderItemsWithMenu)
   const confirmHandler = async () => {
     const invoice : UpdateInvoiceStatusRequest = {
       invoice_id : invoiceCurrent?.id || ""
@@ -110,7 +117,7 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
             orderItemsWithMenu.map((oim, i) => {
                 return (
                     <div key={i} className="grid grid-cols-2 w-full border-b-2 py-5 text-center">
-                      <div className="font-bold items-center">{oim.menu.name}</div>
+                      <div className="font-bold items-center">{oim.menu?.name}</div>
                       <div>{oim.quantity}</div>
                     </div>
                 );
