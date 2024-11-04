@@ -7,15 +7,21 @@ export interface BaseTableResponse {
   id: string;
   tableName: string;
   isAvailable: boolean;
-  qrCode?: string;
+  qrcode?: string;
   accessCode?: string;
   createdAt: Date;
   updatedAt: Date;
+  entryAt: Date;
 }
 
 export interface EditTableRequest{
   id: string;
   tableName: string;
+}
+
+export interface AssignTableRequest {
+  id: string;
+  peopleAmount: number;
 }
 
 export type TableDetailResponse = Omit<BaseTableResponse, 'createdAt' | 'updatedAt'>;

@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetTables } from '@/api/manager/useTable';
+import { useAssignTable, useGetTables } from '@/api/manager/useTable';
 import { ConfirmTableDialog } from '@/components/manager/confirmTableDialog';
 import LoadingAnimation from '@/components/manager/loadingAnimation';
 import { BaseTableResponse } from '@/interfaces/table';
@@ -34,16 +34,16 @@ export default function TableReservation() {
             <div className="flex flex-col select-none">
                 <p className="text-2xl font-bold">Table Reservation</p>
                 <div className="grid grid-cols-3 gap-y-20 mt-8">
-                    {tables && tables.map((table: BaseTableResponse, index) => (
+                    {tables && tables.map((table: BaseTableResponse, index: number) => (
                         <div 
                             key={index} 
-                            onClick={() => table.isAvailable && setSelectedTable(table)} 
+                            onClick={() => setSelectedTable(table)} 
                             className="hover:cursor-pointer flex px-16 items-center justify-center"
                         >
                             {
-                                table.isAvailable === false
-                                    ? tableColor.full
-                                    : (table.id === selectedTable?.id ? tableColor.selected : tableColor.default)
+                                table.id === selectedTable?.id
+                                    ? tableColor.selected
+                                    : (table.isAvailable === false ? tableColor.full : tableColor.default)
                             }
                             <p className="absolute text-3xl text-grey">T-{table.tableName}</p>
                         </div>
@@ -60,7 +60,7 @@ export default function TableReservation() {
                     จองโต๊ะ
                 </div>
             </div>
-            <ConfirmTableDialog openDialog={isOpenPopup} setOpenDialog={setIsOpenPopup} selectedTable={selectedTable} tables={tables} />
+            <ConfirmTableDialog openDialog={isOpenPopup} setOpenDialog={setIsOpenPopup} selectedTable={selectedTable} tables={tables} refetchTables={refetchTables} />
         </>
     )
 }
