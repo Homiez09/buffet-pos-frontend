@@ -20,7 +20,6 @@ export interface OrderItemRequest {
 }
 
 export interface OrderRequest {
-    table_id: string;
     order_item: OrderItemRequest[];
 }
 
