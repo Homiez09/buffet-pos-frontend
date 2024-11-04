@@ -8,6 +8,11 @@ import { OrderResponse, OrderStatus, UpdateOrderRequest } from "@/interfaces/ord
 import OrderCard from "@/components/manager/orderCard";
 import { useGetOrdersByStatus ,useUpdateOrder} from "@/api/manager/useOrder";
 import { useGetTableById, useGetTables } from "@/api/manager/useTable";
+import { BaseTableResponse } from "@/interfaces/table";
+
+interface PreparingOrderWithTable extends OrderResponse {
+  table: BaseTableResponse;
+}
 
 export default function OrderPage() {
   const toaster = useToastHandler();

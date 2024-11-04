@@ -5,7 +5,7 @@ import { OrderResponse, OrderStatus, UpdateOrderRequest } from '@/interfaces/ord
 
 const getOrdersByStatus = async (status: OrderStatus) => {
     const session = await getSession();
-    const { data } = await axiosInstance.get(`/manage/orders/status/${status}`, {
+    const { data } = await axiosInstance.get(`/manage/orders/${status}`, {
         headers: {
             Authorization: `Bearer ${session?.token}`,
         },
@@ -39,7 +39,7 @@ const useUpdateOrder = () => {
 
 const getOrderByTableID = async (tableID :string ) => {
     const session = await getSession();
-    const { data } = await axiosInstance.get(`/manage/orders/table/${tableID}`,{
+    const { data } = await axiosInstance.get(`/manage/orders/${tableID}`,{
         headers: {
             Authorization: `Bearer ${session?.token}`,
         },

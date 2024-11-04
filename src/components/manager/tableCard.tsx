@@ -38,7 +38,7 @@ export default function TableCard({ table, refetchAvailableTables }: { table: Ba
     <div className="flex flex-row justify-between shadow-md p-5 rounded-lg">
       <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-1">
-          <div className="font-bold text-xl">Table NO: {table.id}</div>
+          <div className="font-bold text-xl">Table NO: {table.tableName}</div>
           <div className="text-grey">
             <p>เวลาเริ่มต้น : {table.entryAt.toLocaleTimeString()}</p>
             <p>เวลาสิ้นสุด : {endTime.toLocaleTimeString()}</p>
