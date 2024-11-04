@@ -10,6 +10,9 @@ const CartContext = createContext<{
   cart: OrderItemRequest[];
   setCart: React.Dispatch<React.SetStateAction<any[]>>;
   addItem: (item: OrderItemRequest) => void;
+  accessCode: string;
+  setAccessCode: React.Dispatch<React.SetStateAction<string>>;
+  clearCart: () => void;
 } | null>(null);
 
 export const useCart = () => {
@@ -22,6 +25,11 @@ export const useCart = () => {
 
 export default function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<OrderItemRequest[]>([]);
+  const [accessCode, setAccessCode] = useState<string>('');
+
+  useEffect(() => {
+    console.log(cart);
+  }, []);
 
   const addItem = (item: OrderItemRequest) => {
     const existingItem = cart.find((i) => i.menu_id === item.menu_id);
@@ -44,5 +52,5 @@ export default function CartProvider({ children }: { children: ReactNode }) {
     console.log(cart);
   })
 
-  return <CartContext.Provider value={{ cart, setCart, addItem }}>{children}</CartContext.Provider>;
+  return <CartContext.Provider value={{ cart, setCart, addItem, accessCode, setAccessCode, clearCart }}>{children}</CartContext.Provider>;
 }

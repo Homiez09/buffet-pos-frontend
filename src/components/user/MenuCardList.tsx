@@ -1,8 +1,8 @@
+'use client';
+
 import { BaseMenuResponse } from "@/interfaces/menu";
 import MenuCard from "./MenuCard";
 import { useCart } from "@/provider/CartProvider";
-
-
 
 export default function MenuCardList({ menuList }:{menuList: BaseMenuResponse[]}) {
     const { cart } = useCart();
@@ -12,7 +12,7 @@ export default function MenuCardList({ menuList }:{menuList: BaseMenuResponse[]}
     );
 
     return (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 w-full">
             {filteredMenuList.map((item: BaseMenuResponse) => (
                 <MenuCard key={item.id} menu={item} />
             ))}

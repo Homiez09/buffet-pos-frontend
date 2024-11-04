@@ -90,16 +90,14 @@ export function EditMenuDialog({
   const onSubmit = async (data: EditMenuFormValues) => {
     const categoryData = categories.find((c) => c.name === data.category);
 
-    if (data.image === null) {
-      return alert("Please select an image file to upload");
-    }
+
 
     const editData: EditMenuRequest = {
       id: menu.id,
       name: data.name,
       categoryId: categoryData?.id,
       isAvailable: data.status === MenuStatus.Available,
-      image: data.image,
+      image: data.image ?? undefined,
     };
 
     await editMenu.mutateAsync(editData);
