@@ -48,7 +48,7 @@ const getOrderByTableID = async (tableID :string ) => {
 }
 
 const useGetOrderByTableID = (tableID:string) => {
-    return useQuery<OrderResponse>({
+    return useQuery<OrderResponse[]>({
         queryKey: ["orders", tableID],
         queryFn: () => getOrderByTableID(tableID),
         staleTime: 5 * 60 * 1000,
