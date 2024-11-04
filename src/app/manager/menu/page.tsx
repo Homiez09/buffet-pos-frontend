@@ -1,5 +1,6 @@
 'use client';
 
+import { useDeleteCategory } from "@/api/manager/useCategory";
 import { useAddMenu, useGetMenus } from "@/api/manager/useMenu";
 import AddCategoryDialog from "@/components/manager/addCategoryDialog";
 import { AddMenuDialog } from "@/components/manager/addMenuDialog";
@@ -20,7 +21,7 @@ export default function MenuPage() {
         return <LoadingAnimation />;
     }
 
-    const deleteCategoryHandler = () => {
+    const deleteCategoryHandler = async () => {
         setDeleteCategoryDialog(true);
     };
 

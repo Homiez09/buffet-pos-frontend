@@ -16,7 +16,7 @@ export default function MenuCard({ menu, refetchMenus }: {menu: BaseMenuResponse
     const toaster = useToastHandler();
     const [ openDialog, setOpenDialog ] = useState(false);
     const [ openDeleteDialog, setOpenDeleteDialog ] = useState(false);
-    const { data: category, isLoading: loadingCategory } = useGetCategoryById(menu.categoryId);
+    const { data: category, isLoading: loadingCategory, refetch: refetchCategory } = useGetCategoryById(menu.categoryId);
 
     const deleteMenu = useDeleteMenu();
 
