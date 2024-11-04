@@ -26,13 +26,3 @@ export interface UserLoginResponse {
 export interface UserRegisterResponse {
   message: string;
 }
-
-export interface UserAddOrderRequest{
-  order_item : ItemRequest[]; 
-  table_id: string;
-}
-
-export interface ItemRequest{
-  menu_id: string;
-  quantity: number;
-}
