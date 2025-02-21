@@ -17,9 +17,10 @@ type ConfirmDialogProps = {
   openDialog: boolean;
   setOpenDialog: (open: boolean) => void;
   callback?: () => void;
+  setPhone?: (phone: string) => void;
 };
 
-export function UsePointDialog({ openDialog, setOpenDialog, callback }: ConfirmDialogProps) {
+export function UsePointDialog({ openDialog, setOpenDialog, callback, setPhone }: ConfirmDialogProps) {
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
@@ -43,6 +44,7 @@ export function UsePointDialog({ openDialog, setOpenDialog, callback }: ConfirmD
 
   const handleMemberSelect = (phone: string) => {
     setSelectedMember(phone);
+    setPhone?.(phone);
   };
 
   const handleConfirm = () => {

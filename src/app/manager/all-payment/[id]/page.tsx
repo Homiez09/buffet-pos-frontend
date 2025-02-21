@@ -49,12 +49,19 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
 
   const orderData = servedOrders?.find((order) => order.tableId === id);
   const { data: table, isLoading: loadingTable } = useGetTableById(id);
+
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
     
   useEffect(() => {
     if (!loadingServedOrders) {
       refetchServedOrders();
     }
   }, [loadingServedOrders,refetchServedOrders]);
+
+  useEffect(() => {
+    if (phoneNumber?.length === 0) setIsVisible(false);
+    else setIsVisible(true);
+  }, [phoneNumber])
 
   if (loadingUnpaidInvoices || loadingServedOrders || loadingMenus || loadingTable ) {
     return <LoadingAnimation />;
@@ -118,7 +125,7 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
           <div>Menu</div>
           <div>Quantity</div>
         </div>
-        <div className="collapse-content bg-wherePrimary">
+        <div className=" bg-wherePrimary">
           {
             orderItemsWithMenu.map((oim, i) => {
                 return (
@@ -134,31 +141,35 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
       <div className="flex flex-row justify-between">
             <div>
                 <div><span className="font-bold">จำนวนคน:</span> {invoiceCurrent?.peopleAmount}</div>
-                <div><span className="font-bold">ราคาที่ต้องชำระ:</span>{invoiceCurrent?.totalPrice} baht</div>
+                <div><span className="font-bold">ราคาที่ต้องชำระ: </span>{invoiceCurrent?.totalPrice} baht</div>
+
+
                 <div className="flex justify-row">
-                  {isVisible && <p className="text-whereBlack">ส่วนลดสะสมแต้มจาก <span> 020-323-xxxx </span> </p>}  
-                  {isVisible && <button className="text-red underline font-bold text-error">ลบ</button>}
+                  {isVisible && <p className="text-whereBlack">ส่วนลดสะสมแต้มจาก <span> {phoneNumber} </span> </p>}  
+                  {isVisible && <button className="text-red underline font-bold text-error" onClick={() => {
+                  setPhoneNumber("");
+                  }} > ลบ</button>}
                 </div>  
             </div>
             <div><span className="font-bold">total order:</span> {orderData?.orderItem.length}</div>
         </div>
-        <div className="flex flex-row gap-4 justify-between">
-            <div className="w-full flex flex-row gap-4">
-              <div className="btn bg-grey text-white w-5/12" 
+        <div className="flex flex-row gap-4 justify-center">
+            <div className="w-full flex flex-row gap-4 justify-center">
+              <div className="btn bg-grey border-none text-white w-auto" 
                 onClick={() => router.push("/manager/all-payment"
               )}>
                   กลับสู่หน้าชำระเงิน
               </div>
 
 
-              <div className="btn btn-success text-white w-5/12" onClick={() => {
+              <div className="btn btn-success text-white w-auto" onClick={() => {
                 confirmHandler();
                 setOpenDialog(true);
               }}>
                   ยืนยันการชำระเงิน
               </div>
 
-              <div className="btn btn-success bg-primary border-none text-white w-5/12" onClick={() => {
+              <div className="btn btn-success bg-primary border-none text-white w-auto" onClick={() => {
                 setOpenUsePointDialog(true);
                 }}>
                   ใช้แต้มสะสม
@@ -191,13 +202,16 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
                 router.push("/manager/all-payment");
             }}
         />
-        
+
+
         <UsePointDialog
             openDialog={openUsePointDialog}
             setOpenDialog={setOpenUsePointDialog}
             callback={async () => {
               setIsVisible(!isVisible);
+              
             }}
+            setPhone={(phone) => setPhoneNumber(phone)}
         />
 
     </div>

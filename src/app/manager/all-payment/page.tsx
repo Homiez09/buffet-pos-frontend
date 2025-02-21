@@ -33,7 +33,6 @@ export default function AllPaymentPage() {
 
 
   return (
-    
     <div className="w-full flex flex-col gap-10">
       <div className="flex flex-row justify-between">
       </div>

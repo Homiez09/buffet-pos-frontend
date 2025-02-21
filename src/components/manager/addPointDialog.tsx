@@ -115,13 +115,12 @@ import {
                     <input type="radio" className=" accent-primary w-4 h-4 border-2 rounded-full" name="member" checked={selectedMember === member.phone} readOnly />
                     {member.phone}
                     </td>
-                    <td className="px-7 py-2 text-black font-normal">{member.points} / 10</td>
+                    <td className={`px-7 py-2 text-black font-normal`}> {member.points} / 10</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>  
-
   
   
           {/* PIN Input */}
