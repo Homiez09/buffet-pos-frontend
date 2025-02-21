@@ -61,7 +61,7 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
   }
 
   const orderItemsWithMenu: OrderItemWithMenu[] = (orderData?.orderItem || []).map((item) => {
-    const menu = menus?.find((menu) => menu.id === item.menuID) || { id: item.menuID, name: "" }; // Default object if menu not found
+    const menu = menus?.find((menu) => menu.id === item.menuID) || { id: item.menuID, name: "", description: "", categoryId: "", imageUrl: "", isAvailable: false }; // Default object if menu not found
   
     return { ...item, menu };
   });
@@ -133,35 +133,35 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
       </div>
       <div className="flex flex-row justify-between">
             <div>
-                <div><span className="font-bold">people:</span> {invoiceCurrent?.peopleAmount}</div>
-                <div><span className="font-bold">total cost:</span>{invoiceCurrent?.totalPrice} baht</div>
+                <div><span className="font-bold">จำนวนคน:</span> {invoiceCurrent?.peopleAmount}</div>
+                <div><span className="font-bold">ราคาที่ต้องชำระ:</span>{invoiceCurrent?.totalPrice} baht</div>
                 <div className="flex justify-row">
-                  {isVisible && <p>ส่วนลดสะสมแต้มจาก 020-323-xxxx</p>}  
-                  <button className="text-red underline font-bold">Delete</button>
+                  {isVisible && <p>ส่วนลดสะสมแต้มจาก 020-323-xxxx </p>}  
+                  {isVisible && <button className="text-red underline font-bold text-error">ลบ</button>}
                 </div>  
             </div>
             <div><span className="font-bold">total order:</span> {orderData?.orderItem.length}</div>
         </div>
         <div className="flex flex-row gap-4 justify-between">
             <div className="w-full flex flex-row gap-4">
-              <div className="btn w-5/12" 
+              <div className="btn bg-grey text-white w-5/12" 
                 onClick={() => router.push("/manager/all-payment"
               )}>
-                  Back to All Payments
+                  กลับสู่หน้าชำระเงิน
               </div>
 
 
-              <div className="btn btn-success w-5/12" onClick={() => {
+              <div className="btn btn-success text-white w-5/12" onClick={() => {
                 confirmHandler();
                 setOpenDialog(true);
               }}>
-                  Confirm Payment
+                  ยืนยันการชำระเงิน
               </div>
 
-              <div className="btn btn-success w-5/12" onClick={() => {
+              <div className="btn btn-success bg-primary border-none text-white w-5/12" onClick={() => {
                 setOpenUsePointDialog(true);
                 }}>
-                  Use Point
+                  ใช้แต้มสะสม
               </div>
 
             </div>
@@ -177,15 +177,9 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
           openDialog={openDialog}
           setOpenDialog={setOpenDialog}
           callback={async () => {    
-            if (selectedInvoice) { // Check if selectedInvoice is not null
-              await updataInvoice.mutateAsync(selectedInvoice);
-              setOpenAddPointDialog(true);
+          setOpenAddPointDialog(true);
               // toaster("ลูกค้าชำระเงินสำเร็จ", "ข้อมูลออเดอร์จะถูกจัดเก็บในประวัติออเดอร์");
-              // router.push("/manager/all-payment");
-            } else {
-              // Handle the case where selectedInvoice is null if necessary
-              console.error("Selected invoice is null");
-            }
+              // router.push("/manager/all-payment");    
           }}
         />
 
