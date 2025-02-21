@@ -4,9 +4,11 @@ import { useGetAllUnpaidInvoices, useUpdateInvoice } from "@/api/manager/useInvo
 import { useGetMenus } from "@/api/manager/useMenu";
 import { useGetOrdersByStatus } from "@/api/manager/useOrder";
 import { useGetTableById } from "@/api/manager/useTable";
+import { AddPointDialog } from "@/components/manager/addPointDialog";
 import DateTimeDisplay from "@/components/manager/clock";
 import { ConfirmDialog } from "@/components/manager/confirmDialog";
 import LoadingAnimation from "@/components/manager/loadingAnimation";
+import { UsePointDialog } from "@/components/manager/usePointDialog";
 import { UpdateInvoiceStatusRequest } from "@/interfaces/invoice";
 import { BaseMenuResponse } from "@/interfaces/menu";
 import { OrderItemResponse, OrderResponse,OrderStatus } from "@/interfaces/order";
@@ -30,9 +32,13 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
 
   const { id } = params;
   const [ openDialog, setOpenDialog ] = useState(false);
-  const router = useRouter();
+  const [ openAddpointDialog, setOpenAddPointDialog] = useState(false);
+  const [ openUsePointDialog, setOpenUsePointDialog] = useState(false);
   const toaster = useToastHandler();
-  const updataInvoice = useUpdateInvoice();
+  const [isVisible, setIsVisible] = useState(false);
+
+  const router = useRouter();
+   const updataInvoice = useUpdateInvoice();
   const [selectedInvoice, setSelectedInvoice] = useState<UpdateInvoiceStatusRequest  | null>(null);
 
   const {data:unpaidInvoices, isLoading: loadingUnpaidInvoices } = useGetAllUnpaidInvoices();
@@ -129,27 +135,42 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
             <div>
                 <div><span className="font-bold">people:</span> {invoiceCurrent?.peopleAmount}</div>
                 <div><span className="font-bold">total cost:</span>{invoiceCurrent?.totalPrice} baht</div>
+                <div className="flex justify-row">
+                  {isVisible && <p>ส่วนลดสะสมแต้มจาก 020-323-xxxx</p>}  
+                  <button className="text-red underline font-bold">Delete</button>
+                </div>  
             </div>
             <div><span className="font-bold">total order:</span> {orderData?.orderItem.length}</div>
         </div>
         <div className="flex flex-row gap-4 justify-between">
             <div className="w-full flex flex-row gap-4">
-              <div className="btn w-5/12" onClick={() => router.push(
-                "/manager/all-payment"
+              <div className="btn w-5/12" 
+                onClick={() => router.push("/manager/all-payment"
               )}>
                   Back to All Payments
               </div>
+
+
               <div className="btn btn-success w-5/12" onClick={() => {
                 confirmHandler();
                 setOpenDialog(true);
               }}>
                   Confirm Payment
               </div>
+
+              <div className="btn btn-success w-5/12" onClick={() => {
+                setOpenUsePointDialog(true);
+                }}>
+                  Use Point
+              </div>
+
             </div>
+
             <div className="btn btn-primary w-fit" onClick={() => console.log("printing")}>
               <PiPrinterFill className="w-full h-full text-whereWhite" />
             </div>
         </div>
+
         <ConfirmDialog
           title="ยืนยันการชำระเงิน?"
           description="แน่ใจหรือไม่ว่าต้องการยืนยันการชำระเงิน"
@@ -158,14 +179,33 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
           callback={async () => {    
             if (selectedInvoice) { // Check if selectedInvoice is not null
               await updataInvoice.mutateAsync(selectedInvoice);
-              toaster("ลูกค้าชำระเงินสำเร็จ", "ข้อมูลออเดอร์จะถูกจัดเก็บในประวัติออเดอร์");
-              router.push("/manager/all-payment");
+              setOpenAddPointDialog(true);
+              // toaster("ลูกค้าชำระเงินสำเร็จ", "ข้อมูลออเดอร์จะถูกจัดเก็บในประวัติออเดอร์");
+              // router.push("/manager/all-payment");
             } else {
               // Handle the case where selectedInvoice is null if necessary
               console.error("Selected invoice is null");
             }
           }}
         />
+
+        <AddPointDialog
+            openDialog={openAddpointDialog}
+            setOpenDialog={setOpenAddPointDialog}
+            callback={async () => {
+                toaster("ลูกค้าชำระเงินสำเร็จ", "ข้อมูลออเดอร์จะถูกจัดเก็บในประวัติออเดอร์");
+                router.push("/manager/all-payment");
+            }}
+        />
+        
+        <UsePointDialog
+            openDialog={openUsePointDialog}
+            setOpenDialog={setOpenUsePointDialog}
+            callback={async () => {
+              setIsVisible(!isVisible);
+            }}
+        />
+
     </div>
   );
 }
