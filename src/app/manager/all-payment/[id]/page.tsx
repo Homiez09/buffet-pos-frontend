@@ -136,7 +136,7 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
                 <div><span className="font-bold">จำนวนคน:</span> {invoiceCurrent?.peopleAmount}</div>
                 <div><span className="font-bold">ราคาที่ต้องชำระ:</span>{invoiceCurrent?.totalPrice} baht</div>
                 <div className="flex justify-row">
-                  {isVisible && <p>ส่วนลดสะสมแต้มจาก 020-323-xxxx </p>}  
+                  {isVisible && <p className="text-whereBlack">ส่วนลดสะสมแต้มจาก <span> 020-323-xxxx </span> </p>}  
                   {isVisible && <button className="text-red underline font-bold text-error">ลบ</button>}
                 </div>  
             </div>

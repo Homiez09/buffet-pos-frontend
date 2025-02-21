@@ -5,7 +5,7 @@ import {
     AlertDialogTitle,
   } from "@/components/ui/alert-dialog";
   import { Button } from "@/components/ui/button";
-  import { useState } from "react";
+  import { useState, ReactNode } from "react";
   import AddMemberDialog from "./addMemberDialog";
   
   type Member = {
@@ -78,17 +78,17 @@ import {
           </div>
   
           <div className="flex justify-between my-3">
-            <input placeholder="ค้นหาเบอร์โทรศัพท์" className="border px-3 py-2 rounded-md w-full" />
-            <Button className="ml-3" onClick={() => setOpen(true)}>+ เพิ่มสมาชิก</Button>
+            <input placeholder="ค้นหาเบอร์โทรศัพท์" className="border-none rounded-xl p-3 w-full text-whereBlack bg-zinc-100" />
+            <Button className="ml-3 bg-success text-white font-bold" onClick={() => setOpen(true)}>+ เพิ่มสมาชิก</Button>
             <AddMemberDialog open={open} onClose={() => setOpen(false)} />
           </div>
   
           <div className="overflow-y-auto max-h-60 border rounded-lg">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="px-4 py-2">เบอร์โทรศัพท์</th>
-                  <th className="px-4 py-2">แต้มสะสม</th>
+                <tr className="bg-zinc-100">
+                  <th className="px-9 py-2">เบอร์โทรศัพท์</th>
+                  <th className="px-4 py-2 ">แต้มสะสม</th>
                 </tr>
               </thead>
               <tbody>
@@ -99,10 +99,10 @@ import {
                     onClick={() => handleMemberSelect(member.phone)}
                   >
                     <td className="px-4 py-2 flex items-center gap-2">
-                      <input type="radio" name="member" checked={selectedMember === member.phone} readOnly />
+                      <input type="radio" className=" accent-primary w-4 h-4 border-2 rounded-full" name="member" checked={selectedMember === member.phone} readOnly />
                       {member.phone}
                     </td>
-                    <td className="px-4 py-2 text-orange-500 font-bold">{member.points} / 10</td>
+                    <td className="px-7 py-2 text-black font-normal">{member.points} / 10</td>
                   </tr>
                 ))}
               </tbody>
@@ -118,10 +118,10 @@ import {
               value={pin}
               onChange={(e) => setPin(e.target.value)}
             />
-            {error && <p className="pl-2 pt-2 text-red-500 text-sm mt-1">{error}</p>}
+            {error && <p className="pl-2 pt-2 text-error text-sm mt-1">{error}</p>}
           </div>
   
-          <Button className="w-full bg-orange-500 text-white mt-4" onClick={handleConfirm}>
+          <Button className="w-full bg-primary text-white mt-4" onClick={handleConfirm}>
             ยืนยัน
           </Button>
         </AlertDialogContent>
