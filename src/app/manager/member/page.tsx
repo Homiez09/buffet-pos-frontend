@@ -1,22 +1,14 @@
 "use client";
 
 import useToastHandler from "@/lib/toastHanlder";
-import { format } from 'date-fns';
 import { useEffect, useState } from "react";
 import { ConfirmDialog } from "@/components/manager/confirmDialog";
-import LoadingAnimation from "@/components/manager/loadingAnimation";
-import { OrderResponse, OrderStatus, UpdateOrderRequest } from "@/interfaces/order";
-import OrderCard from "@/components/manager/orderCard";
-import { useGetOrdersByStatus ,useUpdateOrder} from "@/api/manager/useOrder";
-import { useGetTableById, useGetTables } from "@/api/manager/useTable";
-import { BaseTableResponse } from "@/interfaces/table";
-import DateTimeDisplay from "@/components/manager/clock";
+
 
 import { Button } from "@/components/ui/button";
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import AddMemberDialog from "@/components/manager/addMemberDialog";
-import { AddPointDialog } from "@/components/manager/addPointDialog";
-import { UsePointDialog } from "@/components/manager/usePointDialog";
+import { useDeleteCustomer, useGetCustomer } from "@/api/loyalty/useLoyalty";
 
 // interface PreparingOrderWithTable extends OrderResponse {
 //   table: BaseTableResponse;
@@ -24,32 +16,51 @@ import { UsePointDialog } from "@/components/manager/usePointDialog";
 
 export default function MemberPage() {
   const [searchTerm, setSearchTerm] = useState("");
-//   const toaster = useToastHandler();
-//   const updateOrder = useUpdateOrder();
-//   const [openDialog, setOpenDialog] = useState(false);
-//   const { data: tables, isLoading: loadingTables, refetch: refetchTables } = useGetTables();
-//   const {data: preparingOrders =[], isLoading: loadingPreparingOrders,refetch: refetchPreparingOrders } = useGetOrdersByStatus(OrderStatus.Preparing);
-  
-//   const [orderData, setOrderData] = useState<UpdateOrderRequest>();
+  const deleteCustomer = useDeleteCustomer();
+  const getCustomer = useGetCustomer();
 
-  const initialData = [
-    { phone: "064-293-xxxx", points: "1 / 10" },
-    { phone: "064-293-xxxx", points: "1 / 10" },
-    { phone: "064-293-xxxx", points: "1 / 10" },
-    { phone: "064-293-xxxx", points: "1 / 10" },
-    { phone: "064-293-xxxx", points: "1 / 10" },
-  ];
+  //   const toaster = useToastHandler();
+  //   const updateOrder = useUpdateOrder();
+  //   const [openDialog, setOpenDialog] = useState(false);
+  //   const { data: tables, isLoading: loadingTables, refetch: refetchTables } = useGetTables();
+  //   const {data: preparingOrders =[], isLoading: loadingPreparingOrders,refetch: refetchPreparingOrders } = useGetOrdersByStatus(OrderStatus.Preparing);
 
-  const [data, setData] = useState(initialData);
-  
-  const handleDelete = (index: number) => {
-    setData(data.filter((_, i) => i !== index));
+  //   const [orderData, setOrderData] = useState<UpdateOrderRequest>();
+
+  const {
+    data: customers = [],
+    isLoading: loadingCustomers,
+    isError: errorCustomers,
+    refetch: refetchCustomers,
+  } = useGetCustomer();
+
+  const filteredMembers = customers.filter((member) => {
+    const cleanPhone = member.phone.replace(/[^0-9]/g, '');
+    const cleanSearchTerm = searchTerm.replace(/[^0-9]/g, '');
+    return cleanPhone.includes(cleanSearchTerm);
+  });
+
+  // const initialData = [
+  //   { phone: "064-293-xxxx", points: "1 / 10" },
+  //   { phone: "064-293-xxxx", points: "1 / 10" },
+  //   { phone: "064-293-xxxx", points: "1 / 10" },
+  //   { phone: "064-293-xxxx", points: "1 / 10" },
+
+
+  // const initialData = [
+  // ];
+
+  // const [data, setData] = useState();
+
+  const handleDelete = async (id: string) => {
+    await deleteCustomer.mutateAsync(id);
+    refetchCustomers();
   };
 
   const [open, setOpen] = useState(false);
-  const [ openDialog, setOpenDialog ] = useState(false);
-  const [ openAddpointDialog, setopenAddpointDialog] = useState(false);
-  const [ openUsePointDialog, setOpenUsePointDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<string>("");
+
 
 
   const toaster = useToastHandler();
@@ -57,16 +68,14 @@ export default function MemberPage() {
   return (
     <div className="w-full flex flex-col gap-10">
       <div className="flex flex-row justify-between">
-        <label className="input input-bordered flex items-center gap-2 rounded-xl">
-          <input type="text" className="grow" placeholder="Search Number" 
-            value={searchTerm}  
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <label className="input input-bordered flex items-center gap-2 rounded-xl border-none">
+          <input placeholder="ค้นหาเบอร์โทรศัพท์" value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)} />
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
             fill="currentColor"
-            className="h-4 w-4 opacity-70"
+            className="h-6 w-5 opacity-70 text-grey"
           >
             <path
               fillRule="evenodd"
@@ -76,14 +85,14 @@ export default function MemberPage() {
           </svg>
         </label>
 
-        <Button variant="destructive" onClick={() => setOpen(true)}>
-            + Add Member
+        <Button variant="destructive" onClick={() => setOpen(true)} className="bg-success text-white font-bold" >
+          + เพิ่มสมาชิก
         </Button>
 
-        <AddMemberDialog open={open} onClose={() => setOpen(false)}/>
+        <AddMemberDialog open={open} onClose={() => setOpen(false)} />
       </div>
-      
-      <Table>
+
+      <table className="table-auto justify-center text-whereBlack bg-zinc-100">
         <TableHeader>
           <TableRow>
             <TableHead>เบอร์โทรศัพท์</TableHead>
@@ -92,45 +101,35 @@ export default function MemberPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((item, index) => (
+          {filteredMembers.map((member, index) => (
             <TableRow key={index}>
-              <TableCell>{item.phone}</TableCell>
-              <TableCell>{item.points}</TableCell>
+              <TableCell>{member.phone}</TableCell>
+              <TableCell>{member.point}</TableCell>
               <TableCell>
-                <Button variant="destructive" onClick={() => setOpenDialog(true)}>
-                  Delete
+                <Button variant="destructive" onClick={() => {
+                  setSelectedMember(member.id);
+                  setOpenDialog(true);
+                }}>
+                  ลบ
                 </Button>
-
-                <ConfirmDialog
-                    title="แน่ใจหรือไม่ว่าต้องการลบ?"
-                    description="แน่ใจหรือไม่ว่าต้องการเบอร์นี้"
-                    openDialog={openDialog}
-                    setOpenDialog={setOpenDialog}
-                    callback={async () => {    
-                        handleDelete(index)
-                        toaster("ลบสมาชิกสำเร็จ", "คุณได้ทำการลบสมาชิกในระบบเรียบร้อย");
-                        }
-                    }
-                />
               </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
 
-            <div className="btn btn-success w-5/12" onClick={() => {
-                setOpenUsePointDialog(true);
-                }}>
-                  Use Point
-            </div>
-            <UsePointDialog
-                openDialog={openUsePointDialog}
-                setOpenDialog={setOpenUsePointDialog}
-                callback={async () => {
-                    toaster("ลูกค้าชำระเงินสำเร็จ", "ข้อมูลออเดอร์จะถูกจัดเก็บในประวัติออเดอร์");
-                }}
-            />
-      
+          ))}
+
+        </TableBody>
+      </table>
+      <ConfirmDialog
+        title="แน่ใจหรือไม่ว่าต้องการลบ?"
+        description="แน่ใจหรือไม่ว่าต้องการเบอร์นี้"
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        callback={async () => {
+          handleDelete(selectedMember);
+          toaster("ลบสมาชิกสำเร็จ", "คุณได้ทำการลบสมาชิกในระบบเรียบร้อย");
+        }
+        }
+      />
     </div>
   );
 }
