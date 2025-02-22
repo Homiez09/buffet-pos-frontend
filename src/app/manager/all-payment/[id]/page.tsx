@@ -41,7 +41,7 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
   const updataInvoice = useUpdateInvoice();
   const [selectedInvoice, setSelectedInvoice] = useState<UpdateInvoiceStatusRequest | null>(null);
 
-  const { data: unpaidInvoices, isLoading: loadingUnpaidInvoices } = useGetAllUnpaidInvoices();
+  const { data: unpaidInvoices, isLoading: loadingUnpaidInvoices, refetch: refetchUnpaidInvoices } = useGetAllUnpaidInvoices();
   const invoiceCurrent = unpaidInvoices?.find((invoice) => invoice.tableId === id);
 
   const { data: servedOrders, isLoading: loadingServedOrders, refetch: refetchServedOrders } = useGetOrdersByStatus(OrderStatus.Served);
@@ -61,6 +61,7 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
   useEffect(() => {
     if (phoneNumber?.length === 0) setIsVisible(false);
     else setIsVisible(true);
+    refetchUnpaidInvoices();
   }, [phoneNumber])
 
   if (loadingUnpaidInvoices || loadingServedOrders || loadingMenus || loadingTable) {
@@ -146,9 +147,9 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
 
           <div className="flex justify-row">
             {isVisible && <p className="text-whereBlack">ส่วนลดสะสมแต้มจาก <span> {phoneNumber} </span> </p>}
-            {isVisible && <button className="text-red underline font-bold text-error" onClick={() => {
+            {/* {isVisible && <button className="text-red underline font-bold text-error" onClick={() => {
               setPhoneNumber("");
-            }} > ลบ</button>}
+            }} > ลบ</button>} */}
           </div>
         </div>
         <div><span className="font-bold">total order:</span> {orderData?.orderItem.length}</div>
@@ -212,6 +213,7 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
           setIsVisible(!isVisible);
 
         }}
+        invoice_id={invoiceCurrent?.id || ""}
         setPhone={(phone) => setPhoneNumber(phone)}
       />
 

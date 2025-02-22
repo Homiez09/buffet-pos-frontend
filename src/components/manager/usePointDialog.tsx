@@ -5,33 +5,31 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useState, ReactNode } from "react";
+import { useState, ReactNode, Dispatch, SetStateAction } from "react";
 import AddMemberDialog from "./addMemberDialog";
-import { useGetCustomer } from "@/api/loyalty/useLoyalty";
-
-type Member = {
-  phone: string;
-  points: number;
-};
+import { useGetCustomer, useRedeem } from "@/api/loyalty/useLoyalty";
 
 type ConfirmDialogProps = {
   openDialog: boolean;
   setOpenDialog: (open: boolean) => void;
   callback?: () => void;
   setPhone?: (phone: string) => void;
+  invoice_id: string
 };
 
-export function UsePointDialog({ openDialog, setOpenDialog, callback, setPhone }: ConfirmDialogProps) {
+export function UsePointDialog({ openDialog, setOpenDialog, callback, setPhone, invoice_id }: ConfirmDialogProps) {
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
   const {
     data: customers = [],
     isLoading: loadingCustomers,
     isError: errorCustomers,
   } = useGetCustomer();
+  const redeem = useRedeem();
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
-    // const [members, setMembers] = useState<Member[]>([
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
+  // const [members, setMembers] = useState<Member[]>([
   //   { phone: "064-293-xxxx", points: 9 },
   //   { phone: "222-111-xxxx", points: 1 },
   //   { phone: "113-333-xxxx", points: 1 },
@@ -46,19 +44,19 @@ export function UsePointDialog({ openDialog, setOpenDialog, callback, setPhone }
 
 
   const filteredMembers = customers.filter((member) => {
-    const cleanPhone = member.phone.replace(/[^0-9]/g, ''); // ลบตัวอักษรพิเศษออกจากหมายเลขโทรศัพท์
-    const cleanSearchTerm = searchTerm.replace(/[^0-9]/g, ''); // ลบตัวอักษรพิเศษออกจาก searchTerm
+    const cleanPhone = member.phone.replace(/[^0-9]/g, '');
+    const cleanSearchTerm = searchTerm.replace(/[^0-9]/g, '');
     return cleanPhone.includes(cleanSearchTerm);
   });
-  
+
 
 
   const handleMemberSelect = (phone: string) => {
     setSelectedMember(phone);
-    setPhone
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    setIsLoadingButton(true);
     if (!selectedMember) {
       setError("กรุณาเลือกสมาชิก");
       return;
@@ -68,33 +66,34 @@ export function UsePointDialog({ openDialog, setOpenDialog, callback, setPhone }
       return;
     }
 
-    const selectedMemberData = customers.find(m => m.phone === selectedMember);
-    if (selectedMemberData && selectedMemberData.point === 0) {
-      setError("แต้มไม่เพียงพอ");
-      return;
-    }
+    try {
+      await redeem.mutateAsync({
+        invoice_id: invoice_id,
+        phone: selectedMember,
+        pin: pin
+      }, {
+        onSuccess: () => {
+          setPhone?.(selectedMember); // แค่เอาไปโชวหน้าหลัก
+          setOpenDialog(false);
+        },
+        onError: () => {
+          setError("PIN ไม่ถูกต้อง");
+        },
+      })
 
-    setMembers((prev) =>
-      prev.map((m: Member) =>
-        m.phone === selectedMember ? { ...m, points: Math.max(m.points - 1, 0) } : m
-      )
-    );
-
-    setSelectedMember(null);
-    setPin("");
-    setError("");
-    callback?.();
-    setOpenDialog(false);
+    } catch (err) { }
+    setIsLoadingButton(false);
   };
-
+  
   return (
     <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
       <AlertDialogContent className="max-w-lg w-full p-6 rounded-lg shadow-lg">
         <div className="flex justify-between items-center">
           <AlertDialogTitle className="font-bold text-lg">เลือกสมาชิกที่ต้องการใช้แต้มสะสม</AlertDialogTitle>
           <button onClick={() => {
-            setOpenDialog(false)
-            setSelectedMember(null)
+            setOpenDialog(false);
+            setPin("");
+            setSelectedMember(null);
           }
           }>
             <p className="w-5 h-5 font-bold">X</p>
@@ -124,8 +123,8 @@ export function UsePointDialog({ openDialog, setOpenDialog, callback, setPhone }
                   onClick={() => member.point < 10 ? null : handleMemberSelect(member.phone)}
                 >
                   <td className="px-4 py-2 flex items-center gap-2" >
-                    <input type="radio" className={`accent-primary w-4 h-4 border-2 rounded-full`} 
-                      name="member" checked={selectedMember === member.phone} readOnly={member.point < 10}  />
+                    <input type="radio" className={`accent-primary w-4 h-4 border-2 rounded-full`}
+                      name="member" checked={selectedMember === member.phone} readOnly={member.point < 10} />
                     {member.phone}
                   </td>
                   <td className={`px-7 py-2 text-black font-normal ${member.point < 10 ? 'bg-zinc-100 cursor-not-allowed text-grey' : ''} `}>{member.point} / 10</td>
@@ -148,8 +147,8 @@ export function UsePointDialog({ openDialog, setOpenDialog, callback, setPhone }
           {error && <p className="pl-2 pt-2 text-error text-sm mt-1">{error}</p>}
         </div>
 
-        <Button className="w-full bg-primary text-white mt-4" onClick={handleConfirm}>
-          ยืนยัน
+        <Button className="w-full bg-primary text-white mt-4" onClick={handleConfirm} disabled={isLoadingButton}>
+          {isLoadingButton ? "loading..." : "ยืนยัน"}
         </Button>
       </AlertDialogContent>
     </AlertDialog>
