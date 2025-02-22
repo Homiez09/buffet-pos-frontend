@@ -58,7 +58,7 @@ const getCategoryById = async (id: string) => {
 
 const deleteCustomer = async (id: string) => {
     const session = await getSession();
-    const { data } = await axiosInstance.delete(`/loyalty/${id}`, {
+    const { data } = await axiosInstance.delete(`/loyalty/customer/${id}`, {
         headers: {
             Authorization: `Bearer ${session?.token}`,
         },
