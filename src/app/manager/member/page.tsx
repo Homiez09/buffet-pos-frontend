@@ -17,6 +17,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import AddMemberDialog from "@/components/manager/addMemberDialog";
 import { AddPointDialog } from "@/components/manager/addPointDialog";
 import { UsePointDialog } from "@/components/manager/usePointDialog";
+import { useDeleteCustomer } from "@/api/loyalty/useLoyalty";
 
 // interface PreparingOrderWithTable extends OrderResponse {
 //   table: BaseTableResponse;
@@ -24,6 +25,7 @@ import { UsePointDialog } from "@/components/manager/usePointDialog";
 
 export default function MemberPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const deleteCustomer = useDeleteCustomer();
 //   const toaster = useToastHandler();
 //   const updateOrder = useUpdateOrder();
 //   const [openDialog, setOpenDialog] = useState(false);
@@ -42,7 +44,8 @@ export default function MemberPage() {
 
   const [data, setData] = useState(initialData);
   
-  const handleDelete = (index: number) => {
+  const handleDelete = async (index: number) => {
+    // await deleteCustomer.mutateAsync
     setData(data.filter((_, i) => i !== index));
   };
 
@@ -122,15 +125,7 @@ export default function MemberPage() {
                 setOpenUsePointDialog(true);
                 }}>
                   Use Point
-            </div>
-            <UsePointDialog
-                openDialog={openUsePointDialog}
-                setOpenDialog={setOpenUsePointDialog}
-                callback={async () => {
-                    toaster("ลูกค้าชำระเงินสำเร็จ", "ข้อมูลออเดอร์จะถูกจัดเก็บในประวัติออเดอร์");
-                }}
-            />
-      
+            </div>      
     </div>
   );
 }
