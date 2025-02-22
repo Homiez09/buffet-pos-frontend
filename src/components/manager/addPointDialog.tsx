@@ -26,6 +26,7 @@ export function AddPointDialog({ openDialog, setOpenDialog, callback }: ConfirmD
     data: customers = [],
     isLoading: loadingCustomers,
     isError: errorCustomers,
+    refetch: refetchCustomers,
   } = useGetCustomer();
   const [pin, setPin] = useState("");
   const addPoint = useAddPoint();
@@ -56,7 +57,7 @@ export function AddPointDialog({ openDialog, setOpenDialog, callback }: ConfirmD
 
 
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
 
     if (selectedMember && !pin) {
       setError("กรุณากรอก PIN");
@@ -76,14 +77,23 @@ export function AddPointDialog({ openDialog, setOpenDialog, callback }: ConfirmD
     //   )
     // );
 
-    addPoint.mutate(
-      { phone: selectedMember!, pin: pin, point: 1 },
+    await addPoint.mutate(
       {
-      onError: (error) => {
-        setError("เกิดข้อผิดพลาดในการเพิ่มแต้ม");
+        phone: selectedMember!,
+        pin: pin,
+        point: 1, // เพิ่มแต้ม 1 แต้ม
       },
+      {
+        onSuccess: () => {
+          console.log("Refetching customer data...");
+          refetchCustomers();
+        },
+        onError: (error) => {
+          setError("เกิดข้อผิดพลาดในการเพิ่มแต้ม");
+        },
       }
-    );
+    );    
+    
 
     // Reset the state and close the dialog
     setSelectedMember(null);
@@ -159,7 +169,7 @@ export function AddPointDialog({ openDialog, setOpenDialog, callback }: ConfirmD
         </div>
 
         {/* Confirm Button */}
-        <Button className="w-full bg-orange-500 text-white mt-4" onClick={handleConfirm}>
+        <Button className="w-full bg-orange-500 text-white mt-4" onClick={handleConfirm} >
           ยืนยัน
         </Button>
       </AlertDialogContent>
