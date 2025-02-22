@@ -17,7 +17,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import AddMemberDialog from "@/components/manager/addMemberDialog";
 import { AddPointDialog } from "@/components/manager/addPointDialog";
 import { UsePointDialog } from "@/components/manager/usePointDialog";
-import { useDeleteCustomer } from "@/api/loyalty/useLoyalty";
+import { useDeleteCustomer, useGetCustomer } from "@/api/loyalty/useLoyalty";
 
 // interface PreparingOrderWithTable extends OrderResponse {
 //   table: BaseTableResponse;
@@ -26,6 +26,8 @@ import { useDeleteCustomer } from "@/api/loyalty/useLoyalty";
 export default function MemberPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const deleteCustomer = useDeleteCustomer();
+  const getCustomer = useGetCustomer();
+
 //   const toaster = useToastHandler();
 //   const updateOrder = useUpdateOrder();
 //   const [openDialog, setOpenDialog] = useState(false);
@@ -34,19 +36,25 @@ export default function MemberPage() {
   
 //   const [orderData, setOrderData] = useState<UpdateOrderRequest>();
 
-  const initialData = [
-    { phone: "064-293-xxxx", points: "1 / 10" },
-    { phone: "064-293-xxxx", points: "1 / 10" },
-    { phone: "064-293-xxxx", points: "1 / 10" },
-    { phone: "064-293-xxxx", points: "1 / 10" },
-    { phone: "064-293-xxxx", points: "1 / 10" },
-  ];
+const {
+  data: customers = [],
+  isLoading: loadingCustomers,
+  isError: errorCustomers,
+} = useGetCustomer();
 
-  const [data, setData] = useState(initialData);
+  // const initialData = [
+  //   { phone: "064-293-xxxx", points: "1 / 10" },
+  //   { phone: "064-293-xxxx", points: "1 / 10" },
+  //   { phone: "064-293-xxxx", points: "1 / 10" },
+  //   { phone: "064-293-xxxx", points: "1 / 10" },
+  //   { phone: "064-293-xxxx", points: "1 / 10" },
+  // ];
+
+  // const [data, setData] = useState();
   
   const handleDelete = async (index: number) => {
     // await deleteCustomer.mutateAsync
-    setData(data.filter((_, i) => i !== index));
+    // setData(data.filter((_, i) => i !== index));
   };
 
   const [open, setOpen] = useState(false);
@@ -60,16 +68,14 @@ export default function MemberPage() {
   return (
     <div className="w-full flex flex-col gap-10">
       <div className="flex flex-row justify-between">
-        <label className="input input-bordered flex items-center gap-2 rounded-xl">
-          <input type="text" className="grow" placeholder="Search Number" 
-            value={searchTerm}  
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <label className="input input-bordered flex items-center gap-2 rounded-xl border-none">
+          <input placeholder="ค้นหาเบอร์โทรศัพท์" value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)} />
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 16 16"
             fill="currentColor"
-            className="h-4 w-4 opacity-70"
+            className="h-6 w-5 opacity-70 text-grey"
           >
             <path
               fillRule="evenodd"
@@ -79,14 +85,14 @@ export default function MemberPage() {
           </svg>
         </label>
 
-        <Button variant="destructive" onClick={() => setOpen(true)}>
-            + Add Member
+        <Button variant="destructive" onClick={() => setOpen(true)} className="bg-success text-white font-bold" >
+            + เพิ่มสมาชิก
         </Button>
 
         <AddMemberDialog open={open} onClose={() => setOpen(false)}/>
       </div>
       
-      <Table>
+      <table className="table-auto justify-center text-whereBlack bg-zinc-100">
         <TableHeader>
           <TableRow>
             <TableHead>เบอร์โทรศัพท์</TableHead>
@@ -95,13 +101,13 @@ export default function MemberPage() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((item, index) => (
+          {customers.map((member, index) => (
             <TableRow key={index}>
-              <TableCell>{item.phone}</TableCell>
-              <TableCell>{item.points}</TableCell>
+              <TableCell>{member.phone}</TableCell>
+              <TableCell>{member.point}</TableCell>
               <TableCell>
                 <Button variant="destructive" onClick={() => setOpenDialog(true)}>
-                  Delete
+                  ลบ
                 </Button>
 
                 <ConfirmDialog
@@ -119,13 +125,7 @@ export default function MemberPage() {
             </TableRow>
           ))}
         </TableBody>
-      </Table>
-
-            <div className="btn btn-success w-5/12" onClick={() => {
-                setOpenUsePointDialog(true);
-                }}>
-                  Use Point
-            </div>      
+      </table>    
     </div>
   );
 }
