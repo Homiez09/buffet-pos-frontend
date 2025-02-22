@@ -7,6 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState, ReactNode } from "react";
 import AddMemberDialog from "./addMemberDialog";
+import { useGetCustomer } from "@/api/loyalty/useLoyalty";
 
 type Member = {
   phone: string;
@@ -22,29 +23,39 @@ type ConfirmDialogProps = {
 
 export function UsePointDialog({ openDialog, setOpenDialog, callback, setPhone }: ConfirmDialogProps) {
   const [selectedMember, setSelectedMember] = useState<string | null>(null);
+  const {
+    data: customers = [],
+    isLoading: loadingCustomers,
+    isError: errorCustomers,
+  } = useGetCustomer();
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
-  const [members, setMembers] = useState<Member[]>([
-    { phone: "064-293-xxxx", points: 10 },
-    { phone: "222-111-xxxx", points: 1 },
-    { phone: "113-333-xxxx", points: 1 },
-    { phone: "442-454-xxxx", points: 1 },
-    { phone: "142-252-xxxx", points: 1 },
-    { phone: "543-233-xxxx", points: 9 },
-  ]);
+    // const [members, setMembers] = useState<Member[]>([
+  //   { phone: "064-293-xxxx", points: 9 },
+  //   { phone: "222-111-xxxx", points: 1 },
+  //   { phone: "113-333-xxxx", points: 1 },
+  //   { phone: "442-454-xxxx", points: 1 },
+  //   { phone: "142-252-xxxx", points: 1 },
+  //   { phone: "543-233-xxxx", points: 9 },
+  // ]);
+
+
 
   const [searchTerm, setSearchTerm] = useState("");
 
 
-  const filteredMembers = members.filter((member) =>
-    member.phone.includes(searchTerm.toLowerCase())
-  );
+  const filteredMembers = customers.filter((member) => {
+    const cleanPhone = member.phone.replace(/[^0-9]/g, ''); // ลบตัวอักษรพิเศษออกจากหมายเลขโทรศัพท์
+    const cleanSearchTerm = searchTerm.replace(/[^0-9]/g, ''); // ลบตัวอักษรพิเศษออกจาก searchTerm
+    return cleanPhone.includes(cleanSearchTerm);
+  });
+  
 
 
   const handleMemberSelect = (phone: string) => {
     setSelectedMember(phone);
-    setPhone?.(phone);
+    setPhone
   };
 
   const handleConfirm = () => {
@@ -57,14 +68,14 @@ export function UsePointDialog({ openDialog, setOpenDialog, callback, setPhone }
       return;
     }
 
-    const selectedMemberData = members.find(m => m.phone === selectedMember);
-    if (selectedMemberData && selectedMemberData.points === 0) {
+    const selectedMemberData = customers.find(m => m.phone === selectedMember);
+    if (selectedMemberData && selectedMemberData.point === 0) {
       setError("แต้มไม่เพียงพอ");
       return;
     }
 
     setMembers((prev) =>
-      prev.map((m) =>
+      prev.map((m: Member) =>
         m.phone === selectedMember ? { ...m, points: Math.max(m.points - 1, 0) } : m
       )
     );
@@ -109,15 +120,15 @@ export function UsePointDialog({ openDialog, setOpenDialog, callback, setPhone }
               {filteredMembers.map((member) => (
                 <tr
                   key={member.phone}
-                  className={`border-t cursor-pointer ${selectedMember === member.phone ? "bg-orange-100" : ""}  ${member.points < 10 ? 'bg-zinc-100 cursor-not-allowed text-grey' : ''}`}
-                  onClick={() => member.points < 10 ? null : handleMemberSelect(member.phone)}
+                  className={`border-t cursor-pointer ${selectedMember === member.phone ? "bg-orange-100" : ""}  ${member.point < 10 ? 'bg-zinc-100 cursor-not-allowed text-grey' : ''}`}
+                  onClick={() => member.point < 10 ? null : handleMemberSelect(member.phone)}
                 >
                   <td className="px-4 py-2 flex items-center gap-2" >
                     <input type="radio" className={`accent-primary w-4 h-4 border-2 rounded-full`} 
-                      name="member" checked={selectedMember === member.phone} readOnly={member.points < 10}  />
+                      name="member" checked={selectedMember === member.phone} readOnly={member.point < 10}  />
                     {member.phone}
                   </td>
-                  <td className={`px-7 py-2 text-black font-normal ${member.points < 10 ? 'bg-zinc-100 cursor-not-allowed text-grey' : ''} `}>{member.points} / 10</td>
+                  <td className={`px-7 py-2 text-black font-normal ${member.point < 10 ? 'bg-zinc-100 cursor-not-allowed text-grey' : ''} `}>{member.point} / 10</td>
                 </tr>
               ))}
             </tbody>
@@ -144,3 +155,8 @@ export function UsePointDialog({ openDialog, setOpenDialog, callback, setPhone }
     </AlertDialog>
   );
 }
+
+function setMembers(arg0: (prev: any) => any) {
+  throw new Error("Function not implemented.");
+}
+
