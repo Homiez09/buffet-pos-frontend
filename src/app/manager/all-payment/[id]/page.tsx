@@ -189,7 +189,16 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
         openDialog={openDialog}
         setOpenDialog={setOpenDialog}
         callback={async () => {
-          setOpenAddPointDialog(true);
+          if(isVisible){
+            if(selectedInvoice){
+            await updataInvoice.mutateAsync(selectedInvoice);
+            toaster("ลูกค้าชำระเงินสำเร็จ", "ข้อมูลออเดอร์จะถูกจัดเก็บในประวัติออเดอร์");
+            router.push("/manager/all-payment");
+          }
+          }else{
+           setOpenAddPointDialog(true);
+
+          }
         }}
       />
 
