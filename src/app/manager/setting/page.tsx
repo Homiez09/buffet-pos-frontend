@@ -23,10 +23,12 @@ import { useGetPricePerPerson } from "@/api/manager/useSetting";
 const page = () => {
     const [openModifyPriceDialog, setOpenModifyPriceDialog] = useState(false);
     const [netPricePerPerson, setNetPricePerPerson] = useState(250);
+    const [finePricePerGram, setFinePricePerGram] = useState(100);
     const [ openCreateTableDialog, setOpenCreateTableDialog ] = useState(false);
  
     const { data: tables, isLoading: loadingTables, refetch: refetchTables } = useGetTables();
     const { data: pricePerPerson, isLoading: loadingPricePerPerson, refetch: refetchPricePerPerson } = useGetPricePerPerson();
+    const { data: pricePerGram, isLoading: loadingPricePerGram, refetch: refetchPricePerGram} = useGetPricePerGram();
 
     const addTable = useAddTable();
     const router = useRouter();
@@ -112,6 +114,23 @@ const page = () => {
                     refetchPricePerPerson={refetchPricePerPerson}
                 />
             </div>
+
+            <div className="mt-16">
+                <p className="text-3xl">
+                    ค่าปรับอาหารเหลือ : {Number(pricePerPerson?.value).toFixed(2)} บาท/กรัม
+                </p>
+                <button className="btn bg-primary text-white text-lg font-base mt-5" onClick={() => setOpenModifyPriceDialog(true)}>
+                    แก้ไขราคา
+                </button>
+                <ModifyPriceDialog 
+                    openDialog={openModifyPriceDialog} 
+                    setOpenDialog={setOpenModifyPriceDialog} 
+                    price={finePricePerGram} 
+                    onSave={(newPrice) => setFinePricePerGram(newPrice)}
+                    refetchPricePerPerson={refetchPricePerPerson}
+                />
+            </div>
+
             <div className="mt-16">
                 <p className="text-3xl">
                     Employee Whitelist
