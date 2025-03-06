@@ -52,9 +52,9 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
   const { data: table, isLoading: loadingTable } = useGetTableById(id);
 
   const [phoneNumber, setPhoneNumber] = useState<string>('');
-  const updateLeftoverFood = useUpdateLeftoverFood();
+  const { mutateAsync: updateLeftoverFood } = useUpdateLeftoverFood();
   const [leftoverFoodWeight, setLeftoverFoodWeight] = useState("");
-
+  const [isConfirmedLeftover, setIsConfirmedLeftover] = useState(false);
 
   useEffect(() => {
     if (!loadingServedOrders) {
@@ -103,6 +103,22 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
     return `${formattedDate} ${formattedTime}`;
   }
 
+  const handleConfirmLeftoverFood = async () => {
+    if (!leftoverFoodWeight) return;
+
+    try {
+      await updateLeftoverFood({
+        invoice_id: invoiceCurrent?.id || "",
+        total_food_weight: Number(leftoverFoodWeight),
+      });
+
+      setIsConfirmedLeftover(true);
+      refetchUnpaidInvoices();
+    } catch (error) {
+      console.error("Error updating leftover food weight:", error);
+    }
+    };
+
   return (
     <div className="w-full flex flex-col gap-10">
       <div className="flex flex-row justify-between">
@@ -148,10 +164,19 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
         <div><span className="text-red-500 font-bold">อาหารเหลือ (กรัม): </span>
         <input
           type="text"
-          className="grow"
+          className="border rounded px-2 py-1"
           value={leftoverFoodWeight}
           onChange={(e) => setLeftoverFoodWeight(e.target.value)}
+          disabled={isConfirmedLeftover}
         />
+        {!isConfirmedLeftover && (
+          <button
+            className="bg-blue-500 text-white px-3 py-1 rounded"
+            onClick={handleConfirmLeftoverFood}
+          >
+            ยืนยัน
+          </button>
+        )}
       </div>
 
           <div><span className="font-bold">จำนวนคน:</span> {invoiceCurrent?.peopleAmount}</div>
