@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { MdTableBar } from "react-icons/md";
 import { PiPrinterFill } from "react-icons/pi";
+import { useUpdateLeftoverFood } from "@/api/manager/useInvoice";
 
 interface PaymentDetailPageProps {
   params: {
@@ -51,6 +52,9 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
   const { data: table, isLoading: loadingTable } = useGetTableById(id);
 
   const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const updateLeftoverFood = useUpdateLeftoverFood();
+  const [leftoverFoodWeight, setLeftoverFoodWeight] = useState("");
+
 
   useEffect(() => {
     if (!loadingServedOrders) {
@@ -141,6 +145,15 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
       </div>
       <div className="flex flex-row justify-between">
         <div>
+        <div><span className="text-red-500 font-bold">อาหารเหลือ (กรัม): </span>
+        <input
+          type="text"
+          className="grow"
+          value={leftoverFoodWeight}
+          onChange={(e) => setLeftoverFoodWeight(e.target.value)}
+        />
+      </div>
+
           <div><span className="font-bold">จำนวนคน:</span> {invoiceCurrent?.peopleAmount}</div>
           <div><span className="font-bold">ราคาที่ต้องชำระ: </span>{invoiceCurrent?.totalPrice} baht</div>
 
@@ -204,7 +217,6 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
           router.push("/manager/all-payment");
         }}
       />
-
 
       <UsePointDialog
         openDialog={openUsePointDialog}

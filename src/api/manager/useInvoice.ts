@@ -71,6 +71,21 @@ const useCancelInvoice = () => {
     });
 }
 
+const updateLeftoverFood = async ({ invoiceId, leftoverWeight }: { invoiceId: string, leftoverWeight: string }) => {
+    const session = await getSession();
+    const { data } = await axiosInstance.patch(`/manage/invoices/${invoiceId}/leftover`, { leftoverWeight }, {
+        headers: {
+            Authorization: `Bearer ${session?.token}`,
+        },
+    });
+    return data;
+}
+
+const useUpdateLeftoverFood = () => {
+    return useMutation({
+        mutationFn: updateLeftoverFood,
+    });
+}
 
 
-export { useUpdateInvoice, useGetAllPaidInvoices, useGetAllUnpaidInvoices ,useCancelInvoice}
+export { useUpdateInvoice, useGetAllPaidInvoices, useGetAllUnpaidInvoices ,useCancelInvoice, useUpdateLeftoverFood}
