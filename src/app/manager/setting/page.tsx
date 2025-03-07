@@ -18,7 +18,7 @@ import { useAddTable, useGetTables } from "@/api/manager/useTable";
 import { useForm } from "react-hook-form";
 import LoadingAnimation from "@/components/manager/loadingAnimation";
 import { useRouter } from "next/navigation";
-import { useGetPricePerPerson } from "@/api/manager/useSetting";
+import { useGetPricePerGram, useGetPricePerPerson } from "@/api/manager/useSetting";
 
 const page = () => {
     const [openModifyPriceDialog, setOpenModifyPriceDialog] = useState(false);
@@ -40,7 +40,7 @@ const page = () => {
         formState: { errors },
       } = useForm();
 
-    if (loadingTables || loadingPricePerPerson) {
+    if (loadingTables || loadingPricePerPerson || loadingPricePerGram) {
         return <LoadingAnimation/>;
     }
 
@@ -117,7 +117,7 @@ const page = () => {
 
             <div className="mt-16">
                 <p className="text-3xl">
-                    ค่าปรับอาหารเหลือ : {Number(pricePerPerson?.value).toFixed(2)} บาท/กรัม
+                    ค่าปรับอาหารเหลือ : {Number(pricePerGram?.value).toFixed(2)} บาท/กรัม
                 </p>
                 <button className="btn bg-primary text-white text-lg font-base mt-5" onClick={() => setOpenModifyPriceDialog(true)}>
                     แก้ไขราคา
