@@ -28,8 +28,8 @@ export function AddPointDialog({ openDialog, setOpenDialog, callback }: ConfirmD
     isError: errorCustomers,
     refetch: refetchCustomers,
   } = useGetCustomer();
-  const [pin, setPin] = useState("");
   const addPoint = useAddPoint();
+  const [pin, setPin] = useState("");
   const [error, setError] = useState("");
   // const [members, setMembers] = useState<Member[]>([
   //   { phone: "064-293-xxxx", points: 9 },
@@ -41,9 +41,8 @@ export function AddPointDialog({ openDialog, setOpenDialog, callback }: ConfirmD
   // ]);
 
   const [open, setOpen] = useState(false);
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-
-
 
   const filteredMembers = customers.filter((member) => {
     const cleanPhone = member.phone.replace(/[^0-9]/g, ''); 
@@ -54,53 +53,42 @@ export function AddPointDialog({ openDialog, setOpenDialog, callback }: ConfirmD
   const handleMemberSelect = (phone: string) => {
     setSelectedMember(phone);
   };
-
-
-
+  
   const handleConfirm = async () => {
-
-    if (selectedMember && !pin) {
+    setIsLoadingButton(true);
+    if (!selectedMember) {
+      setError("กรุณาเลือกสมาชิก");
+      return;
+    }
+    if (!pin) {
       setError("กรุณากรอก PIN");
       return;
     }
-
     if (!selectedMember && pin) {
       setError("กรุณาเลือกสมาชิก");
       return;
     }
-
-
-    // Update the selected member's points
-    // setMembers((prevMembers) =>
-    //   prevMembers.map((member) =>
-    //     member.phone === selectedMember ? { ...member, points: member.points + 1 } : member
-    //   )
-    // );
-
-    await addPoint.mutate(
-      {
-        phone: selectedMember!,
-        pin: pin,
-        point: 1, // เพิ่มแต้ม 1 แต้ม
-      },
-      {
-        onSuccess: () => {
-          console.log("Refetching customer data...");
-          refetchCustomers();
-        },
-        onError: (error) => {
-          setError("เกิดข้อผิดพลาดในการเพิ่มแต้ม");
-        },
-      }
-    );    
-    
-
-    // Reset the state and close the dialog
-    setSelectedMember(null);
-    setPin("");
-    setError("");
-    callback?.();
-    setOpenDialog(false);
+    try {
+      await addPoint.mutate(
+        {
+          phone: selectedMember!,
+          pin: pin,
+          point: 1, // เพิ่มแต้ม 1 แต้ม
+        },{
+          onSuccess: () => {
+            console.log("Refetching customer data...");
+            setSelectedMember(null);
+            setPin("");
+            setError("");
+            callback?.();
+            refetchCustomers();  // รีเฟรชข้อมูลลูกค้า
+            setOpenDialog(false);
+          },
+          onError: (error) => {
+            setError("PIN ไม่ถูกต้อง");
+          },});
+    } catch (err) {
+      setError("เกิดข้อผิดพลาดในการเพิ่มแต้ม");}
   };
 
   return (
@@ -116,8 +104,6 @@ export function AddPointDialog({ openDialog, setOpenDialog, callback }: ConfirmD
             <p className="w-5 h-5 font-bold">X</p>
           </button>
         </div>
-
-        {/* Search Input */}
 
         <div className="flex justify-between my-3">
           <input placeholder="ค้นหาเบอร์โทรศัพท์" className="border-none rounded-xl p-3 w-full text-whereBlack bg-zinc-100" value={searchTerm}
@@ -153,8 +139,6 @@ export function AddPointDialog({ openDialog, setOpenDialog, callback }: ConfirmD
           </table>
         </div>
 
-
-        {/* PIN Input */}
         <div className="mt-4">
           <label className="font-semibold">PIN : </label>
           <input
@@ -168,7 +152,6 @@ export function AddPointDialog({ openDialog, setOpenDialog, callback }: ConfirmD
           {error && <p className="pl-2 pt-2 text-error text-sm mt-1">{error}</p>}
         </div>
 
-        {/* Confirm Button */}
         <Button className="w-full bg-orange-500 text-white mt-4" onClick={handleConfirm} >
           ยืนยัน
         </Button>

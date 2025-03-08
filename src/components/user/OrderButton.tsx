@@ -3,10 +3,15 @@
 import { useCart } from "@/provider/CartProvider";
 import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
+import { ConfirmDialog } from "../manager/confirmDialog";
+import { useState } from "react";
 
 export default function OrderButton() {
     const router = useRouter();
     const { cart } = useCart();
+
+    const [openDialog, setOpenDialog] = useState(false);
+    const [openStaffDialog, setOpenStaffDialog] = useState(false);
 
     return (
         <div className="fixed bottom-0 right-0 p-5">
@@ -17,9 +22,26 @@ export default function OrderButton() {
                     </div>}
                     <Icon icon="ic:baseline-shopping-cart" fontSize={30} color='#fff' />
                 </div>
+                
                 <div className="bg-primary rounded-full p-3" onClick={()=>router.push('/user/history')}>
                     <Icon icon="ic:baseline-history" fontSize={30} color='#fff' />
                 </div>
+
+                <div className="bg-primary rounded-full p-3" onClick={() => {
+                    setOpenStaffDialog(true);
+                }}>
+                    <Icon icon="ic:baseline-user" fontSize={30} color='#fff' />
+                </div>
+
+                <ConfirmDialog
+                title="ยืนยันการเรียกพนักงาน?"
+                description="แน่ใจหรือไม่ว่าต้องการเรียกพนักงาน"
+                openDialog={openDialog}
+                setOpenDialog={setOpenDialog}
+                callback={async () => {
+                    setOpenStaffDialog(true);
+                }}
+                />
             </div>
         </div>
     );

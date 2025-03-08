@@ -1,7 +1,7 @@
 "use client";
 
 import useToastHandler from "@/lib/toastHanlder";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ConfirmDialog } from "@/components/manager/confirmDialog";
 
 
@@ -9,7 +9,9 @@ import { Button } from "@/components/ui/button";
 import { TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 import AddMemberDialog from "@/components/manager/addMemberDialog";
 import { useDeleteCustomer, useGetCustomer } from "@/api/loyalty/useLoyalty";
-
+//import { AddPointDialog } from "@/components/manager/addPointDialog";
+//import { UsePointDialog } from "@/components/manager/usePointDialog";
+//import toast, { Toaster } from "react-hot-toast";
 // interface PreparingOrderWithTable extends OrderResponse {
 //   table: BaseTableResponse;
 // }
@@ -17,7 +19,6 @@ import { useDeleteCustomer, useGetCustomer } from "@/api/loyalty/useLoyalty";
 export default function MemberPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const deleteCustomer = useDeleteCustomer();
-  const getCustomer = useGetCustomer();
 
   //   const toaster = useToastHandler();
   //   const updateOrder = useUpdateOrder();
@@ -61,8 +62,6 @@ export default function MemberPage() {
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedMember, setSelectedMember] = useState<string>("");
 
-
-
   const toaster = useToastHandler();
 
   return (
@@ -89,7 +88,14 @@ export default function MemberPage() {
           + เพิ่มสมาชิก
         </Button>
 
-        <AddMemberDialog open={open} onClose={() => setOpen(false)} />
+        <AddMemberDialog 
+        open={open} 
+        onClose={() => setOpen(false)} 
+        callback={async () => {
+            toaster("เพิ่มสมาชิกสำเร็จ", "คุณได้ทำการเพิ่มสมาชิกเข้าในระบบ");
+          }
+        }
+        refetchCustomers={refetchCustomers} />
       </div>
 
       <table className="table-auto justify-center text-whereBlack bg-zinc-100">

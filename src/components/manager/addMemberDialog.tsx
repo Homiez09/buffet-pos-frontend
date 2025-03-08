@@ -3,23 +3,36 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { useAddCustomer } from "@/api/loyalty/useLoyalty";
 // import { Input } from "@/components/ui/input";
 // import { X } from "lucide-react";
 
-export default function AddMemberDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+export default function AddMemberDialog({ open, onClose, callback, refetchCustomers}: { open: boolean; onClose: () => void; callback: () => void; refetchCustomers: () => void; }) {
   const [phone, setPhone] = useState("");
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
+  const addCustomerMutation = useAddCustomer(); 
 
-  const handleSubmit = () => {
-    if (!phone || !pin) {
-      setError("กรุณากรอกข้อมูลให้ครบถ้วน");
+  const handleSubmit = async () => { 
+    const phonePattern = /^\d{10}$/;
+    const pinPattern = /^\d{6}$/;
+  
+    if (!phonePattern.test(phone) || !pinPattern.test(pin)) {
+      setError("all errers");
     } else {
       setError("");
-      alert("สมาชิกถูกเพิ่มเรียบร้อย!");
-      onClose(); // Close modal after success
+      try {
+        await addCustomerMutation.mutateAsync({ phone, pin });
+        refetchCustomers();
+        callback?.();
+        onClose();
+      } catch (error) {
+        setError("");
+        console.error("Failed to add member:", error);
+      }
     }
   };
+  const isFormValid = /^\d{10}$/.test(phone) && /^\d{6}$/.test(pin);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -38,7 +51,7 @@ export default function AddMemberDialog({ open, onClose }: { open: boolean; onCl
             <label className="font-semibold">เบอร์โทรศัพท์ : </label>
             <input
               type="text"
-              placeholder="064-xxx-xxxx"
+              placeholder="064xxxxxxx"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
@@ -48,7 +61,7 @@ export default function AddMemberDialog({ open, onClose }: { open: boolean; onCl
             <label className="font-semibold">PIN : </label>
             <input
               type="password"
-              placeholder="xxxx"
+              placeholder="xxxxxx"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
             />
@@ -56,7 +69,7 @@ export default function AddMemberDialog({ open, onClose }: { open: boolean; onCl
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
-          <Button className="w-full text-white" onClick={handleSubmit}>
+          <Button className="w-full text-white" onClick={handleSubmit} disabled={!isFormValid}>
             เพิ่มสมาชิก
           </Button>
         </div>
