@@ -56,17 +56,16 @@ export function AddPointDialog({ openDialog, setOpenDialog, callback }: ConfirmD
   
   const handleConfirm = async () => {
     setIsLoadingButton(true);
-    if (!selectedMember) {
-      setError("กรุณาเลือกสมาชิก");
-      return;
-    }
-    if (!pin) {
+    if (!pin && selectedMember) {
       setError("กรุณากรอก PIN");
       return;
     }
     if (!selectedMember && pin) {
       setError("กรุณาเลือกสมาชิก");
       return;
+    }
+    if(!selectedMember && !pin){
+      callback?.();
     }
     try {
       await addPoint.mutate(
@@ -85,7 +84,7 @@ export function AddPointDialog({ openDialog, setOpenDialog, callback }: ConfirmD
             setOpenDialog(false);
           },
           onError: (error) => {
-            setError("PIN ไม่ถูกต้อง");
+            setError("PIN ไfม่ถูกต้อง");
           },});
     } catch (err) {
       setError("เกิดข้อผิดพลาดในการเพิ่มแต้ม");}

@@ -82,10 +82,8 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
     const invoice: UpdateInvoiceStatusRequest = {
       invoice_id: invoiceCurrent?.id || ""
     }
-    if (invoice) {
       setSelectedInvoice(invoice);
-      setOpenDialog(true); // Open the dialog after setting selected invoice
-    }
+      setOpenDialog(true); 
   };
 
   function formatDate(date: Date): string {
