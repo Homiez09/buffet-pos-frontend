@@ -10,6 +10,7 @@ import MenuCard from "@/components/manager/menuCard";
 import MenuPopularCard from "@/components/manager/menuPopularCard";
 import { BaseMenuResponse } from "@/interfaces/menu";
 import { useState } from "react";
+import { number } from "zod";
 
 export default function MenuPage() {
     const [openDialog, setOpenDialog] = useState(false);
@@ -76,12 +77,15 @@ export default function MenuPage() {
                 </div>
             </div>
 
+            <div className="text-3xl font-bold">
+                เมนูขายดี
+            </div>
+
             <div className="grid grid-cols-3 gap-10">
-                <p className="font-blod font-3xl">เมนูขายดี</p>
 
                 {Array.isArray(filteredMenus) && filteredMenus.length > 0 ? (
-                    filteredMenus.map((menu: BaseMenuResponse) => (
-                        <MenuPopularCard key={menu.id} menu={menu} refetchMenus={refetchMenus} />
+                    filteredMenus.slice(0, 3).map((menu: BaseMenuResponse, index: number) => (
+                        <MenuPopularCard key={menu.id} menu={menu} refetchMenus={refetchMenus} rank={index+1} />
                     ))
                 ) : (
                     <p>No menus available</p>

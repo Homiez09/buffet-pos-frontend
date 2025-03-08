@@ -28,9 +28,9 @@ export default function OrderButton() {
                 </div>
 
                 <div className="bg-primary rounded-full p-3" onClick={() => {
-                    setOpenStaffDialog(true);
+                    setOpenDialog(true);
                 }}>
-                    <Icon icon="ic:baseline-user" fontSize={30} color='#fff' />
+                    <Icon icon="ic:baseline-person" fontSize={30} color='#fff' />
                 </div>
 
                 <ConfirmDialog

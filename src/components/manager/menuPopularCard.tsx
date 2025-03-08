@@ -11,7 +11,7 @@ import Image from "next/image";
 import { useDeleteMenu } from "@/api/manager/useMenu";
 
 
-export default function MenuPopularCard({ menu, refetchMenus }: {menu: BaseMenuResponse, refetchMenus: () => void}) {
+export default function MenuPopularCard({ menu, refetchMenus, rank }: {menu: BaseMenuResponse, refetchMenus: () => void, rank: number}) {
 
     const toaster = useToastHandler();
     const [ openDialog, setOpenDialog ] = useState(false);
@@ -45,11 +45,11 @@ export default function MenuPopularCard({ menu, refetchMenus }: {menu: BaseMenuR
                     layout=""
                     className="object-cover w-full h-full"
                 />
-                {menu.isPopular && (
-                <span className="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full flex items-center">
-                    🔥 Popular #{menu.rank}
+                {/* {menu.bestSeller && ( */}
+                <span className="absolute top-2 left-2 bg-red-500 text-white text-xl px-2 py-1 rounded-full flex items-center">
+                    🔥 Popular # {rank}
                 </span>
-                )}
+                {/* )} */}
             </figure>
             
             <div className="card-body flex flex-col justify-between">
