@@ -1,5 +1,6 @@
 "use client";
 
+import { useGetAllPaidInvoices } from "@/api/manager/useInvoice";
 import { useGetMenus } from "@/api/manager/useMenu";
 import { useGetOrdersByStatus } from "@/api/manager/useOrder";
 import { useGetTableById } from "@/api/manager/useTable";
@@ -31,13 +32,17 @@ export default function HistoryDetailPage({ params }: HistoryDetailPageProps) {
   const router = useRouter();
   const toaster = useToastHandler();
 
+  // const { data: servedOrders, isLoading: loadingServedOrders } = useGetOrdersByStatus(OrderStatus.Served);
+  const { data: menus, isLoading: loadingMenus, refetch: refetchMenus } = useGetMenus();
+  const { data: invoices, isLoading: loadingInvoices } = useGetAllPaidInvoices();
   const { data: servedOrders, isLoading: loadingServedOrders } = useGetOrdersByStatus(OrderStatus.Served);
-  const { data: menus, isLoading: loadingMenus } = useGetMenus();
+  
+  const invoice = invoices?.find((invoice) => invoice.tableId === id);
+  const orderData = servedOrders?.find((order) => order.id === invoice?.tableId);
 
-  const orderData = servedOrders?.find((order) => order.id === id);
-  const { data: table, isLoading: loadingTable } = useGetTableById(orderData?.tableId!);
+  // const { data: table, isLoading: loadingTable } = useGetTableById(orderData?.tableId!);
 
-  if (loadingServedOrders || loadingMenus || loadingTable) {
+  if (loadingServedOrders || loadingMenus || loadingInvoices) {
     return <LoadingAnimation />;
   }
   
@@ -77,7 +82,7 @@ export default function HistoryDetailPage({ params }: HistoryDetailPageProps) {
             <div className="flex flex-row items-center">
               <MdTableBar className="mx-2 w-6 h-6" />:
             </div>
-            <p>{table?.tableName}</p>
+            {/* <p>{table?.tableName}</p> */}
           </div>
         </div>
       </div>
@@ -90,7 +95,7 @@ export default function HistoryDetailPage({ params }: HistoryDetailPageProps) {
         <div className="collapse-content bg-wherePrimary">
           {
             orderItemsWithMenu.map((oim, i) => {
-                return (
+          return (
                     <div key={i} className="grid grid-cols-2 w-full border-b-2 py-5 text-center">
                       <div className="font-bold items-center">{oim.menu.name}</div>
                       <div>{oim.quantity}</div>
