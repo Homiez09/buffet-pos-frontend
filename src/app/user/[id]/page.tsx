@@ -13,6 +13,7 @@ import { BaseCategoryResponse } from "@/interfaces/category";
 import { useGetTable } from "@/api/user/useTable";
 import { BaseTableResponse } from "@/interfaces/table";
 import { entryTime, remainingTime } from "@/lib/formatDate";
+import { useGetBestMenuSellers } from "@/api/general/useBestSeller";
 
 type Props = {
   params: { id: string }
@@ -22,6 +23,7 @@ export default function Home({ params }: Props) {
   const [search, setSearch] = useState<string>('');
   const { setAccessCode } = useCart();
   const { data: menus, isLoading: isMenuLoading } = useGetMenus(params.id);
+  const { data: bestMenus, isLoading: isBestMenuLoading } = useGetBestMenuSellers();
   const { data: categories, isLoading: isLoadingCategories } = useGetCategories(params.id) as { data: BaseCategoryResponse[], isLoading: boolean };
   const { data: table, isLoading: isLoadingTable } = useGetTable(params.id) as { data: BaseTableResponse, isLoading: boolean };
 
@@ -36,8 +38,6 @@ export default function Home({ params }: Props) {
   const filteredMenuList = menus.filter((item) => {
     return item.name.toLowerCase().includes(search.toLowerCase());
   });
-
-  const bestSellerMenus = menus.filter((item) => item.bestSeller);
 
   const menusByCategory = filteredMenuList.reduce((acc, item) => {
     const category = categories.find(cat => cat.id === item.categoryId);
@@ -60,7 +60,16 @@ export default function Home({ params }: Props) {
         </div>
         <p className="text-primary text-xl text-right pr-1"> {entryTime(table.entryAt.toString())} น. </p>
         <div className="m-2 space-y-10">
-        <MenuList key="ขายดี" title="ขายดี" menuList={bestSellerMenus} />
+
+          
+          {/* เปลี่ยนตรงนี้เป็น CARD แบบใน FIGMA */}
+          {bestMenus &&
+            <MenuList key="ขายดี" title="ขายดี" menuList={bestMenus!} />
+          }
+          {/* ----------------------------- */}
+
+
+
           {Object.keys(menusByCategory).map((key) => {
             return <MenuList key={key} title={key} menuList={menusByCategory[key]} />;
           })}
