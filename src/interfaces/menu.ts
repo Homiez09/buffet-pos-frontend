@@ -1,4 +1,5 @@
 export interface BaseMenuResponse {
+  bestSeller: unknown;
   id: string; // uuid.UUID corresponds to a string representation of a UUID
   name: string;
   description: string;
