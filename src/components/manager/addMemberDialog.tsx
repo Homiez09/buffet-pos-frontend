@@ -7,7 +7,7 @@ import { useAddCustomer } from "@/api/loyalty/useLoyalty";
 // import { Input } from "@/components/ui/input";
 // import { X } from "lucide-react";
 
-export default function AddMemberDialog({ open, onClose, callback, refetchCustomers}: { open: boolean; onClose: () => void; callback: () => void; refetchCustomers: () => void; }) {
+export default function AddMemberDialog({ open, onClose, callback, refetchCustomers}: { open: boolean; onClose?: () => void; callback?: () => void; refetchCustomers?: () => void; }) {
   const [phone, setPhone] = useState("");
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
@@ -23,9 +23,9 @@ export default function AddMemberDialog({ open, onClose, callback, refetchCustom
       setError("");
       try {
         await addCustomerMutation.mutateAsync({ phone, pin });
-        refetchCustomers();
+        refetchCustomers?.();
         callback?.();
-        onClose();
+        onClose?.();
       } catch (error) {
         setError("");
         console.error("Failed to add member:", error);

@@ -16,6 +16,8 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   output: "standalone",
+  trailingSlash: false,
+  reactStrictMode: true,
 };
 
 export default nextConfig;
