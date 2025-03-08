@@ -22,9 +22,9 @@ export default function Home({ params }: Props) {
   const [search, setSearch] = useState<string>('');
   const { setAccessCode } = useCart();
   const { data: menus, isLoading: isMenuLoading } = useGetMenus(params.id);
-  const { data: categories, isLoading: isLoadingCategories } = useGetCategories(params.id) as {data: BaseCategoryResponse[], isLoading: boolean};
-  const { data: table, isLoading: isLoadingTable } = useGetTable(params.id) as {data: BaseTableResponse, isLoading: boolean};
-  
+  const { data: categories, isLoading: isLoadingCategories } = useGetCategories(params.id) as { data: BaseCategoryResponse[], isLoading: boolean };
+  const { data: table, isLoading: isLoadingTable } = useGetTable(params.id) as { data: BaseTableResponse, isLoading: boolean };
+
   useEffect(() => {
     setAccessCode(params.id);
     console.log(menus)
@@ -36,34 +36,37 @@ export default function Home({ params }: Props) {
   const filteredMenuList = menus.filter((item) => {
     return item.name.toLowerCase().includes(search.toLowerCase());
   });
-  
+
+  const bestSellerMenus = menus.filter((item) => item.bestSeller);
+
   const menusByCategory = filteredMenuList.reduce((acc, item) => {
     const category = categories.find(cat => cat.id === item.categoryId);
     const categoryName = category ? category.name : "Unknown";
 
     if (!acc[categoryName]) {
-        acc[categoryName] = [];
+      acc[categoryName] = [];
     }
     acc[categoryName].push(item);
     return acc;
   }, {} as { [key: string]: any[] });
 
   return (
-      <ScreenMobile>
-        <HeaderTabs categories={Object.keys(menusByCategory)} search={search} setSearch={setSearch} />
-        <div className="flex flex-col gap-2 px-3 pt-16 pb-24">
-          <div className="flex flex-row justify-between w-full">
-            <p className=" w-1/3 font-bold text-lg pl-1"> โต๊ะที่ : {table.tableName} </p>
-            <p className=" w-2/3 font-bold text-lg text-end"> เวลาในการทาน : {remainingTime(table.entryAt.toString())} นาที </p>
-          </div>
-          <p className="text-primary text-xl text-right pr-1"> {entryTime(table.entryAt.toString())} น. </p>
-          <div className="m-2 space-y-10">
-            {Object.keys(menusByCategory).map((key) => {
-              return <MenuList key={key} title={key} menuList={menusByCategory[key]} />;
-            })}
-          </div>
+    <ScreenMobile>
+      <HeaderTabs categories={Object.keys(menusByCategory)} search={search} setSearch={setSearch} />
+      <div className="flex flex-col gap-2 px-3 pt-16 pb-24">
+        <div className="flex flex-row justify-between w-full">
+          <p className=" w-1/3 font-bold text-lg pl-1"> โต๊ะที่ : {table.tableName} </p>
+          <p className=" w-2/3 font-bold text-lg text-end"> เวลาในการทาน : {remainingTime(table.entryAt.toString())} นาที </p>
         </div>
-        <OrderButton />
-      </ScreenMobile>
+        <p className="text-primary text-xl text-right pr-1"> {entryTime(table.entryAt.toString())} น. </p>
+        <div className="m-2 space-y-10">
+        <MenuList key="ขายดี" title="ขายดี" menuList={bestSellerMenus} />
+          {Object.keys(menusByCategory).map((key) => {
+            return <MenuList key={key} title={key} menuList={menusByCategory[key]} />;
+          })}
+        </div>
+      </div>
+      <OrderButton />
+    </ScreenMobile>
   );
 }
