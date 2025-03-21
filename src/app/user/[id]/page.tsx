@@ -32,7 +32,7 @@ export default function Home({ params }: Props) {
   const { data: bestMenus, isLoading: isBestMenuLoading } = useGetBestMenuSellers();
   const { data: categories, isLoading: isLoadingCategories } = useGetCategories(params.id) as { data: BaseCategoryResponse[], isLoading: boolean };
   const { data: table, isLoading: isLoadingTable } = useGetTable(params.id) as { data: BaseTableResponse, isLoading: boolean };
-  const { data: staffStatus, refetch: refetchStaffStatus } = useGetStaffRequestStatus(params.id ?? "");
+  const { data: staffStatus } = useGetStaffRequestStatus(params.id ?? "");
   const toaster = useToastHandler();
 
   useEffect(() => {
@@ -42,7 +42,6 @@ export default function Home({ params }: Props) {
 
   useEffect(() => {
     if (staffStatus?.status === "accepted") {
-      console.log("accepted")
       toaster("พนักงานกำลังไปหาคุณ", "พนักงานกำลังไปหาคุณ");
     } 
     else if (staffStatus?.status === "rejected") {
@@ -50,14 +49,14 @@ export default function Home({ params }: Props) {
     }
   }, [staffStatus]);
 
-  useEffect(() => {
-    console.log(staffStatus);
-    const interval = setInterval(() => {
-      refetchStaffStatus();
-    }, 3000);
+  // useEffect(() => {
+  //   console.log(staffStatus);
+  //   const interval = setInterval(() => {
+  //     refetchStaffStatus();
+  //   }, 3000);
 
-    return () => clearInterval(interval);
-  }, [refetchStaffStatus]);
+  //   return () => clearInterval(interval);
+  // }, [refetchStaffStatus]);
 
 
   if (isMenuLoading || isLoadingCategories || isLoadingTable) return <LoadingAnimation />;

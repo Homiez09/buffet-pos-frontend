@@ -13,11 +13,11 @@ interface UpdateStaffRequestRequest {
     status: "accepted" | "rejected";
 }
 
-const getStaffRequestStatus = async (tableId: string) => {
-    console.log("tableId", tableId);
-    const { data } = await axiosInstance.get(`/customer/staff-notifications/${tableId}`, {
+const getAllNotification = async () => {
+    const session = await getSession();
+    const { data } = await axiosInstance.get(`/manage/staff-notifications`, {
         headers: {
-            AccessCode: tableId,
+            Authorization: `${session?.token}`,
         },
     });
     return data as StaffRequestStatusResponse;
@@ -33,12 +33,12 @@ const updateStaffRequestStatus = async (newStatus: UpdateStaffRequestRequest) =>
     return data;
 }
 
-const useGetStaffRequestStatus = (tableId: string) => {
+const useGetAllNotification = () => {
     return useQuery<StaffRequestStatusResponse>({
-        queryKey: ["staff-request-status", tableId],
-        queryFn: () => getStaffRequestStatus(tableId),
-        staleTime: 0,
-        refetchInterval: 3000,
+        queryKey: ["staff-notification"],
+        queryFn: () => getAllNotification(),
+        staleTime: 5 * 60 * 1000,
+        refetchInterval: 5000,
     });
 }
 
@@ -48,4 +48,4 @@ const useUpdateStaffRequestStatus = () => {
     });
 }
 
-export { useGetStaffRequestStatus, useUpdateStaffRequestStatus };
+export { useGetAllNotification, useUpdateStaffRequestStatus };
