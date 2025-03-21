@@ -16,6 +16,9 @@ import { entryTime, remainingTime } from "@/lib/formatDate";
 import { useGetBestMenuSellers } from "@/api/general/useBestSeller";
 import Image from "next/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
+import { useGetStaffRequestStatus } from "@/api/user/useStaffRequest";
+//import useToastHandler from "@/lib/toastHandler";
+import StaffRequestStatus from "@/components/user/StaffRequestStatus";
 
 type Props = {
   params: { id: string }
@@ -23,17 +26,30 @@ type Props = {
 
 export default function Home({ params }: Props) {
   const [search, setSearch] = useState<string>('');
-  //const [activeTab, setActiveTab] = useState<string>("ขายดี");
   const { setAccessCode, cart, addItem } = useCart();
+  const [StaffRequestStatus, setStaffRequestStatus] = useState<string | null>(null);
   const { data: menus, isLoading: isMenuLoading } = useGetMenus(params.id);
   const { data: bestMenus, isLoading: isBestMenuLoading } = useGetBestMenuSellers();
   const { data: categories, isLoading: isLoadingCategories } = useGetCategories(params.id) as { data: BaseCategoryResponse[], isLoading: boolean };
   const { data: table, isLoading: isLoadingTable } = useGetTable(params.id) as { data: BaseTableResponse, isLoading: boolean };
+  const tableId = table?.id;
+  const { data: staffStatus } = useGetStaffRequestStatus(tableId ?? "");
+  //const toaster = useToastHandler();
 
   useEffect(() => {
     setAccessCode(params.id);
     console.log(menus)
   }, [menus]);
+
+  useEffect(() => {
+    if (staffStatus?.status === "In Progress") {
+      toaster("พนักงานกำลังไปหาคุณ", "พนักงานกำลังไปหาคุณ");
+    } 
+    else if (staffStatus?.status === "Resolved") {
+      toaster("พนักงานปฏิเสธการเรียก", "พนักงานปฏิเสธการเรียกพนักงาน");
+    }
+  }, [staffStatus]);
+
 
   if (isMenuLoading || isLoadingCategories || isLoadingTable) return <LoadingAnimation />;
   if (!menus) return <p>ไม่พบเมนู</p>;
@@ -55,6 +71,7 @@ export default function Home({ params }: Props) {
 
   return (
     <ScreenMobile>
+      <StaffRequestStatus tableId={table?.id ?? ""} />
       <HeaderTabs categories={Object.keys(menusByCategory)} search={search} setSearch={setSearch} />
       <div className="flex flex-col gap-2 px-3 pt-16 pb-24">
         <div className="flex flex-row justify-between w-full">
