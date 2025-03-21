@@ -1,6 +1,6 @@
 'use client'
 
-import { useGetPricePerGram } from "@/api/manager/useSetting";
+import { useGetPricePerGram } from "@/api/manager/useSettingGram";
 import { BaseInvoiceResponse } from "@/interfaces/invoice";
 import { useRouter } from "next/navigation";
 

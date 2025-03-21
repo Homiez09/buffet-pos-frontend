@@ -92,6 +92,8 @@ export default function MenuPage() {
                 )}
             </div>
 
+            <hr />
+
             <div className="grid grid-cols-3 gap-10">
                 {Array.isArray(filteredMenus) && filteredMenus.length > 0 ? (
                     filteredMenus.map((menu: BaseMenuResponse) => (

@@ -17,13 +17,12 @@ type ModifyPriceGramDialogProps = {
 
 
 const ModifyPriceGramDialog = ({ openDialog, setOpenDialog, price, onSave, refetchPricePerGram }: ModifyPriceGramDialogProps) => {
-
     const editPricePerGram = useEditPricePerGram();
     const [inputPrice, setInputPrice] = useState(price);
 
     const handleSave = async () => {
 
-        await editPricePerGram.mutateAsync({ price: inputPrice }, {
+        await editPricePerGram.mutateAsync({ price_fee_food_overweight: inputPrice }, {
             onSuccess: () => {
                 refetchPricePerGram();
                 alert("แก้ไขราคาสำเร็จ");

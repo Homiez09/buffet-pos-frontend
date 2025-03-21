@@ -3,7 +3,7 @@ export interface EditPricePerPersonRequest {
 }
 
 export interface EditPricePerGramRequest {
-    price: number;
+    price_fee_food_overweight: number;
 }
 
 export interface SettingResponse {
