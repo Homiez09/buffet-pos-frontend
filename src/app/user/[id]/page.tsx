@@ -19,6 +19,7 @@ import { Icon } from "@iconify/react/dist/iconify.js";
 import { useGetStaffRequestStatus } from "@/api/user/useStaffRequest";
 //import useToastHandler from "@/lib/toastHandler";
 import StaffRequestStatus from "@/components/user/StaffRequestStatus";
+import useToastHandler from "@/lib/toastHanlder";
 
 type Props = {
   params: { id: string }
@@ -27,14 +28,12 @@ type Props = {
 export default function Home({ params }: Props) {
   const [search, setSearch] = useState<string>('');
   const { setAccessCode, cart, addItem } = useCart();
-  const [StaffRequestStatus, setStaffRequestStatus] = useState<string | null>(null);
   const { data: menus, isLoading: isMenuLoading } = useGetMenus(params.id);
   const { data: bestMenus, isLoading: isBestMenuLoading } = useGetBestMenuSellers();
   const { data: categories, isLoading: isLoadingCategories } = useGetCategories(params.id) as { data: BaseCategoryResponse[], isLoading: boolean };
   const { data: table, isLoading: isLoadingTable } = useGetTable(params.id) as { data: BaseTableResponse, isLoading: boolean };
-  const tableId = table?.id;
-  const { data: staffStatus } = useGetStaffRequestStatus(tableId ?? "");
-  //const toaster = useToastHandler();
+  const { data: staffStatus, refetch: refetchStaffStatus } = useGetStaffRequestStatus(params.id ?? "");
+  const toaster = useToastHandler();
 
   useEffect(() => {
     setAccessCode(params.id);
@@ -42,13 +41,23 @@ export default function Home({ params }: Props) {
   }, [menus]);
 
   useEffect(() => {
-    if (staffStatus?.status === "In Progress") {
+    if (staffStatus?.status === "accepted") {
+      console.log("accepted")
       toaster("พนักงานกำลังไปหาคุณ", "พนักงานกำลังไปหาคุณ");
     } 
-    else if (staffStatus?.status === "Resolved") {
+    else if (staffStatus?.status === "rejected") {
       toaster("พนักงานปฏิเสธการเรียก", "พนักงานปฏิเสธการเรียกพนักงาน");
     }
   }, [staffStatus]);
+
+  useEffect(() => {
+    console.log(staffStatus);
+    const interval = setInterval(() => {
+      refetchStaffStatus();
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [refetchStaffStatus]);
 
 
   if (isMenuLoading || isLoadingCategories || isLoadingTable) return <LoadingAnimation />;
@@ -71,7 +80,7 @@ export default function Home({ params }: Props) {
 
   return (
     <ScreenMobile>
-      <StaffRequestStatus tableId={table?.id ?? ""} />
+      {/* <StaffRequestStatus tableId={table?.id ?? ""} /> */}
       <HeaderTabs categories={Object.keys(menusByCategory)} search={search} setSearch={setSearch} />
       <div className="flex flex-col gap-2 px-3 pt-16 pb-24">
         <div className="flex flex-row justify-between w-full">
@@ -127,7 +136,7 @@ export default function Home({ params }: Props) {
           })}
         </div>
       </div>
-      <OrderButton />
+      <OrderButton table_id={params.id} />
     </ScreenMobile>
   );
 }

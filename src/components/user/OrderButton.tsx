@@ -5,8 +5,9 @@ import { Icon } from "@iconify/react";
 import { useRouter } from "next/navigation";
 import { ConfirmDialog } from "../manager/confirmDialog";
 import { useState } from "react";
+import StaffRequestStatus from "./StaffRequestStatus";
 
-export default function OrderButton() {
+export default function OrderButton({ table_id }: { table_id: string }) {
     const router = useRouter();
     const { cart } = useCart();
 
@@ -39,7 +40,8 @@ export default function OrderButton() {
                 openDialog={openDialog}
                 setOpenDialog={setOpenDialog}
                 callback={async () => {
-                    setOpenStaffDialog(true);
+                    console.log('fd')
+                    // <StaffRequestStatus(table_id) />
                 }}
                 />
             </div>

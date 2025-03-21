@@ -5,19 +5,19 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSession } from "next-auth/react";
 
 interface StaffRequestStatusResponse {
-    status: "Pending" | "In Progress" | "Resolved";
+    status: "pending" | "accepted" | "rejected";
 }
 
 interface UpdateStaffRequestRequest {
     requestId: string;
-    status: "In Progress" | "Resolved";
+    status: "accepted" | "rejected";
 }
 
 const getStaffRequestStatus = async (tableId: string) => {
-    const session = await getSession();
-    const { data } = await axiosInstance.get(`/user/staff-request-status?tableId=${Id}`, {
+    console.log("tableId", tableId);
+    const { data } = await axiosInstance.get(`/customer/staff-notifications/${tableId}`, {
         headers: {
-            Authorization: `Bearer ${session?.token}`,
+            AccessCode: tableId,
         },
     });
     return data as StaffRequestStatusResponse;
