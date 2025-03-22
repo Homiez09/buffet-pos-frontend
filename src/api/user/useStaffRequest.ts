@@ -2,19 +2,12 @@
 
 import axiosInstance from "@/lib/axiosInstance";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getSession } from "next-auth/react";
 
 interface StaffRequestStatusResponse {
     status: "pending" | "accepted" | "rejected";
 }
 
-interface UpdateStaffRequestRequest {
-    requestId: string;
-    status: "accepted" | "rejected";
-}
-
 const getStaffRequestStatus = async (tableId: string) => {
-    console.log("tableId", tableId);
     const { data } = await axiosInstance.get(`/customer/staff-notifications/${tableId}`, {
         headers: {
             AccessCode: tableId,
@@ -23,11 +16,10 @@ const getStaffRequestStatus = async (tableId: string) => {
     return data as StaffRequestStatusResponse;
 }
 
-const updateStaffRequestStatus = async (newStatus: UpdateStaffRequestRequest) => {
-    const session = await getSession();
-    const { data } = await axiosInstance.put("/staff/update-request-status", newStatus, {
+const createStaffRequest = async (tableId: string) => {
+    const { data } = await axiosInstance.post("/customer/staff-notifications", { table_id: tableId }, {
         headers: {
-            Authorization: `Bearer ${session?.token}`,
+            AccessCode: tableId,
         },
     });
     return data;
@@ -42,10 +34,10 @@ const useGetStaffRequestStatus = (tableId: string) => {
     });
 }
 
-const useUpdateStaffRequestStatus = () => {
+const useCreateStaffRequest = () => {
     return useMutation({
-        mutationFn: updateStaffRequestStatus,
+        mutationFn: createStaffRequest,
     });
 }
 
-export { useGetStaffRequestStatus, useUpdateStaffRequestStatus };
+export { useGetStaffRequestStatus, useCreateStaffRequest };

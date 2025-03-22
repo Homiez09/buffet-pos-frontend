@@ -6,13 +6,17 @@ import { useRouter } from "next/navigation";
 import { ConfirmDialog } from "../manager/confirmDialog";
 import { useState } from "react";
 import StaffRequestStatus from "./StaffRequestStatus";
+import { useCreateStaffRequest } from "@/api/user/useStaffRequest";
+import useToastHandler from "@/lib/toastHanlder";
 
 export default function OrderButton({ table_id }: { table_id: string }) {
     const router = useRouter();
     const { cart } = useCart();
 
     const [openDialog, setOpenDialog] = useState(false);
-    const [openStaffDialog, setOpenStaffDialog] = useState(false);
+
+    const createStaffRequest = useCreateStaffRequest();
+    const toaster = useToastHandler();
 
     return (
         <div className="fixed bottom-0 right-0 p-5">
@@ -40,8 +44,14 @@ export default function OrderButton({ table_id }: { table_id: string }) {
                 openDialog={openDialog}
                 setOpenDialog={setOpenDialog}
                 callback={async () => {
-                    console.log('fd')
-                    // <StaffRequestStatus(table_id) />
+                    await createStaffRequest.mutateAsync(table_id, {
+                        onSuccess: () => {
+                            toaster("success", "เรียกพนักงานสำเร็จ");
+                        },
+                        onError: () => {
+                            toaster("error", "เรียกพนักงานไม่สำเร็จ");
+                        },
+                    });
                 }}
                 />
             </div>

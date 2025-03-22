@@ -37,8 +37,8 @@ const useGetAllNotification = () => {
     return useQuery<StaffRequestStatusResponse>({
         queryKey: ["staff-notification"],
         queryFn: () => getAllNotification(),
-        staleTime: 5 * 60 * 1000,
-        refetchInterval: 5000,
+        staleTime: 0,
+        refetchInterval: 3000,
     });
 }
 
