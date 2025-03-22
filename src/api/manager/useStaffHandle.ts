@@ -24,6 +24,7 @@ const getAllNotification = async () => {
             Authorization: `Bearer ${session?.token}`,
         },
     });
+
     return data as StaffRequestStatusResponse[];
 }
 
