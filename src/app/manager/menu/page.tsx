@@ -1,7 +1,6 @@
 'use client';
 
-import { useDeleteCategory } from "@/api/manager/useCategory";
-import { useAddMenu, useGetMenus } from "@/api/manager/useMenu";
+import { useGetMenus } from "@/api/manager/useMenu";
 import AddCategoryDialog from "@/components/manager/addCategoryDialog";
 import { AddMenuDialog } from "@/components/manager/addMenuDialog";
 import DeleteCategoryDialog from "@/components/manager/DeleteCategoryDialog";
@@ -10,7 +9,6 @@ import MenuCard from "@/components/manager/menuCard";
 import MenuPopularCard from "@/components/manager/menuPopularCard";
 import { BaseMenuResponse } from "@/interfaces/menu";
 import { useState } from "react";
-import { number } from "zod";
 
 export default function MenuPage() {
     const [openDialog, setOpenDialog] = useState(false);

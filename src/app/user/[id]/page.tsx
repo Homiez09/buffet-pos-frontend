@@ -17,8 +17,6 @@ import { useGetBestMenuSellers } from "@/api/general/useBestSeller";
 import Image from "next/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useGetStaffRequestStatus } from "@/api/user/useStaffRequest";
-//import useToastHandler from "@/lib/toastHandler";
-import StaffRequestStatus from "@/components/user/StaffRequestStatus";
 import useToastHandler from "@/lib/toastHanlder";
 
 type Props = {
@@ -32,8 +30,9 @@ export default function Home({ params }: Props) {
   const { data: bestMenus, isLoading: isBestMenuLoading } = useGetBestMenuSellers();
   const { data: categories, isLoading: isLoadingCategories } = useGetCategories(params.id) as { data: BaseCategoryResponse[], isLoading: boolean };
   const { data: table, isLoading: isLoadingTable } = useGetTable(params.id) as { data: BaseTableResponse, isLoading: boolean };
-  const { data: staffStatus, refetch: refetchStaffStatus } = useGetStaffRequestStatus(params.id ?? "");
+  const { data: staffStatus } = useGetStaffRequestStatus(params.id ?? "");
   const toaster = useToastHandler();
+  const [callDuring, setCallDuring] = useState(false);
 
   useEffect(() => {
     setAccessCode(params.id);
@@ -41,24 +40,24 @@ export default function Home({ params }: Props) {
   }, [menus]);
 
   useEffect(() => {
+    if (!callDuring) return;
+    console.log(staffStatus);
     if (staffStatus?.status === "accepted") {
-      console.log("accepted")
       toaster("พนักงานกำลังไปหาคุณ", "พนักงานกำลังไปหาคุณ");
     } 
     else if (staffStatus?.status === "rejected") {
       toaster("พนักงานปฏิเสธการเรียก", "พนักงานปฏิเสธการเรียกพนักงาน");
     }
-  }, [staffStatus]);
+    setCallDuring(false);
+  }, [callDuring]);
 
   useEffect(() => {
-    console.log(staffStatus);
-    const interval = setInterval(() => {
-      refetchStaffStatus();
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [refetchStaffStatus]);
-
+    console.log(callDuring, staffStatus?.status);
+    if (callDuring) return;
+    if (staffStatus?.status === "accepted" || staffStatus?.status === "rejected") {
+      setCallDuring(true)
+    } 
+  }, [staffStatus]);
 
   if (isMenuLoading || isLoadingCategories || isLoadingTable) return <LoadingAnimation />;
   if (!menus) return <p>ไม่พบเมนู</p>;
@@ -80,7 +79,6 @@ export default function Home({ params }: Props) {
 
   return (
     <ScreenMobile>
-      {/* <StaffRequestStatus tableId={table?.id ?? ""} /> */}
       <HeaderTabs categories={Object.keys(menusByCategory)} search={search} setSearch={setSearch} />
       <div className="flex flex-col gap-2 px-3 pt-16 pb-24">
         <div className="flex flex-row justify-between w-full">
@@ -90,7 +88,6 @@ export default function Home({ params }: Props) {
         <p className="text-primary text-xl text-right pr-1"> {entryTime(table.entryAt.toString())} น. </p>
         <div className="m-2 space-y-10">
 
-          
         {bestMenus && bestMenus.length > 0 && (
             <div id="ขายดี">
               <p className="text-2xl font-bold mb-2">ขายดี</p>
