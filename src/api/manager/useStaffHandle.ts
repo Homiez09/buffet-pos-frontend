@@ -6,10 +6,14 @@ import { getSession } from "next-auth/react";
 
 interface StaffRequestStatusResponse {
     status: "pending" | "accepted" | "rejected";
+    id: string;
+    table_id: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 interface UpdateStaffRequestRequest {
-    requestId: string;
+    staff_notification_id: string;
     status: "accepted" | "rejected";
 }
 
@@ -17,15 +21,15 @@ const getAllNotification = async () => {
     const session = await getSession();
     const { data } = await axiosInstance.get(`/manage/staff-notifications`, {
         headers: {
-            Authorization: `${session?.token}`,
+            Authorization: `Bearer ${session?.token}`,
         },
     });
-    return data as StaffRequestStatusResponse;
+    return data as StaffRequestStatusResponse[];
 }
 
 const updateStaffRequestStatus = async (newStatus: UpdateStaffRequestRequest) => {
     const session = await getSession();
-    const { data } = await axiosInstance.put("/staff/update-request-status", newStatus, {
+    const { data } = await axiosInstance.put("/manage/staff-notifications", newStatus, {
         headers: {
             Authorization: `Bearer ${session?.token}`,
         },
@@ -34,7 +38,7 @@ const updateStaffRequestStatus = async (newStatus: UpdateStaffRequestRequest) =>
 }
 
 const useGetAllNotification = () => {
-    return useQuery<StaffRequestStatusResponse>({
+    return useQuery<StaffRequestStatusResponse[]>({
         queryKey: ["staff-notification"],
         queryFn: () => getAllNotification(),
         staleTime: 0,
