@@ -1,3 +1,5 @@
+'client';
+
 import {
   Dialog,
   DialogContent,
