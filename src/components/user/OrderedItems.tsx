@@ -1,4 +1,4 @@
-'client';
+"use client";
 
 import { OrderResponse } from "@/interfaces/order";
 import MenuCompleteCardList from "./MenuCompleteCardList";
