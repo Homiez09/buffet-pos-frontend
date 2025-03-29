@@ -5,7 +5,6 @@ import QueryClientProvider from "@/provider/QueryClientProvider";
 import { Noto_Sans_Thai_Looped } from "next/font/google";
 import NextAuthProvider from "@/provider/NextAuthProvider";
 import CartProvider from "@/provider/CartProvider";
-import { PublicEnvScript } from 'next-runtime-env';
 
 const notoSan = Noto_Sans_Thai_Looped({
   weight: ["400", "700"],
@@ -20,9 +19,6 @@ export default async function RootLayout({
 
   return (
     <html lang="en" data-theme="ming">
-      <head>
-        <PublicEnvScript />
-      </head>
       <body>
         <NextAuthProvider>
           <CartProvider>
