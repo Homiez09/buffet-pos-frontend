@@ -1,8 +1,5 @@
-<<<<<<< HEAD
 'client';
 
-=======
->>>>>>> main
 import * as React from "react";
 
 const Table = ({ children }: { children: React.ReactNode }) => (
