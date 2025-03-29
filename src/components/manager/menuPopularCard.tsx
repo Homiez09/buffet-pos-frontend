@@ -32,8 +32,6 @@ export default function MenuPopularCard({ menu, refetchMenus, rank }: {menu: Bas
         setOpenDialog(true);
     }
 
-    
-
     return (
         <div className="card card-compact bg-base-100 shadow-xl h-[23rem]">
             <figure className="h-full w-full">
