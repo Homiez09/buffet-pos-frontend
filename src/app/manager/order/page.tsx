@@ -1,6 +1,6 @@
 "use client";
 
-import useToastHandler from "@/lib/toastHanlder";
+import useToastHandler from "@/lib/toastHandler";
 import { format } from 'date-fns';
 import { useEffect, useState } from "react";
 import { ConfirmDialog } from "@/components/manager/confirmDialog";

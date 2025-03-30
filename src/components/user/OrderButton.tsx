@@ -7,7 +7,7 @@ import { ConfirmDialog } from "../manager/confirmDialog";
 import { useState } from "react";
 import StaffRequestStatus from "./StaffRequestStatus";
 import { useCreateStaffRequest } from "@/api/user/useStaffRequest";
-import useToastHandler from "@/lib/toastHanlder";
+import useToastHandler from "@/lib/toastHandler";
 
 export default function OrderButton({ table_id }: { table_id: string }) {
     const router = useRouter();

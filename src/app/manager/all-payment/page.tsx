@@ -1,7 +1,7 @@
 "use client";
 
 import { ConfirmDialog } from "@/components/manager/confirmDialog";
-import useToastHandler from "@/lib/toastHanlder";
+import useToastHandler from "@/lib/toastHandler";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useGetTables } from "@/api/manager/useTable";

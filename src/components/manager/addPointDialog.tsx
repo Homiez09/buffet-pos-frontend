@@ -1,4 +1,4 @@
-'client';
+"use client";
 
 import {
   AlertDialog,
@@ -46,11 +46,11 @@ export function AddPointDialog({ openDialog, setOpenDialog, callback }: ConfirmD
   const [isLoadingButton, setIsLoadingButton] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredMembers = customers.filter((member) => {
+  const filteredMembers = customers && customers.filter((member) => {
     const cleanPhone = member.phone.replace(/[^0-9]/g, ''); 
     const cleanSearchTerm = searchTerm.replace(/[^0-9]/g, ''); 
     return cleanPhone.includes(cleanSearchTerm);
-  });
+  }) || [];
   
   const handleMemberSelect = (phone: string) => {
     setSelectedMember(phone);

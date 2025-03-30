@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useGetStaffRequestStatus } from "@/api/user/useStaffRequest";
-import useToastHandler from "@/lib/toastHanlder";
+import useToastHandler from "@/lib/toastHandler";
 
 type Props = {
   tableId: string;

@@ -1,4 +1,4 @@
-'client';
+"use client";
 
 import { ReactNode } from "react";
 import StaffRequestStatus from "@/components/user/StaffRequestStatus";

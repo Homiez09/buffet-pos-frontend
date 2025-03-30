@@ -9,7 +9,7 @@ import { ConfirmDialog } from "@/components/manager/confirmDialog";
 import LoadingAnimation from "@/components/manager/loadingAnimation";
 import { BaseMenuResponse } from "@/interfaces/menu";
 import { OrderItemResponse, OrderResponse, OrderStatus } from "@/interfaces/order";
-import useToastHandler from "@/lib/toastHanlder";
+import useToastHandler from "@/lib/toastHandler";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { MdTableBar } from "react-icons/md";

@@ -1,6 +1,6 @@
 'use client';
 
-import useToastHandler from "@/lib/toastHanlder";
+import useToastHandler from "@/lib/toastHandler";
 import { useState } from "react";
 import { EditMenuDialog } from "./editMenuDialog";
 import { ConfirmDialog } from "./confirmDialog";

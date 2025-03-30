@@ -3,7 +3,7 @@
 import { BaseTableResponse } from "@/interfaces/table";
 import { useRouter } from "next/navigation";
 import { useState,useEffect } from "react";
-import useToastHandler from "@/lib/toastHanlder";
+import useToastHandler from "@/lib/toastHandler";
 import { ConfirmDialog } from "./confirmDialog";
 import { useCancelInvoice, useGetAllUnpaidInvoices } from "@/api/manager/useInvoice";
 

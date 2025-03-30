@@ -1,7 +1,7 @@
 'use client';
 
 import { BaseTableResponse, EditTableRequest } from '@/interfaces/table'
-import useToastHandler from '@/lib/toastHanlder';
+import useToastHandler from "@/lib/toastHandler";
 import React, { useState } from 'react'
 import { ConfirmDialog } from './manager/confirmDialog';
 import ModifyTableNameDialog from './manager/ModifyTableNameDialog';
