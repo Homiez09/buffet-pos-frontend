@@ -35,11 +35,11 @@ export default function MemberPage() {
     refetch: refetchCustomers,
   } = useGetCustomer();
 
-  const filteredMembers = customers.filter((member) => {
+  const filteredMembers = customers && customers.filter((member) => {
     const cleanPhone = member.phone.replace(/[^0-9]/g, '');
     const cleanSearchTerm = searchTerm.replace(/[^0-9]/g, '');
     return cleanPhone.includes(cleanSearchTerm);
-  });
+  }) || [];
 
   const handleDelete = async (id: string) => {
     await deleteCustomer.mutateAsync(id);
