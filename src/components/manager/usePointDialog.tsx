@@ -45,11 +45,11 @@ export function UsePointDialog({ openDialog, setOpenDialog, callback, setPhone, 
   const [searchTerm, setSearchTerm] = useState("");
 
 
-  const filteredMembers = customers.filter((member) => {
+  const filteredMembers = customers && customers.filter((member) => {
     const cleanPhone = member.phone.replace(/[^0-9]/g, '');
     const cleanSearchTerm = searchTerm.replace(/[^0-9]/g, '');
     return cleanPhone.includes(cleanSearchTerm);
-  });
+  }) || [];
 
 
 
