@@ -17,7 +17,7 @@ import { useGetBestMenuSellers } from "@/api/general/useBestSeller";
 import Image from "next/image";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useGetStaffRequestStatus } from "@/api/user/useStaffRequest";
-import useToastHandler from "@/lib/toastHanlder";
+import useToastHandler from "@/lib/toastHandler";
 
 type Props = {
   params: { id: string }

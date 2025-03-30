@@ -11,8 +11,8 @@ import LoadingAnimation from "@/components/manager/loadingAnimation";
 import { UsePointDialog } from "@/components/manager/usePointDialog";
 import { UpdateInvoiceStatusRequest } from "@/interfaces/invoice";
 import { BaseMenuResponse } from "@/interfaces/menu";
-import { OrderItemResponse, OrderResponse, OrderStatus } from "@/interfaces/order";
-import useToastHandler from "@/lib/toastHanlder";
+import { OrderItemResponse, OrderStatus } from "@/interfaces/order";
+import useToastHandler from "@/lib/toastHandler";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { MdTableBar } from "react-icons/md";
@@ -72,7 +72,7 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
     return <LoadingAnimation />;
   }
 
-  const orderItemsWithMenu: OrderItemWithMenu[] = (orderData?.orderItem || []).map((item) => {
+  const orderItemsWithMenu: OrderItemWithMenu[] | any = (orderData?.orderItem || []).map((item) => {
     const menu = menus?.find((menu) => menu.id === item.menuID) || { id: item.menuID, name: "", description: "", categoryId: "", imageUrl: "", isAvailable: false }; // Default object if menu not found
 
     return { ...item, menu };
@@ -146,7 +146,7 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
         </div>
         <div className=" bg-wherePrimary">
           {
-            orderItemsWithMenu.map((oim, i) => {
+            orderItemsWithMenu.map((oim: any, i: number) => {
               return (
                 <div key={i} className="grid grid-cols-2 w-full border-b-2 py-5 text-center">
                   <div className="font-bold items-center">{oim.menu?.name}</div>
@@ -183,9 +183,6 @@ export default function PaymentDetailPage({ params }: PaymentDetailPageProps) {
 
           <div className="flex justify-row">
             {isVisible && <p className="text-whereBlack">ส่วนลดสะสมแต้มจาก <span> {phoneNumber} </span> </p>}
-            {/* {isVisible && <button className="text-red underline font-bold text-error" onClick={() => {
-              setPhoneNumber("");
-            }} > ลบ</button>} */}
           </div>
         </div>
         <div><span className="font-bold">total order:</span> {orderData?.orderItem.length}</div>

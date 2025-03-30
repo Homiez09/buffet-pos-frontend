@@ -1,6 +1,6 @@
 "use client";
 
-import useToastHandler from "@/lib/toastHanlder";
+import useToastHandler from "@/lib/toastHandler";
 import { useState } from "react";
 import { ConfirmDialog } from "@/components/manager/confirmDialog";
 
@@ -40,18 +40,6 @@ export default function MemberPage() {
     const cleanSearchTerm = searchTerm.replace(/[^0-9]/g, '');
     return cleanPhone.includes(cleanSearchTerm);
   });
-
-  // const initialData = [
-  //   { phone: "064-293-xxxx", points: "1 / 10" },
-  //   { phone: "064-293-xxxx", points: "1 / 10" },
-  //   { phone: "064-293-xxxx", points: "1 / 10" },
-  //   { phone: "064-293-xxxx", points: "1 / 10" },
-
-
-  // const initialData = [
-  // ];
-
-  // const [data, setData] = useState();
 
   const handleDelete = async (id: string) => {
     await deleteCustomer.mutateAsync(id);
